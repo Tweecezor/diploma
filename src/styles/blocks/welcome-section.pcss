@@ -1,0 +1,135 @@
+.welcome-section{
+  /* background:url('../images/content/background.png') center center no-repeat;
+  background-size:cover; */
+  position: relative;
+  color:white;
+  z-index: 6;
+}
+.welcome-section__content{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex: .7;
+  z-index: 6;
+}
+.welcome-section__scroll{
+  position: absolute;
+  display: flex;
+  bottom: 10%;
+  transform: translate(-50%);
+  z-index:6;
+  cursor: pointer;
+  left: 50%;
+  &:hover > .welcome-section__scroll-icon{
+    animation-name: move;
+    animation-duration: .7s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: backwards;
+  }
+  @include tablets{
+    display: none;
+  }
+}
+.welcome-section__scroll-link{
+      text-decoration:none;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 30px;
+      /* position: absolute;
+      display:flex;
+      bottom: 20%;
+      transform: translate(-50%);
+      cursor: pointer;
+      left: 50%; */
+}
+.welcome-section__content-wrap{
+  display: flex;
+  justify-content: flex-end;
+  @include tablets{
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.welcome-section__title{
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 30px;
+  opacity: .4;
+  /* width:20%; */
+  @include phones{
+    font-size: 17px;
+  }
+  &-wrap{
+    width:17%;
+    @include tablets{
+        width: 40%;
+        align-self: center;
+        text-align: center;
+    }
+    @include phones{
+      width:48%;
+    }
+  }
+}
+.welcome-section__name-title{
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 60px;
+  width:30%;
+  @include tablets{
+    font-size: 4.5rem;
+    font-weight: 800;
+    line-height: 3.75rem;
+    width: 50%;
+  }
+  @include phones{
+    font-size: 39px;
+    font-weight: 800;
+    line-height: 3.75rem;
+    width: 60%;
+    text-align: center;
+    line-height: initial;
+  }
+}
+.welcome-section__name-title-wrap{
+  width:65%;
+  @include tablets{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+.welcome-section__scroll-icon{
+  width:  30px;
+  height: 30px;
+  fill: white;
+  /* position: inherit; */
+  bottom: 10%;
+}
+@keyframes move{
+  from{
+    bottom: 20%;
+  }
+  to{
+    bottom: -10%
+  }
+}
+
+/* .skills{
+   background-image:url('../images/content/background-skills.png');
+}
+.skills__img{
+  widows: 682px;
+  height: 983px;
+}
+.example_img{
+  width:500px;
+  height: 300px;
+}
+.form-icon{
+  width:25px;
+  height: 25px;
+} */

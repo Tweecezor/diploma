@@ -1,0 +1,21 @@
+header.header
+  include ./logo.pug
+  //- +nav('nav', ['Главная', 'Обо мне', 'Навыки', 'Работы', 'Отзывы', 'Связаться'])
+  include ./main-menu.pug
+  +main-menu('header')
+  .header__links-wrap
+    include ./socials.pug
+    +socials('header')
+    a(href="#" id='hamburger-menu-open').hamburger-menu-link
+      .hamburger-menu-link__bars
+
+  //- ul.social__list
+  //-   li.social__item
+  //-     a.social__link(href="#")
+  //-       +icon('insta','link-class')
+  //-   li.social__item
+  //-     a.social__link(href="#")
+  //-       +icon('vk','link-class')
+  //-   li.social__item
+  //-     a.social__link(href="#")
+  //-       +icon('github','link-class')

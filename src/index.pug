@@ -1,0 +1,25 @@
+include ./mixins.pug
+
+<!DOCTYPE html>
+html(lang="ru")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title Personal Porfolio
+  body
+    .wrapper
+      main.maincontent
+        //- .parallax-wrap
+        include ./components/parallax.pug
+        //- include ./components/welcome-section.pug
+        //- include ./components/about.pug
+        include ./components/skills.pug
+        include ./components/myWorks.pug
+        .maincontent__autumn-bg
+          .container.autumn-container
+            include ./components/reviews.pug
+            include ./components/contact.pug
+        include ./components/footer.pug
+  
+    
