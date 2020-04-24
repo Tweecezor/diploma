@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --mode=development --hot",
     "build": "rm -rf dist && webpack --mode=production --progress",
     "reg": "node reg-util.js",
-    "test":"jest test/login.test.js"
+    "test": "jest test/login.test.js"
   },
   "keywords": [],
   "author": "",
