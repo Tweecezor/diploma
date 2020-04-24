@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[9],{445:function(t,s,e){"use strict";e.r(s);var n=function(){var t=this.$createElement;return(this._self._c||t)("div",{staticClass:"wrapper"},[this._v("sfgdrndfghs")])};n._withStripped=!0;var a={},i=e(50),r=Object(i.a)(a,n,[],!1,null,"5f1aad78",null);r.options.__file="src/admin/components/drag.vue";s.default=r.exports}}]);
