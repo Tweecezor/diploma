@@ -21,6 +21,7 @@ export default {
         case "Работы":
           return this.$router.push("/works");
         case "Тесты":
+          this.$router.push("/test");
           return this.$router.push("/tests");
         case "Настройки":
           return this.$router.push("/mySettings");
@@ -47,7 +48,8 @@ export default {
   display: flex;
 }
 .nav__item {
-  border-bottom: 2px solid white;
+  /* border-bottom: 2px solid white; */
+  border-bottom: 2px solid #efefef;
   &:hover {
     color: $orange;
     border-bottom: 2px solid $orange;

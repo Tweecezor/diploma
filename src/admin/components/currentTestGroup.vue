@@ -1,6 +1,6 @@
 <template lang="pug">
   .currentTest
-    //- pre {{currentTestGroup.level}}
+    //- pre {{currentTestGroup}}
     ul.currentTest__list
       li.currentTest__item.level(v-for="(item,levelId) in +currentTestGroup.level")
         .level__title-wrap
@@ -48,10 +48,11 @@ export default {
       this.$emit("addNewQuestion", obj);
     },
     downloadQuestions() {
-      console.log(this.filteredQuestions);
-      alert(
-        "Загрузить вопросы из банка вопросов. Вывести страницу со списокм всех вопросов и поиском"
-      );
+      // console.log(this.filteredQuestions);
+      this.$router.push("./questions");
+      // alert(
+      //   "Загрузить вопросы из банка вопросов. Вывести страницу со списокм всех вопросов и поиском"
+      // );
     },
     showQuestions(levelId) {
       this.$emit("showAllQuestionsInGroup", levelId, this.currentTestGroup.id);

@@ -16,20 +16,20 @@
 <script>
 import headerComponent from "./components/header";
 import navComponent from "./components/navigation";
-import about from "./components/pages/about";
-import works from "./components/pages/works";
-import reviews from "./components/pages/reviews";
-import login from "./components/pages/login";
+// import about from "./components/pages/about";
+// import works from "./components/pages/works";
+// import reviews from "./components/pages/reviews";
+// import login from "./components/pages/login";
 import { mapActions, mapState, mapGetters } from "vuex";
 import store from "@/store";
 export default {
   components: {
     headerComponent,
     navComponent,
-    about,
-    works,
-    reviews,
-    login,
+    // about,
+    // works,
+    // reviews,
+    // login,
     tooltips: () => import("./components/tooltips")
   },
   computed: {

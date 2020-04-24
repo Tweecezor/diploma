@@ -1,20 +1,6 @@
 <template lang="pug">
   .answers__wrapper
-    //- pre {{typeOfQuestion}}
-    //- pre {{currentAnswer}}
-    //- pre {{prevCorrectAnswer}}
-    //- pre {{question_id}}
-    //- pre {{newImg}}
-    //- pre {{showAImg}}
     //- pre {{answer}}
-    //- .answers__image
-    //-   .current_level__files(:style="{'background-image':`url(${this.questionPhotoURl})`}")
-    //-     .current_level__file-upload
-    //-       label(for="photoFile").current_level__load-text
-    //-         p Изображение для Ответа
-    //-         .dropzone(id="drop1")
-    //-         input(type="file" id="photoFile" @change="loadPhoto" accept="image/*").current_level__file-input
-    //-         .current_level__file-btn.btn Загрузить
     .answers__data(v-if="typeOfQuestion==='oneAnswer' || typeOfQuestion==='multipleAnswer'")
       .answers__data_label-wrap
         label.answers__data_label Текст ответа
@@ -25,24 +11,29 @@
           input( type="radio" :name="question_id" v-bind:value="currentAnswer.text" :disabled="!editMode" :checked="answer.correct"  @change="setCorrectAnswer").answers__data_status
         .answers__data_correct-wrap(v-if="typeOfQuestion === 'multipleAnswer'")
           input( type="checkbox" :name="question_id" v-bind:value="currentAnswer.text" :disabled="!editMode" :checked="answer.correct"  @change="setCorrectAnswer").answers__data_status
-        .answers__actions(v-if="!editMode")
+        .answers__actions(v-if="!editMode && !editPhotoMode")
             .answers__actions_correct(@click="editMode = true") 
+            .answer__actions-photo(@click="setAnswerImgUrl(answer)")
             .answers__actions_trash(@click="deleteQuestion") 
-        .answers__actions(v-else)
+        .answers__actions(v-if="editMode")
           .answers__actions_update(@click="updateCurrentAnswer") 
           .answers__actions_cancel(@click="cancelUpdate") 
-      div(v-if="currentAnswer.imgURL && !newImg").answer__image_actions
-        button(@click.prevent="showAnswerImage" ).btn.answer__image_show-btn Показать изображение ответа
-        div(v-if="currentAnswer.imgURL && showAImg")
-          input( id='answer_img' type="file" accept="image/*" @change="loadImg").answer_img.answer__image_input 
-          label(for="answer_img" v-if="editMode") Заменить изображение
-          div.answer_avatar(:style="{'background-image':`url(${currentAnswer.imgURL})`}")
-        button(@click="deleteImg" v-if='editMode').answer__image_delete-btn.btn Удалить изображение
-      div(v-if="!currentAnswer.imgURL && editMode")
-        input( id='answer_img' type="file" accept="image/*" @change="loadImg($event,true)").answer_img.answer__image_input 
-        label(for="answer_img" v-if="editMode") Добавить изображение
-      div.answer_avatar(v-if="currentAnswer.imgURL && newImg" :style="{'background-image':`url(${currentAnswer.imgURL})`}")
-      hr
+        .answers__actions(v-if="editPhotoMode")
+          .answers__actions_update(@click="saveNewImg") 
+          .answers__actions_cancel(@click="cancelImgUpdate") 
+
+      //- div(v-if="currentAnswer.imgURL && !newImg").answer__image_actions
+      //-   button(@click.prevent="showAnswerImage" ).btn.answer__image_show-btn Показать изображение ответа
+      //-   div(v-if="currentAnswer.imgURL && showAImg")
+      //-     input( id='answer_img' type="file" accept="image/*" @change="loadImg").answer_img.answer__image_input 
+      //-     label(for="answer_img" v-if="editMode") Заменить изображение
+      //-     div.answer_avatar(:style="{'background-image':`url(${currentAnswer.imgURL})`}")
+      //-   button(@click="deleteImg" v-if='editMode').answer__image_delete-btn.btn Удалить изображение
+      //- div(v-if="!currentAnswer.imgURL && editMode")
+      //-   input( id='answer_img' type="file" accept="image/*" @change="loadImg($event,true)").answer_img.answer__image_input 
+      //-   label(for="answer_img" v-if="editMode") Добавить изображение
+      //- div.answer_avatar(v-if="currentAnswer.imgURL && newImg" :style="{'background-image':`url(${currentAnswer.imgURL})`}")
+    
 
       
 
@@ -56,10 +47,12 @@ export default {
     level_id: Number,
     question_id: Number,
     answerLength: Number,
-    typeOfQuestion: String
+    typeOfQuestion: String,
+    answerImgUrl: String
   },
   data() {
     return {
+      editPhotoMode: false,
       editMode: false,
       newAnswer: "",
       newAnswerImgURL: "",
@@ -70,7 +63,8 @@ export default {
         correct: this.answer.correct,
         text: this.answer.text
       },
-      newImg: false
+      newImg: false,
+      prevAnswerImgUrl: ""
     };
   },
   methods: {
@@ -79,6 +73,34 @@ export default {
       "updateAnswer",
       "addNewAnswer"
     ]),
+    cancelImgUpdate() {
+      console.log("cancel");
+      this.editPhotoMode = false;
+      this.$emit("emitResetAnswerImgUrl");
+    },
+    saveNewImg() {
+      console.log("save");
+      this.editPhotoMode = false;
+      this.updateAnswer({
+        text: this.currentAnswer.text,
+        imgURL: this.answerImgUrl,
+        answer_id: this.currentAnswer.answer_id,
+        level_id: this.level_id,
+        test_id: this.test_id,
+        question_id: this.question_id,
+        imgURL: this.answerImgUrl
+      });
+      // console.log(this.answerImgUrl);
+      this.$emit("emitResetAnswerImgUrl");
+      // console.log(this.answer.imgURL);
+    },
+    setAnswerImgUrl(answer) {
+      this.editPhotoMode = true;
+      console.log(this.answer.imgURL);
+      this.prevAnswerImgUrl = this.answer.imgURL;
+      // console.log("afdewr");
+      this.$emit("setAnswerImgURL", answer.imgURL);
+    },
     newAnswerAdd() {
       let newAnswer = {
         answer: {
@@ -130,8 +152,6 @@ export default {
       this.showAImg = false;
     },
     cancelUpdate() {
-      // this.currentAnswer = { ...this.answer };
-      // this.answer = this.currentAnswer;
       this.changeAnswerStatus({
         text: this.prevCorrectAnswer.text,
         correct: this.prevCorrectAnswer.correct,
@@ -157,6 +177,12 @@ export default {
         question_id: this.question_id,
         type: this.typeOfQuestion
       });
+    }
+  },
+  watch: {
+    answer: function(answer) {
+      console.log(answer);
+      this.currentAnswer = { ...this.answer };
     }
   }
 };
@@ -281,6 +307,25 @@ export default {
   &:before {
     content: "";
     background: svg-load("remove.svg", fill= "red") center center no-repeat /
+      contain;
+    width: 20px;
+    height: 20px;
+    opacity: initial;
+    position: absolute;
+    top: 15%;
+    left: 63%;
+  }
+}
+.answer__actions-photo {
+  /* padding-right: 50px; */
+  position: relative;
+  margin-right: 20px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  &:before {
+    content: "";
+    background: svg-load("photo.svg", fill= "#383bcf") center center no-repeat /
       contain;
     width: 20px;
     height: 20px;

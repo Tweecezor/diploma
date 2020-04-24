@@ -1,36 +1,11 @@
 <template lang="pug">
   .container
+    //- pre {{groups}}
+    //- pre {{tests}}
     .wrapper-test
-      //- pre {{tests}}
-      //- pre.QUESTIONS {{questions}}
-      //- pre {{groups}}
-      //- pre {{currentLevelInTestGroup}}
-      //- pre {{currentTestGroup}}
-      //- div(@click="OpenNew") КЛИК СЮДА
-      //- a(href="../drag.vue") GRAG
-      //- .sidebar(v-if="!showAllTests")
-        ul.sidebar-list
-          li.sidebar-item(v-if="tests" v-for="item in tests")
-            .test__header
-              .test__name-wrap
-                label.test__label Название теста
-              .test__name-wrap
-                input(type="text" v-model="item.name" disabled).test__name-input.test__input
-            .test__levels
-              .test__levels-wrap
-                label.test__levels-label.test__label Количество уровней
-              .test__levels-wrap 
-                input(type="text" v-model="item.level" disabled).test__levels-input.test__input
-            .test__group
-              .test__group-wrap
-                label.test__group-label.test__label Для группы
-              .test__group-wrap
-                input(type="text" v-model="item.group" disabled).test__group-input.test__input
-            button(@click="openTest(item)").btn Открыть  
-          hr
-      CURRENT_LEVEL_IN_TEST_GROUP(:currentLevel="this.currentLevelInTestGroup" v-if="isCurrentLevelOpen")
-      CURRENT_TEST_GROUP(@showAllQuestionsInGroup="showAllQuestionsInGroup" v-if="isTestOpen" :currentTestGroup="this.currentTestGroup" :levelsCount="+this.currentTestGroup.level" @addNewQuestion="addQuestion")
-      ALL_QUESTIONS_IN_GROUP(v-if="showQuestions" :questions="filteredQuestions")
+      //- CURRENT_LEVEL_IN_TEST_GROUP(:currentLevel="this.currentLevelInTestGroup" v-if="isCurrentLevelOpen")
+      //- CURRENT_TEST_GROUP(@showAllQuestionsInGroup="showAllQuestionsInGroup" v-if="isTestOpen" :currentTestGroup="this.currentTestGroup" :levelsCount="+this.currentTestGroup.level" @addNewQuestion="addQuestion")
+      //- ALL_QUESTIONS_IN_GROUP(v-if="showQuestions" :questions="filteredQuestions")
       .addedWrapper(v-if="showAllTests")
         ul.created_test-list
           li().created_test-item.test.test--new
@@ -83,12 +58,16 @@ import { mapActions, mapState } from "vuex";
 import CURRENT_TEST_GROUP from "../currentTestGroup";
 import CURRENT_LEVEL_IN_TEST_GROUP from "../currentLevelInTestGroup";
 import ALL_QUESTIONS_IN_GROUP from "../allQuestionsForTest";
+//
+import ACTIONS_WITH_CURRENT_TEST from "./actionsWithCurrentTest";
 
 export default {
   components: {
     CURRENT_TEST_GROUP,
     CURRENT_LEVEL_IN_TEST_GROUP,
-    ALL_QUESTIONS_IN_GROUP
+    ALL_QUESTIONS_IN_GROUP,
+    //
+    ACTIONS_WITH_CURRENT_TEST
   },
   data() {
     return {
@@ -148,7 +127,9 @@ export default {
     ...mapActions("helped", [
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus",
-      "changeShowQuestionsStatus"
+      "changeShowQuestionsStatus",
+      "setCurrentLevelInTestGroup",
+      "setCurrentTestGroup"
     ]),
     addNewTest() {
       const newTetsGroup = {
@@ -162,12 +143,15 @@ export default {
     },
     openTest(item) {
       this.currentTestGroup = item;
-      console.log(this.currentTestGroup);
+      this.setCurrentTestGroup(item);
+      // console.log(this.currentTestGroup);
+      this.$router.push("./currentTest");
       this.changeShowQuestionsStatus(false);
       this.changeCurrentTestStatus(true);
       this.showAllTests = false;
     },
     addQuestion(obj) {
+      console.log(obj);
       this.currentLevelInTestGroup = {
         ...obj
       };
@@ -207,8 +191,6 @@ export default {
 <style lang="postcss" scoped>
 .wrapper-test {
   display: flex;
-  /* flex-direction: column; */
-  /* flex-wrap: wrap; */
   justify-content: space-between;
 }
 .created_test-list {

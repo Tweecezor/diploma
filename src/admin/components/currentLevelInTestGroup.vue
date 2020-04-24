@@ -1,6 +1,6 @@
 <template lang="pug">
   div.current_level-wrapper
-    //- pre {{answerPhotoURl}}
+    //- pre {{currentLevel}}
     .current_level__topic-wrap
       h1.current_level__topic Добавление вопроса
     .current_level__content
@@ -25,7 +25,8 @@
               option(value="multipleAnswer").current_level__question-option Множественный ответ
               option(value="handwritingAnswer").current_level__question-option Свободный ответ
       .current_level__topic-wrap
-        h1.current_level__topic Добавление ответов
+        h1.current_level__topic(v-if="typeOfQuestion!='handwritingAnswer'") Добавление ответов
+        h1.current_level__topic(v-else) Добавление ключевых слов
       .current_level__content-bottom
         .current_level__files.current_level__files--answer(v-if="typeOfQuestion!='handwritingAnswer'" :style="{'background-image':`url(${this.answerPhotoURl})`}")
           .current_level__file-upload
@@ -37,7 +38,7 @@
               .dropzone(v-else)
                 input(type="file" id="photoAnswerFile" @change="changeAnswerPhoto" accept="image/*").current_level__file-input
                 .current_level__file-btn.btn Изменить
-        .current_level-data
+        .current_level-data(v-if="typeOfQuestion !== 'handwritingAnswer'")
           ONE_ANSWER(
             :prevAnswerPhotoURl="prevAnswerPhotoURl" :answerPhotoURl="answerPhotoURl" :questionPhotoURl="questionPhotoURl" :currentQuestion="currentQuestion" :currentLevel="currentLevel" 
             v-if="typeOfQuestion === 'oneAnswer'"
@@ -52,7 +53,10 @@
             v-on:showCurrentAnswerIMG="setAnswerURL"
             v-on:emitResetData="resetData"
             )
-          HANDWRITING_ANSWER(:currentLevel="currentLevel" v-if="typeOfQuestion === 'handwritingAnswer'")
+          .current_level__btn-wrap
+            button(@click="subitQuestion").save.btn Завершить
+        .current_level-data--hand(v-if="typeOfQuestion === 'handwritingAnswer'")
+          HANDWRITING_ANSWER(:currentLevel="currentLevel" )
           .current_level__btn-wrap
             button(@click="subitQuestion").save.btn Завершить
 </template>
@@ -148,6 +152,7 @@ export default {
 
     subitQuestion() {
       this.changeCurrentLevelStatus(false);
+      this.changeCurrentTestStatus(true);
     }
   }
 };
@@ -302,5 +307,8 @@ export default {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.875rem;
+}
+.current_level-data--hand {
+  width: 100%;
 }
 </style>

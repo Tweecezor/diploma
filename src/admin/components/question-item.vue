@@ -4,6 +4,9 @@
     //- pre {{currentQuestion}}
     //- pre {{test_id}}
     //- pre {{level_id}}
+    //- pre {{qText}}
+    //- input(type="text" v-model="qText")
+    //- input(type="text" v-model="item.text")
     .question__title-wrap
       h1.question__title Просмотр вопроса
     .question__content
@@ -12,7 +15,8 @@
           label.question__data_label Текст вопроса
         .questions__data_content
           .question__data_text-wrap
-            input(type="text" v-model="currentQuestion.text" :disabled="!editMode").question__input.question__text
+            //- input(type="text" v-model="item.text") 
+            input(type="text" v-model="currentQuestion.text" ).question__input.question__text
           .question__actions(v-if="!editMode")
             .question__actions_correct(@click="editMode = true") 
             .question__actions_trash(@click="deleteQuestion") 
@@ -47,7 +51,8 @@ export default {
   props: {
     item: Object,
     test_id: Number,
-    level_id: Number
+    level_id: Number,
+    qText: String
   },
   data() {
     return {
@@ -96,6 +101,12 @@ export default {
     ...mapState("helped", {
       showQuestions: state => state.showQuestions
     })
+  },
+  watch: {
+    item: function(item) {
+      console.log(item);
+      this.currentQuestion = { ...this.item };
+    }
   }
 };
 </script>

@@ -5,23 +5,23 @@ export default [
   },
   {
     path: "/",
-    component: () => import("../components/pages/about"),
+    component: () => import("./../components/pages/test.vue"),
   },
-  {
-    path: "/works",
-    component: () => import("../components/pages/works"),
-  },
-  {
-    path: "/reviews",
-    component: () => import("../components/pages/reviews"),
-  },
-  {
-    path: "/login",
-    component: () => import("./../components/pages/login.vue"),
-    meta: {
-      public: true,
-    },
-  },
+  // {
+  //   path: "/works",
+  //   component: () => import("../components/pages/works"),
+  // },
+  // {
+  //   path: "/reviews",
+  //   component: () => import("../components/pages/reviews"),
+  // },
+  // {
+  //   path: "/login",
+  //   component: () => import("./../components/pages/login.vue"),
+  //   meta: {
+  //     public: true,
+  //   },
+  // },
   {
     path: "/tests",
     component: () => import("./../components/pages/test.vue"),
@@ -41,5 +41,9 @@ export default [
   {
     path: "/questions",
     component: () => import("./../components/pages/questions"),
+  },
+  {
+    path: "/currentTest",
+    component: () => import("./../components/pages/actionsWithCurrentTest.vue"),
   },
 ];

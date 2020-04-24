@@ -1,33 +1,35 @@
 <template lang="pug">
-  .wrapper
+  .wrapper-
     //- pre {{keywordsArray}}
-    div Рукописный ввод 
-    form(@submit.prevent="subitQuestion").question
-      .question__wrapper
-        .question__title-wrapper()
-          label(for="question__title"  v-model="question_title").question__label Введите вопрос
-          input(type="text" :disabled="editQuestion" v-model="currentQuestion").question__titile
-          div(v-if="editQuestionMode")
-            button(type="button" @click="editQuestion = false") Редактировать
-            button(@click.prevent="editQuestion = true") Сохранить
-          label(for="addQuestionImg") Добавить изображение?
-            input(type="checkbox" id="addQuestionImg" v-model="questionWithPhoto" )
-          input(type="file" @change="loadPhoto" accept="image/*" id="question_img").input_question_img 
-          label(for="question_img" v-if="questionWithPhoto" ).question_img
-            .question_avatar(:style="{'background-image':`url(${this.questionPhotoURl})`}")
-              label(for="question_img").question__change_img(v-if="questionPhotoURl && !editQuestion") Заменить
-        button( v-if="!showInputAnswer" type="button" @click="addQuestion").addQuestion Добавить вопрос
-        hr
-        .addWorks__label-wrap
-          label(for="input-tag").addWorks__label Ключевое слово
-          input(type="text" name="tag" id="input-tag" v-model='keyword').keywords__input
-          button(type="button" @click="addKeyword").addKeyword Добавить
-          div.error-input()
-        .addWorks__tags-list-wrap
-          ul.addWorks__tags-list
-            li(v-for="(item,index) in keywordsArray" v-if="keywordsArray.length!=0 && item!=''" ).addWorks__tags-item {{item}}
-              .deleteTag(@click="removeKeyword(index)") x
-      button(type="submit").save Сохранить ответ
+    //- div Рукописный ввод 
+    //- form(@submit.prevent="subitQuestion").question
+    //-   .question__wrapper
+    //-     .question__title-wrapper()
+    //-       label(for="question__title"  v-model="question_title").question__label Введите вопрос
+    //-       input(type="text" :disabled="editQuestion" v-model="currentQuestion").question__titile
+    //-       div(v-if="editQuestionMode")
+    //-         button(type="button" @click="editQuestion = false") Редактировать
+    //-         button(@click.prevent="editQuestion = true") Сохранить
+    //-       label(for="addQuestionImg") Добавить изображение?
+    //-         input(type="checkbox" id="addQuestionImg" v-model="questionWithPhoto" )
+    //-       input(type="file" @change="loadPhoto" accept="image/*" id="question_img").input_question_img 
+    //-       label(for="question_img" v-if="questionWithPhoto" ).question_img
+    //-         .question_avatar(:style="{'background-image':`url(${this.questionPhotoURl})`}")
+    //-           label(for="question_img").question__change_img(v-if="questionPhotoURl && !editQuestion") Заменить
+    //-     button( v-if="!showInputAnswer" type="button" @click="addQuestion").addQuestion Добавить вопрос
+    //-     hr
+    .keywords__add
+      .keywords__add_label-wrap
+        label(for="input-tag").keywords__add_label Ключевое слово
+      .keywords__add_text-wrap
+        input(type="text" name="tag" id="input-tag" v-model='keyword').keywords__add_text
+        button(type="button" @click="addKeyword").addKeyword.btn +
+      //- div.error-input()
+    .addWorks__tags-list-wrap(v-if="keywordsArray.length")
+      ul.addWorks__tags-list()
+        li(v-for="(item,index) in keywordsArray" v-if="keywordsArray.length!=0 && item!=''" ).addWorks__tags-item {{item}}
+          .deleteTag(@click="removeKeyword(index)") x
+    button(@click="subitQuestion").save Сохранить вопрос
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
@@ -234,6 +236,28 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+.keywords__add_label {
+  display: block;
+  opacity: 0.5;
+  color: #414c63;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.875rem;
+}
+.keywords__add_text {
+  background-color: transparent;
+  font-weight: 700;
+  border: none;
+  border-bottom: 2px solid #414c63;
+  padding: 0 0.3125rem 0.625rem;
+  width: 100%;
+  margin-bottom: 1.875rem;
+}
+.keywords__add_text-wrap {
+  display: flex;
+}
+/////////////-------------
+
 .wrapper {
   width: 100%;
   /* height: 300px; */

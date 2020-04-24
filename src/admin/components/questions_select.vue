@@ -1,17 +1,30 @@
 <template lang="pug">
   div.select
-    select(@change="setGroup").selectGroup
-      option(value="") Выберите группу
-      option(v-if="groups" v-for="(group,position) in groups" ref="selectedGroup"  :value="group.groupName").test__students-group {{group.groupName}}
+    .select_wrapper
+      .select__label-wrap
+        label.select__label Выберите группу
+      .select-wrap  
+        select(@change="setGroup").select_select
+          option(value="") Выберите группу
+          option(v-if="groups" v-for="(group,position) in groups" ref="selectedGroup"  :value="group.groupName").select_option {{group.groupName}}
     //- pre {{ filteredTests}}
-    select( @change="setTest" v-if="filteredTests.length").selectTest
-      option(value="") Выберите тест
-      option( v-for="test in filteredTests" ref="selectedTest" :data-levels="test.level" :value="test.id").test__students-group   {{test.name}}
-    select( v-else).selectTest
-      option(value="") Тесты еще не созданы
-    select(name="level" required v-model="level").test__levels
-      option(value="") Выберите уровень
-      option(v-for="level in levels" :value="level").test__level {{level}}
+    .select_wrapper
+      .select__label-wrap
+        label.select__label Выберите тест
+      .select-wrap(v-if="filteredTests.length")
+        select( @change="setTest" ).select_select
+          option(value="") Выберите тест
+          option( v-for="test in filteredTests" ref="selectedTest" :data-levels="test.level" :value="test.id").test__students-group   {{test.name}}
+      .select-wrap(v-else)
+        select.select_select
+          option(value="").select_option Тесты еще не созданы
+    .select_wrapper
+      .select__label-wrap
+        label.select__label Выберите уровень
+      .select-wrap.select-wrap--level
+        select(name="level" required v-model="level").select_select
+          option(value="") Выберите уровень
+          option(v-for="level in levels" :value="level").select_option {{level}}
       //- option(value="1").test__level 1
       //- option(value="2").test__level 2
       //- option(value="3").test__level 3
@@ -162,4 +175,18 @@ export default {
   }
   /* display: flex; */
 }
+.select__label {
+  color: #414c63;
+  font-size: 1rem;
+  line-height: 1.875rem;
+  opacity: 0.5;
+}
+.select-wrap {
+  &--level {
+    margin-bottom: 20px;
+  }
+}
+/* .select_wrapper {
+  width: 30%;
+} */
 </style>

@@ -2,36 +2,55 @@
   section.questions
     //- pre {{questions}}
     ul.breadcrumbs_list
-      li.breadcrumbs_item.breadcrumb(v-for="(item,id) in questions")
-        .breadcrumb_item(:class="{}") {{id+1}}
+      li.breadcrumbs_item.breadcrumb( ref="breadcrumb" v-for="(currentQuestion,id) in questions")
+        .breadcrumb_item( @click="changeCurrentQuestion($event,currentQuestion,id)" :class="") {{id+1}}
     .questions__close(@click="closeSection") X
-    ul.questions__list(v-if="questions.length")
-      li.questions__item.question(v-for="item in questions")
-        //- pre {{item.type}}
-        QUESTION_ITEM(:item="item.question" :test_id="item.test_id" :level_id="item.level_id")
-        div(v-if="item.type!=='handwritingAnswer'").answer__content
-          .answers__title Просмотр ответов
-          .answers__data
-            .answers__data_img
-              .current_level__files(:style="")
-                .current_level__file-upload
-                  label(for="photoFile").current_level__load-text
-                    p Изображение для вопроса
-                    .dropzone(id="drop1")
-                    input(type="file" id="photoFile" @change="" accept="image/*").current_level__file-input
-                    .current_level__file-btn.btn Загрузить
-            .answers__data_content
-              ul(v-for="answer in item.answers").answers__list
-                li.answers__item.answer()
-                  ANSWER_ITEM(:typeOfQuestion="item.type" :answerLength="item.answers.length" :question_id="item.question.question_id" :answer="answer" :test_id="item.test_id" :level_id="item.level_id")
-              ADD_NEW_ANSWER(:answerLength="item.answers.length" :question_id="item.question.question_id" :test_id="item.test_id" :level_id="item.level_id")
-        div(v-else)
-          KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type")
-          //- div.answers__title Ответы
-          //-   ul(v-for="keyword in item.keywordsArray").answers__list
-          //-     li.answers__item.answer()
-          //-       pre {{keyword}}
-    div(v-else).questions__empty Вопросы для этого уровня еще не созданы
+    .questions__list-wrap
+      .questions__list(v-if="questions.length")
+        //- CURRENT_QUESTION(:item="item")
+        .questions__item.question()
+          //- pre {{item}}
+          //- pre {{item}}
+          QUESTION_ITEM( :qText="qText" :item="item.question" :test_id="item.test_id" :level_id="item.level_id")
+          div(v-if="item.type!=='handwritingAnswer'").answer__content
+            .answers__title Просмотр ответов
+            .answers__data
+              .answers__data_img
+                .current_level__files(:style="{'background-image':`url(${currentAnswerImgUrl})`}")
+                  .current_level__file-upload
+                    label(for="photoFile").current_level__load-text
+                      p Изображение для вопроса
+                      .dropzone(id="drop1" v-if="currentAnswerImgUrl==''")
+                        input(type="file" id="photoFile" @change="loadAnwerPhoto" accept="image/*").current_level__file-input
+                        .current_level__file-btn.btn Загрузить
+                      .dropzone(v-else)
+                        input(type="file" id="photoFile" @change="changeAnswerPhoto" accept="image/*").current_level__file-input
+                        .current_level__file-btn.btn Изменить
+              .answers__data_content
+                ul().answers__list
+                  li.answers__item.answer(v-for="answer in item.answers")
+                    ANSWER_ITEM(
+                      :typeOfQuestion="item.type" :answerLength="item.answers.length" 
+                      :question_id="item.question.question_id" :answer="answer" 
+                      :test_id="item.test_id" :level_id="item.level_id"
+                      :answerImgUrl="currentAnswerImgUrl"
+                      v-on:setAnswerImgURL="setCurrentAnswerIMG"
+                      v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
+                      )
+                ADD_NEW_ANSWER(
+                  :answerLength="item.answers.length" :question_id="item.question.question_id" 
+                  :test_id="item.test_id" :level_id="item.level_id"
+                  :currentAnswerImgUrl="currentAnswerImgUrl"
+                  :answerImgUrl="currentAnswerImgUrl"
+                  v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
+                  )
+          div(v-else)
+            KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type")
+            //- div.answers__title Ответы
+            //-   ul(v-for="keyword in item.keywordsArray").answers__list
+            //-     li.answers__item.answer()
+            //-       pre {{keyword}}
+      //- div(v-else).questions__empty Вопросы для этого уровня еще не созданы
     
 </template>
 
@@ -41,22 +60,32 @@ import QUESTION_ITEM from "./question-item";
 import ANSWER_ITEM from "./answer-item";
 import ADD_NEW_ANSWER from "./answerAddNew";
 import KEYWORDS_ANSWER from "./keywordsAnswer";
+import CURRENT_QUESTION from "./currentQuestionOnLevel";
 export default {
   components: {
     QUESTION_ITEM,
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
-    KEYWORDS_ANSWER
+    KEYWORDS_ANSWER,
+    CURRENT_QUESTION
   },
   props: {
     questions: Array
   },
   data() {
     return {
+      activeQuestion: 0,
+      qText: "",
+      item: "",
+      // item: this.questions[0],
+      // currentQuestionItem: this.questions[1],
       showQImg: false,
       showAImg: false,
       isTestOpen: false,
-      currentQuestionID: 1
+      currentQuestionID: 1,
+      currentAnswerImgUrl: "",
+      breadcrumbs: []
+      // answerImgUrl: ""
     };
   },
   methods: {
@@ -65,22 +94,86 @@ export default {
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus"
     ]),
-
-    // showQuestionImage() {
-    //   // console.log(this.showingImg);
-    //   this.showQImg = !this.showQImg;
-    // },
-    // showAnswerImage() {
-    //   this.showAImg = !this.showAImg;
-    // },
+    setCurrentQuestion() {
+      this.item = this.questions[this.activeQuestion];
+    },
+    changeCurrentQuestion(e, currentQuestion, id) {
+      console.log(e.target);
+      // console.log(currentQuestion);
+      // console.log(typeof currentQuestion);
+      // this.breadcrumbs[0].classList.add("breadcrumb--active");
+      for (var i = 0; i < this.breadcrumbs.length; i++) {
+        // if (i === id) {
+        //   this.breadcrumbs[i].classList.add("breadcrumb--active");
+        // } else {
+        //   this.breadcrumbs[i].classList.remove("breadcrumb--active");
+        // }
+        i == id
+          ? this.breadcrumbs[i].classList.add("breadcrumb--active")
+          : this.breadcrumbs[i].classList.remove("breadcrumb--active");
+      }
+      this.item = currentQuestion;
+      this.qText = currentQuestion.question.text;
+      // console.log(this.questions[id]);
+      // this.item = this.questions[id];
+      // console.log(this.item);
+      // this.qText = item.question.text;
+      // this.activeQuestion = id;
+    },
+    loadAnwerPhoto(e) {
+      const file = e.target.files[0];
+      console.log(file);
+      const reader = new FileReader();
+      try {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.currentAnswerImgUrl = reader.result;
+        };
+      } catch (error) {
+        alert(error.message);
+        console.log(error.message.errors.photo);
+      }
+    },
+    changeAnswerPhoto(e) {
+      const file = e.target.files[0];
+      console.log(file);
+      const reader = new FileReader();
+      try {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.currentAnswerImgUrl = reader.result;
+        };
+      } catch (error) {
+        alert(error.message);
+        console.log(error.message.errors.photo);
+      }
+    },
+    resetAnswerImgUrl() {
+      this.currentAnswerImgUrl = "";
+    },
+    setCurrentAnswerIMG(imgURL) {
+      this.currentAnswerImgUrl = imgURL;
+    },
     closeSection() {
       this.changeShowQuestionsStatus(false);
+      this.changeCurrentTestStatus(true);
     }
   },
   computed: {
     ...mapState("helped", {
       showQuestions: state => state.showQuestions
     })
+  },
+  created() {
+    this.setCurrentQuestion();
+  },
+  mounted() {
+    console.log(this.$refs.breadcrumb);
+    this.breadcrumbs = this.$refs.breadcrumb;
+    this.breadcrumbs[0].classList.add("breadcrumb--active");
+    for (var i = 1; i < this.breadcrumbs.length; i++) {
+      this.breadcrumbs[i].classList.remove("breadcrumb--active");
+    }
   }
 };
 </script>
@@ -129,17 +222,17 @@ export default {
 .question {
   width: 100%;
 }
-.questions__list {
+/* .questions__list {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-}
-.questions__item {
+} */
+/* .questions__item {
   width: 400px;
   background-color: white;
   min-height: 300px;
   border: 1px solid black;
-}
+} */
 .question_img {
   width: 100%;
   height: 200px;
@@ -234,5 +327,50 @@ export default {
 }
 .current_level__file-input {
   display: none;
+}
+.answers__item {
+  margin-bottom: 20px;
+}
+.answers__list {
+  margin-top: -8px;
+  margin-bottom: 10px;
+}
+/* .questions__list {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.question {
+  position: relative;
+} */
+.questions__list-wrap {
+  /* width: 100vh; */
+  /* overflow: hidden;
+  width: 800px; */
+}
+.questions__list {
+  /* display: flex;
+  display: flex; */
+  /* position: relative; */
+  /* display: flex;
+  position: relative;
+  overflow: hidden; */
+  /* width: 300PX; */
+  /* width: 500px; */
+  /* OVERFLOW: hidden; */
+  /* left: 0px; */
+}
+.questions__item {
+  /* border: 1px solid black; */
+  border: 1px solid #efefef;
+  box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0.17);
+  border-radius: 6px;
+  /* width: 100%; */
+  /* width: 2000px; */
+  /* width: 800px; */
+}
+.breadcrumb--active {
+  color: orange;
+  border: 1px solid orange;
 }
 </style>

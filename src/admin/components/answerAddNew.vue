@@ -1,8 +1,10 @@
 <template lang="pug">
-  div.answer__add
-    h3.answer__add-title Добавить новый ответ
-    input(type="text" v-model="newAnswer").answer__add-input
-    button(@click="newAnswerAdd").btn Добавить
+  .answer__add
+    .answer__add_title-wrap
+      label.answer__add_title Добавить новый ответ
+    .answer__add_text-wrap
+      input(type="text" v-model="newAnswer").answer__add_text
+      button(@click="newAnswerAdd").btn +
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
@@ -12,7 +14,8 @@ export default {
     test_id: Number,
     level_id: Number,
     question_id: Number,
-    answerLength: Number
+    answerLength: Number,
+    currentAnswerImgUrl: String
   },
   data() {
     return {
@@ -31,7 +34,7 @@ export default {
         answer: {
           text: this.newAnswer,
           correct: false,
-          imgURL: this.newAnswerImgURL,
+          imgURL: this.currentAnswerImgUrl,
           answer_id: this.answerLength + 1
         },
         test_id: this.test_id,
@@ -41,6 +44,7 @@ export default {
       console.log(newAnswer);
       this.newAnswer = "";
       this.addNewAnswer(newAnswer);
+      this.$emit("emitResetAnswerImgUrl");
     }
     // loadImg(e) {
     //   // console.log(isNewImg);
@@ -66,4 +70,23 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+.answer__add_title {
+  display: block;
+  opacity: 0.5;
+  color: #414c63;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.875rem;
+}
+.answer__add_text-wrap {
+  display: flex;
+}
+.answer__add_text {
+  width: 100%;
+  background-color: transparent;
+  font-weight: 700;
+  border: none;
+  border-bottom: 2px solid #414c63;
+  padding: 0 0.3125rem 0.625rem;
+}
 </style>
