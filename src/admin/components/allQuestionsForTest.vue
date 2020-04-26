@@ -204,9 +204,9 @@ export default {
   margin-right: 5px;
   color: #414c63;
   &:hover {
-    border: 1px solid orange;
+    border: 1px solid #db9600;
     cursor: pointer;
-    color: orange;
+    color: #db9600;
   }
 }
 .questions {
@@ -370,7 +370,7 @@ export default {
   /* width: 800px; */
 }
 .breadcrumb--active {
-  color: orange;
-  border: 1px solid orange;
+  color: #db9600;
+  border: 1px solid #db9600;
 }
 </style>

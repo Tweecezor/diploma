@@ -3,7 +3,7 @@
     .container
       ul.nav__list
         li.nav__item(
-          v-for="item in ['Тесты','Группы','Настройки','Вопросы']"
+          v-for="item in ['Тесты','Группы','Настройки','Вопросы','Прохождение']"
         )
           a(@click.prevent="clickLink(item)").nav__link {{item}}
           //- router-link(to="/works") {{item}}
@@ -29,6 +29,8 @@ export default {
           return this.$router.push("/groups");
         case "Вопросы":
           return this.$router.push("/questions");
+        case "Прохождение":
+          return this.$router.push("/publicTests");
       }
     }
   }
@@ -42,20 +44,20 @@ export default {
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 30px;
-  border-bottom: 1px solid #efefef;
+  border-bottom: 2px solid #efefef;
 }
 .nav__list {
   display: flex;
 }
 .nav__item {
   /* border-bottom: 2px solid white; */
-  border-bottom: 2px solid #efefef;
+  border-bottom: 2px solid transparent;
   &:hover {
-    color: $orange;
-    border-bottom: 2px solid $orange;
+    color: #edb947;
+    border-bottom: 2px solid #edb947;
   }
   &-active {
-    border-bottom: 2px solid $orange;
+    border-bottom: 2px solid #edb947;
   }
 }
 .nav__link {

@@ -13,7 +13,7 @@
     .group__desc(ref="studentsList")
       .group__desc-text(v-for="student in group.studentsInGroup")
         STUDENT_IN_GROUP(:student="student")
-    label Добавить студента:
+    label.group__desc-label Добавить студента:
     .group__desc-student.student
         input(type="text" placeholder="Фамилия" v-model="studentSurname ").student__input.student__input--surname
         input(type="text" placeholder="Имя"  v-model="studentName").student__input
@@ -96,7 +96,9 @@ export default {
 .student__add {
   width: 30px;
   height: 30px;
-  background-color: red;
+  /* background-color: red; */
+  background: linear-gradient(190deg, #db9600, #edb947);
+  cursor: pointer;
   border-radius: 50%;
   position: relative;
   &:before {
@@ -112,9 +114,21 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
   }
+  &:hover {
+    background: linear-gradient(to left, #db9600, #edb947);
+  }
 }
+
+.group__name,
+.group__status {
+  &:hover {
+    border-bottom: none;
+  }
+  border-bottom: none;
+}
+
 .student {
-  padding-left: 55px;
+  /* padding-left: 55px; */
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
@@ -130,6 +144,9 @@ export default {
   }
   &--surname {
     width: 28%;
+  }
+  &:hover {
+    border-bottom: 1px solid #edb947;
   }
 }
 .group__preview {
@@ -237,9 +254,15 @@ export default {
   border-bottom: 1px solid transparent;
 }
 .group__active {
-  border-bottom: 1px solid orange;
+  border-bottom: 1px solid #edb947;
+  /* border-bottom: 1px solid orange; */
 }
 .student__input {
   padding-bottom: 5px;
+}
+.group__desc-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #db9600;
 }
 </style>

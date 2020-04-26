@@ -133,9 +133,13 @@ export default {
 }
 .level__actions_btn {
   background: transparent;
-  border-bottom: 1px solid #414c63;
+  /* border-bottom: 1px solid #414c63; */
+  border-bottom: 1px solid transparent;
   width: 71%;
   margin-bottom: 10px;
+  &:hover {
+    border-bottom: 1px solid #edb947;
+  }
 }
 .level__actions {
   display: flex;

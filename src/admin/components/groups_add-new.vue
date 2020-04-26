@@ -82,6 +82,7 @@ export default {
         name: this.student_name,
         surname: this.student_surname,
         thirdname: this.student_thirdname,
+        fullName: `${this.student_name} ${this.student_surname} ${this.student_thirdname}`,
         group_id: this.group_id,
         student_id: this.studentsArray.length + 1
       };
@@ -128,7 +129,7 @@ export default {
 
 .group__title {
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid #414c63;
+  border-bottom: 2px solid #414c63;
   margin-bottom: 4.625rem;
   font-size: 1.125rem;
   font-weight: 700;
@@ -273,9 +274,12 @@ export default {
 .group__reset {
   background: transparent;
   border: none;
-  color: $orange;
+  color: #db9600;
   margin-right: 30px;
   cursor: pointer;
+  &:hover {
+    color: #edb947;
+  }
 }
 .group__user-text {
   text-align: center;
@@ -349,5 +353,17 @@ export default {
   margin-bottom: 30px;
 }
 .group__info--student {
+}
+input[type="text"],
+input[type="email"] {
+  &:hover {
+    border-bottom: 2px solid #edb947;
+  }
+  &:active {
+    border-bottom: 2px solid #edb947;
+  }
+}
+input[type="text"] {
+  border-bottom: 2px solid #000;
 }
 </style>

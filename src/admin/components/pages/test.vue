@@ -6,29 +6,37 @@
       //- CURRENT_LEVEL_IN_TEST_GROUP(:currentLevel="this.currentLevelInTestGroup" v-if="isCurrentLevelOpen")
       //- CURRENT_TEST_GROUP(@showAllQuestionsInGroup="showAllQuestionsInGroup" v-if="isTestOpen" :currentTestGroup="this.currentTestGroup" :levelsCount="+this.currentTestGroup.level" @addNewQuestion="addQuestion")
       //- ALL_QUESTIONS_IN_GROUP(v-if="showQuestions" :questions="filteredQuestions")
+      //- .a(@click="openN") HEY
       .addedWrapper(v-if="showAllTests")
+        //- pre {{showAddNew}};
         ul.created_test-list
-          li().created_test-item.test.test--new
-            .test__header
-              .test__name-wrap
-                label.test__name-label.test__label Введите название теста
-              .test__name-wrap
-                input(type="text" v-model="obj.name").test__name-input
-            .test__levels
-              .test__levels-wrap
-                label.test__levels-label.test__label Выберите количество уровней
-              .test__levels-wrap 
-                select(name="level" required v-model="obj.level").test__levels-select
-                  option(value="1").test__levels-option 1
-                  option(value="2").test__levels-option 2
-                  option(value="3").test__levels-option 3
-            .test__group
-              .test__group-wrap
-                label.test__group-label.test__label Выберите группу
-              .test__group-wrap
-                select(name="groups" required v-model="obj.group").test__group-select
-                  option(v-for="group in groups" :value="group.groupName").test__group-option {{group.groupName}}
-            button(@click="addNewTest").btn Создать
+          li(v-if="" :class="{testAdding:showAddNew}").created_test-item.test.test--new
+            .test__preview#preview(v-if="!showAddNew" @click="showAddNew = true")
+              .test__preview_logo
+              //- .test__preview_test-wrap
+              .test__preview_test Добавить тест
+            .test__add_new(v-else)
+              .test__header
+                .test__name-wrap
+                  label.test__name-label.test__label Введите название теста
+                .test__name-wrap
+                  input(type="text" v-model="obj.name").test__name-input
+              .test__levels
+                .test__levels-wrap
+                  label.test__levels-label.test__label Количество уровней
+                .test__levels-wrap 
+                  select(name="level" required v-model="obj.level").test__levels-select
+                    option(value="1").test__levels-option 1
+                    option(value="2").test__levels-option 2
+                    option(value="3").test__levels-option 3
+              .test__group
+                .test__group-wrap
+                  label.test__group-label.test__label Выберите группу
+                .test__group-wrap
+                  select(name="groups" required v-model="obj.group").test__group-select
+                    option(v-for="group in groups" :value="group.groupName").test__group-option {{group.groupName}}
+              button(@click="addNewTest").btn Создать
+          //- li.created_test-item.test.test--add-new()
 
 
           li.created_test-item.test(v-if="tests" v-for="item in tests")
@@ -54,6 +62,10 @@
 </template>
 
 <script>
+console.log("hahaInScript");
+var addBlock;
+console.log(addBlock);
+
 import { mapActions, mapState } from "vuex";
 import CURRENT_TEST_GROUP from "../currentTestGroup";
 import CURRENT_LEVEL_IN_TEST_GROUP from "../currentLevelInTestGroup";
@@ -75,6 +87,7 @@ export default {
       currentLevelInTestGroup: {},
       currentTestGroup: {},
       filteredQuestions: [],
+      showAddNew: false,
       obj: {
         level: "3",
         name: "Тут название теста",
@@ -83,6 +96,12 @@ export default {
     };
   },
   methods: {
+    mouseover(e) {
+      console.log(e.target);
+    },
+    openN() {
+      console.log(addBlock);
+    },
     showAllQuestionsInGroup(levelId, groupId) {
       if (this.questions.length) {
         console.log(levelId);
@@ -137,6 +156,7 @@ export default {
         ...this.obj
       };
       this.addNew(newTetsGroup);
+      this.showAddNew = false;
     },
     CLICK() {
       console.log(this.tests);
@@ -164,6 +184,8 @@ export default {
   },
   mounted() {
     this.changeCurrentLevelStatus(false);
+    const addNewBlock = document.querySelector("#preview");
+    addBlock = addNewBlock;
   },
   computed: {
     ...mapState("groups", {
@@ -189,6 +211,8 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+@import url("../../../styles/mixins.pcss");
+
 .wrapper-test {
   display: flex;
   justify-content: space-between;
@@ -200,8 +224,8 @@ export default {
 }
 
 .created_test-item {
-  width: calc((100%-4%) / 3);
-  margin-right: 2%;
+  width: calc((100%-2%) / 3);
+  margin-right: 1%;
   padding: 50px 20px;
   background-color: white;
   border: 1px solid black;
@@ -263,7 +287,13 @@ select {
   margin-bottom: 1.875rem;
 }
 .test--new {
-  background: #ccc;
+  min-height: 253px;
+  background: linear-gradient(90deg, #db9600 0, #edb947);
+  &:hover {
+    background: linear-gradient(to left, #db9600 0, #edb947);
+    cursor: pointer;
+  }
+  /* background: linear-gradient(90deg, #db9600 0, #edb947); */
 }
 /* .created-test {
   padding: 20px;
@@ -294,5 +324,77 @@ select {
   border-radious: 2px;
   border-radius: 6px;
   box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0.14);
+}
+.test--add-new {
+  /* position: absolute; */
+  background: linear-gradient(90deg, #db9600 0, #edb947);
+}
+.test__add_new {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.test__preview {
+  height: 100%;
+  min-height: 253px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.test__preview_logo {
+  /* position: relative; */
+  /* width: 9.375rem;
+  height: 9.375rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  margin-bottom: 20px; */
+  display: flex;
+  width: 9.375rem;
+  height: 9.375rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  position: relative;
+  &:before {
+    content: "";
+    background: svg-load("remove.svg", fill= "#fff") center center no-repeat /
+      contain;
+    width: 2.125rem;
+    height: 2.125rem;
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    transform: translate(-50%, 50%) rotate(45deg);
+  }
+  @include phones {
+    width: 4.375rem;
+    height: 4.375rem;
+    margin-bottom: 0;
+  }
+}
+.testAdding {
+  background: white;
+
+  &:hover {
+    background: white;
+    cursor: default;
+  }
+}
+.test__preview_test {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.875rem;
+  color: #fff;
+  width: 5.875rem;
+  text-align: center;
 }
 </style>

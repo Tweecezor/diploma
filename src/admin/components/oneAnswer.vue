@@ -33,50 +33,6 @@
       //- //-     .question_avatar(:style="{'background-image':`url(${this.questionPhotoURl})`}")
       //- button( v-if="!showInputAnswer" type="button" @click="addQuestion") Добавить вопрос
       //- hr
-      .answers__title-wrap
-          h2.asnwers__title Список ответов
-      .answers__wrapper()
-        ul.answers__list(v-if="answers.length" v-for="(answer,id) in answers") 
-          
-          ANSWER_ITEM(
-            :answer="answer" :answers="answers" 
-            :answerPhotoURl="answerPhotoURl"
-            :prevAnswerPhotoURl="prevAnswerPhotoURl"
-            v-on:emitSetCorrectAnswer="setCorrectAnswer" 
-            v-on:emitShowAnswerImg="showAnswerImg"
-            v-on:emitDropAnswerURL="resetAnswerUrl"
-          )
-
-
-
-            //- .answer__text-wrap
-            //-   input(type="text" v-model="answer.text"  ).answers__text
-            //- .answer__correct-wrap
-            //-   input(type="radio" name="isCorrect" v-bind:value="answer.text" id="isCorrect" @change="setCorrectAnswer").answer__correct 
-            //- .answer__actions()
-            //-   .answer__actions-edit(v-if="!editAnswer")
-            //-   .answer__actions-save(v-if="editAnswer" @click="changeAnswer(answer)")
-            //-   .answer__actions-photo( @click="showAnswerImg(answer)")
-            //-   .answer__actions-delete 
-
-
-
-            //- .answer__actions(v-else)
-            //-   .answer__actions-save()
-            //-   .answer__actions-cancel
-            //- .answer__actions
-            //-   button(type="button" @click="editAnswer=false").answer__actions-edit 
-            //-   button(type="button" @click="saveChangedAnswer(id+1,answer.text)").answer__actions-save Сохранить 
-             
-              div.answer__with_img(v-if="answer.imgURL")
-                label Изображение
-                input(type="file" @change="loadAnswerPhoto" accept="image/*" id="answer_img")
-                label(for="answer_img" v-if="answerPhotoURl") Заменить
-                br
-                //- .question_avatar(:style="{'background-image':`url(${answerPhotoURl})`}")
-                div(v-if="answer.imgURL").question_img 
-                  .question_avatar(:style="{'background-image':`url(${answer.imgURL})`}")
-          //- hr
       .answer_new
         .answer_new__data
           .answer_new__topic-wrap
@@ -85,6 +41,19 @@
             input(type="text" v-model="currentAnswer").answer_new__input
             .answer_new__actions
               button.answer_new__btn(@click="addAnswer").answer_new__btn Добавить ответ
+      .answers__title-wrap
+          h2.asnwers__title Список ответов
+      .answers__wrapper()
+        ul.answers__list(v-if="answers.length" v-for="(answer,id) in answers") 
+          ANSWER_ITEM(
+            :answer="answer" :answers="answers" 
+            :answerPhotoURl="answerPhotoURl"
+            :prevAnswerPhotoURl="prevAnswerPhotoURl"
+            v-on:emitSetCorrectAnswer="setCorrectAnswer" 
+            v-on:emitShowAnswerImg="showAnswerImg"
+            v-on:emitDropAnswerURL="resetAnswerUrl"
+          )
+      
 
       //- label(for="addAnswerImg") Добавить изображение?
       //-   input(type="checkbox" id="addAnswerImg" v-model="answerWithPhoto" )
@@ -523,9 +492,10 @@ export default {
 }
 .answer_new {
   display: flex;
+  margin-bottom: 30px;
 }
 .answers__wrapper {
-  min-height: 200px;
+  /* min-height: 200px; */
 }
 .answer_new__input-wrap {
   display: flex;

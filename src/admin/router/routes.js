@@ -46,4 +46,8 @@ export default [
     path: "/currentTest",
     component: () => import("./../components/pages/actionsWithCurrentTest.vue"),
   },
+  {
+    path: "/publicTests",
+    component: () => import("./../components/tests_public"),
+  },
 ];

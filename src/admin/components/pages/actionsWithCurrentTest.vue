@@ -1,7 +1,7 @@
 <template lang="pug">
   .container
     .actionsCurrentTest-wraper  
-      .backToTest(  v-if="isTestOpen"  @click="backToTest") Back
+      .backToTest(  v-if="isTestOpen"  @click="backToTest") back
       CURRENT_LEVEL_IN_TEST_GROUP(:currentLevel="this.currentLevelInTestGroup" v-if="isCurrentLevelOpen")
       CURRENT_TEST_GROUP(
         v-if="isTestOpen" 
@@ -119,6 +119,35 @@ export default {
 <style lang="postcss" scoped>
 .backToTest {
   cursor: pointer;
-  font-weight: bold;
+  color: transparent;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  margin-bottom: 10px;
+  /* font-weight: bold; */
+  &:before {
+    content: "";
+    background: svg-load("back.svg", fill= "#db9600") center center no-repeat /
+      contain;
+    width: 30px;
+    height: 30px;
+    opacity: initial;
+    position: absolute;
+    /* top: 15%; */
+    /* left: 63%; */
+  }
+  &:hover {
+    &:before {
+      content: "";
+      background: svg-load("back.svg", fill= "#edb947") center center no-repeat /
+        contain;
+      width: 30px;
+      height: 30px;
+      opacity: initial;
+      position: absolute;
+      /* top: 15%; */
+      /* left: 63%; */
+    }
+  }
 }
 </style>

@@ -18,6 +18,14 @@
       //-       label(for="question_img").question__change_img(v-if="questionPhotoURl && !editQuestion") Заменить
       //- button( v-if="!showInputAnswer" type="button" @click="addQuestion") Добавить вопрос
       //- hr
+      .answer_new
+        .answer_new__data
+          .answer_new__topic-wrap
+            label.answer_new__topic Введите текст ответа
+          .answer_new__input-wrap
+            input(type="text" v-model="currentAnswer").answer_new__input
+            .answer_new__actions
+              button.answer_new__btn(@click="addAnswer").answer_new__btn Добавить ответ
       .answers__title-wrap
         h2.asnwers__title Список ответов
       .answers__wrapper()
@@ -30,43 +38,8 @@
             v-on:emitShowAnswerImg="showAnswerImg"
             v-on:emitDropAnswerURL="resetAnswerUrl"
           )
-          //- li.answers__item 
-          //-   //- pre {{editAnswer}}
-          //-   .answer__text-wrap
-          //-     input(type="text" v-model="answer.text"  ).answers__text
-          //-   .answer__correct-wrap
-          //-     input(type="checkbox" name="isCorrect" v-bind:value="answer.text" id="isCorrect" @change="setCorrectAnswer").answer__correct 
-          //-   .answer__actions()
-          //-     .answer__actions-edit(v-if="!editAnswer")
-          //-     .answer__actions-save(v-if="editAnswer" @click="changeAnswer(answer)")
-          //-     .answer__actions-photo( @click="showAnswerImg(answer)")
-          //-     .answer__actions-delete 
-
-            //- input(type="text" v-model="answer.text" ).answers__text
-            //- button(type="button" @click="editAnswer=false") Редактировать
-            //-   button(type="button" @click="saveChangedAnswer(id+1,answer.text)") Сохранить
-            //- input(type="checkbox" name="isCorrect" v-bind:value="answer.text" id="isCorrect" @change="setCorrectAnswer")
-
-
-
-          //-   div.answer__with_img(v-if="answer.imgURL")
-          //-     label Изображение
-          //-     input(type="file" @change="loadAnswerPhoto" accept="image/*" id="answer_img")
-          //-     label(for="answer_img" v-if="answerPhotoURl") Заменить
-          //-     br
-          //-     //- .question_avatar(:style="{'background-image':`url(${answerPhotoURl})`}")
-          //-     div(v-if="answer.imgURL").question_img 
-          //-       .question_avatar(:style="{'background-image':`url(${answer.imgURL})`}")
-          //- hr
-
-      .answer_new
-        .answer_new__data
-          .answer_new__topic-wrap
-            label.answer_new__topic Введите текст ответа
-          .answer_new__input-wrap
-            input(type="text" v-model="currentAnswer").answer_new__input
-            .answer_new__actions
-              button.answer_new__btn(@click="addAnswer").answer_new__btn Добавить ответ
+         
+      
       //- .answer()
       //-   label.answer__label Введите ответ
       //-   input(type="text" v-model="currentAnswer")
@@ -504,9 +477,10 @@ export default {
 }
 .answer_new {
   display: flex;
+  margin-bottom: 30px;
 }
 .answers__wrapper {
-  min-height: 200px;
+  /* min-height: 200px; */
 }
 .answer_new__input-wrap {
   display: flex;

@@ -470,6 +470,13 @@ export default {
 .aa {
   text-align: center;
 }
+.answers__title {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #414c63;
+  margin-bottom: 1.875rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
 </style>
 
 // questions: {

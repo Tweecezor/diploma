@@ -50,9 +50,9 @@ export default {
   width: 85%;
   height: 500px;
   background-color: white;
-  border: 1px solid black;
+  border: 2px solid black;
 }
 .settings__item {
-  border-bottom: 1px solid black;
+  border-bottom: 2px solid black;
 }
 </style>

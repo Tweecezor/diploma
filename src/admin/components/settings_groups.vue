@@ -65,14 +65,14 @@ export default {
 .groups__item {
   min-height: 380px;
   padding: 15px 10px;
-  width: calc((100%-2%) / 2);
+  width: calc((100%-1%) / 2);
   margin-right: 1%;
   margin-bottom: 5%;
   background: white;
   box-shadow: 4px 3px 20px rgba(0, 0, 0, 0.07);
   position: relative;
   padding-bottom: 50px;
-  &:nth-child(3n) {
+  &:nth-child(2n) {
     margin-right: 0px;
   }
   @include tablets {
@@ -97,7 +97,11 @@ export default {
   }
 }
 .groups__add_new {
-  background: linear-gradient(to left, #ea7400 0%, #f29400 100%);
+  /* background: linear-gradient(to left, #ea7400 0%, #f29400 100%); */
+  background: linear-gradient(190deg, #db9600 0%, #edb947);
+  &:hover {
+    background: linear-gradient(to left, #db9600 0%, #edb947);
+  }
   /* width: 30%; */
 }
 .groups__new {
@@ -154,5 +158,16 @@ export default {
     width: 9.875rem;
     text-align: center;
   }
+}
+input[type="text"] {
+  &:hover {
+    border-bottom: 2px solid #edb947;
+  }
+  &:active {
+    border-bottom: 2px solid #edb947;
+  }
+}
+input[type="text"] {
+  border-bottom: 2px solid #000;
 }
 </style>

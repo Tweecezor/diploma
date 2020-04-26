@@ -89,15 +89,17 @@ export default {
 
 .btn {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 10px 20px;
-  background: linear-gradient(to right, #ea7400 0%, #f29400 100%);
+  /* background: linear-gradient(to right, #ea7400 0%, #f29400 100%); */
+  background: linear-gradient(to right, #db9600 0%, #edb947 100%);
   border-radius: 25px;
   color: white;
   border: none;
   cursor: pointer;
   &:hover {
-    background: linear-gradient(to left, #ea7400 0%, #f29400 100%);
+    /* background: linear-gradient(to left, #ea7400 0%, #f29400 100%); */
+    background: linear-gradient(to left, #db9600 0%, #edb947 100%);
   }
 }
 
@@ -133,6 +135,22 @@ export default {
 .admin__content {
   position: relative;
   z-index: 5;
+}
+input[type="text"] {
+  border-bottom: 2px solid #000;
+}
+input[type="text"]:disabled {
+  &:hover {
+    border-bottom: 2px solid #000;
+  }
+}
+input[type="text"] {
+  &:hover {
+    border-bottom: 2px solid #edb947;
+  }
+  &:active {
+    border-bottom: 2px solid #edb947;
+  }
 }
 </style>
 

@@ -44,7 +44,8 @@ export default {
 @import url("../../styles/mixins.pcss");
 
 .header {
-  background-image: linear-gradient(to right, #3e3e59 0%, #454573 100%);
+  /* background-image: linear-gradient(to right, #3e3e59 0%, #454573 100%); */
+  background-image: linear-gradient(90deg, #373556 0, #434573);
 }
 .header-container {
   display: flex;
