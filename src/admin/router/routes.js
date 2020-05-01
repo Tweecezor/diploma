@@ -50,4 +50,12 @@ export default [
     path: "/publicTests",
     component: () => import("./../components/tests_public"),
   },
+  {
+    path: "/passingTest",
+    component: () => import("./../components/passing_test"),
+  },
+  {
+    path: "/completedTest",
+    component: () => import("./../components/completed_test"),
+  },
 ];

@@ -78,6 +78,7 @@ export default {
         name: this.studentName,
         surname: this.studentSurname,
         thirdname: this.studentThirdname,
+        fullName: `${this.studentSurname} ${this.studentName} ${this.studentThirdname}`,
         group_id: this.group.group_id,
         student_id: this.group.studentsInGroup.length + 1
       };

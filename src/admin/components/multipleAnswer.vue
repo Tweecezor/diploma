@@ -3,7 +3,7 @@
     //- pre {{editQuestion}}
     //- div МНОЖЕСТВЕННЫЙ ОТВЕТ 
     //- form(@submit.prevent="subitQuestion").question
-    .question__wrapper
+    .question
       //- .question__title-wrapper()
       //-   label(for="question__title"  v-model="question_title").question__label Введите вопрос
       //-   input(type="text" :disabled="editQuestion" v-model="currentQuestion").question__titile
@@ -50,8 +50,10 @@
       //-   //-   .question_avatar(:style="{'background-image':`url(${this.answerPhotoURl})`}")
       //-   button(type="button" @click="addAnswer").addAnswer__button Добавить ответ
 
-
-    button( @click="subitQuestion").save Сохранить вопрос
+    .actions__button-wrap
+      button(@click="endWorkWithQUestion").actions__button-end Завершить
+      button(@click="subitQuestion").save.btn Создать вопрос 
+    //- button( @click="subitQuestion").save Сохранить вопрос
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
@@ -89,6 +91,10 @@ export default {
     };
   },
   methods: {
+    endWorkWithQUestion() {
+      this.$emit("emitEndWork");
+    },
+
     resetAnswerUrl() {
       this.$emit("resetAnswerUrl");
     },
@@ -274,6 +280,13 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+.wrapper- {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .wrapper {
   width: 100%;
   /* height: 300px; */
@@ -283,6 +296,7 @@ export default {
 .question {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
 }
 .question__title-wrapper {
   display: flex;
@@ -294,8 +308,8 @@ export default {
   justify-self: flex-end;
 }
 .save {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  /* margin-top: 20px;
+  margin-bottom: 20px; */
 }
 .question__type {
   margin-bottom: 10px;
@@ -494,5 +508,14 @@ export default {
   display: flex;
   position: relative;
   margin-top: 10px;
+}
+
+.actions__button-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.actions__button-end {
+  margin-right: 10px;
 }
 </style>

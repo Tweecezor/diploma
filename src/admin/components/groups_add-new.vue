@@ -82,7 +82,7 @@ export default {
         name: this.student_name,
         surname: this.student_surname,
         thirdname: this.student_thirdname,
-        fullName: `${this.student_name} ${this.student_surname} ${this.student_thirdname}`,
+        fullName: `${this.student_surname} ${this.student_name} ${this.student_thirdname}`,
         group_id: this.group_id,
         student_id: this.studentsArray.length + 1
       };

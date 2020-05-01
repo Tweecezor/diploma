@@ -1,7 +1,296 @@
 export default {
   namespaced: true,
   state: {
-    questions: [],
+    questions: [
+      {
+        type: "oneAnswer",
+        question: {
+          text: "1",
+          img: "",
+          question_id: 1,
+        },
+        answers: [
+          {
+            text: "1",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "1",
+          img: "",
+          question_id: 2,
+        },
+        answers: [
+          {
+            text: "1",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "2",
+          img: "",
+          question_id: 3,
+        },
+        answers: [
+          {
+            text: "2",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "3",
+          img: "",
+          question_id: 4,
+        },
+        answers: [
+          {
+            text: "1",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "3",
+          img: "",
+          question_id: 5,
+        },
+        answers: [
+          {
+            text: "2",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "12",
+          img: "",
+          question_id: 6,
+        },
+        answers: [
+          {
+            text: "qw",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "qwd",
+          img: "",
+          question_id: 7,
+        },
+        answers: [
+          {
+            text: "12",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "qwef",
+          img: "",
+          question_id: 8,
+        },
+        answers: [
+          {
+            text: "ewf",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "12",
+          img: "",
+          question_id: 9,
+        },
+        answers: [
+          {
+            text: "qwd",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "qd",
+          img: "",
+          question_id: 10,
+        },
+        answers: [
+          {
+            text: "we",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "wef",
+          img: "",
+          question_id: 11,
+        },
+        answers: [
+          {
+            text: "wef",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "12",
+          img: "",
+          question_id: 12,
+        },
+        answers: [
+          {
+            text: "wqd",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "123",
+          img: "",
+          question_id: 13,
+        },
+        answers: [
+          {
+            text: "eqw",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "qwd",
+          img: "",
+          question_id: 14,
+        },
+        answers: [
+          {
+            text: "qwd",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "qwe",
+          img: "",
+          question_id: 15,
+        },
+        answers: [
+          {
+            text: "wef",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+      {
+        type: "oneAnswer",
+        question: {
+          text: "wef",
+          img: "",
+          question_id: 16,
+        },
+        answers: [
+          {
+            text: "wef",
+            correct: true,
+            imgURL: "",
+            answer_id: 1,
+          },
+        ],
+        level_id: 1,
+        test_id: 1,
+      },
+    ],
   },
   actions: {
     addNew(store, newQuestion) {

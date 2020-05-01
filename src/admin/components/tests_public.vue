@@ -1,16 +1,17 @@
 <template lang="pug">
   .container
-    .wrapper__container
-      .admin__content
-        //- pre {{tests}}
+    .wrap
+      .admin__content(v-if="!opened")
+        //- pre {{questions}}
         //- pre {{groups}}
         //- pre {{currentTestsList}}
+        //- pre {{studentsInCurrentGroup}}
+        //- pre {{filteredQuestions}}
         .group_breadcrumbs
           ul.group_breadcrumbs__list
             li.group_breadcrumbs_item.breadcrumb(v-for="item in groups")
               .breadcrumb__text-wrap(@click="filterTestByGroup(item)") 
                 .breadcrumb__text {{item.groupName}}
-        
         .test__content
           ul.test__list
             li.test__item(v-for="item in currentTestsList")
@@ -32,6 +33,13 @@
                   input(type="text" v-model="item.group" disabled).test__group-input.test__input
                 //- .created-test__group {{item.group}}
               button(@click="openTest(item)").btn Открыть
+      TEST_PREVIEW(
+        v-if="opened"
+        :currentTest="currentTest"
+        :studentsInCurrentGroup="studentsInCurrentGroup"
+        :questions="filteredQuestions"
+      )
+
         //- div(v-if="$route.meta.public")
         //-   router-view
         //-   tooltips
@@ -44,22 +52,45 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import TEST_PREVIEW from "./tests_preview_public";
+// import PASSING_TEST from "./passing_test";
 export default {
+  components: {
+    TEST_PREVIEW
+    // PASSING_TEST
+  },
   data() {
     return {
-      currentTestsList: []
+      currentTestsList: [],
+      studentsInCurrentGroup: [],
+      currentTest: "",
+      opened: false,
+      filteredQuestions: ""
     };
   },
   methods: {
     openTest(item) {
       console.log(item);
+      this.currentTest = item;
+      console.log();
       let studentsInCurrentGroup;
       this.groups.filter(group =>
         group.groupName === item.group
           ? (studentsInCurrentGroup = group.studentsInGroup)
           : ""
       );
-      console.log(studentsInCurrentGroup);
+      this.studentsInCurrentGroup = studentsInCurrentGroup;
+      console.log(this.studentsInCurrentGroup);
+      this.opened = true;
+      this.filteredQuestions = this.filterQuestionsByTest(item);
+    },
+    filterQuestionsByTest(currentTest) {
+      console.log(currentTest);
+      let filteredQuestionsByTest = this.questions.filter(item =>
+        item.test_id === currentTest.id ? item : ""
+      );
+      console.log(filteredQuestionsByTest);
+      return filteredQuestionsByTest;
     },
     filterTestByGroup(group) {
       console.log(group);
@@ -158,5 +189,18 @@ export default {
   border-bottom: 2px solid #414c63;
   padding: 0 0.3125rem 0.625rem;
   margin-bottom: 1.875rem;
+}
+.current_test_info {
+  display: flex;
+  width: 100%;
+  border: 1px solid black;
+  padding: 10px;
+}
+.current_test_info__desc-wrap {
+  width: 55%;
+  margin-right: 5%;
+}
+.current_test_actions-wrap {
+  width: 45%;
 }
 </style>

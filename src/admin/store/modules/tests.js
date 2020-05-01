@@ -1,7 +1,14 @@
 export default {
   namespaced: true,
   state: {
-    tests: [],
+    tests: [
+      {
+        id: 1,
+        level: "3",
+        name: "Тут название теста",
+        group: "ИДБ 16 01",
+      },
+    ],
   },
   actions: {
     async addNew(store, obj) {

@@ -2,6 +2,7 @@
   .container
     //- pre {{groups}}
     //- pre {{tests}}
+    //- pre {{questions}}
     .wrapper-test
       //- CURRENT_LEVEL_IN_TEST_GROUP(:currentLevel="this.currentLevelInTestGroup" v-if="isCurrentLevelOpen")
       //- CURRENT_TEST_GROUP(@showAllQuestionsInGroup="showAllQuestionsInGroup" v-if="isTestOpen" :currentTestGroup="this.currentTestGroup" :levelsCount="+this.currentTestGroup.level" @addNewQuestion="addQuestion")

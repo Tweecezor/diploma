@@ -7,8 +7,18 @@ export default {
     showAddGroup: false,
     currentLevelInTestGroup: "",
     currentTestGroup: "",
+    questionsForCurrentPassingTest: [],
+    completedTestQuestions: [],
   },
   actions: {
+    setCompletedTestQuestions(store, questions) {
+      store.commit("SET_COMPLETED_TEST_QUESTIONS", questions);
+    },
+
+    setQuestionsForCurrentPassingTest(store, questions) {
+      store.commit("SET_QUESTIONS_FOR_CURRENT_PASSING_TEST", questions);
+    },
+
     setCurrentTestGroup(store, testGroup) {
       store.commit("SET_CURRENT_TEST_GROUP", testGroup);
     },
@@ -34,6 +44,14 @@ export default {
     },
   },
   mutations: {
+    SET_COMPLETED_TEST_QUESTIONS(state, questions) {
+      state.completedTestQuestions = questions;
+    },
+
+    SET_QUESTIONS_FOR_CURRENT_PASSING_TEST(state, questions) {
+      state.questionsForCurrentPassingTest = questions;
+    },
+
     SET_CURRENT_TEST_GROUP(state, testGroup) {
       state.currentTestGroup = testGroup;
     },

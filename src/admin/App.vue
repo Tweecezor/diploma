@@ -120,6 +120,8 @@ export default {
 .wrapper__container {
   /* background: url("../images/content/background-main.jpg") no-repeat; */
   background: #f7f8f9;
+  /* background: #dbdbdb; */
+
   min-height: 100vh;
   background-size: cover;
   position: relative;
@@ -129,7 +131,7 @@ export default {
     width: 100%;
     height: 100%;
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.7);
+    /* background-color: rgba(255, 255, 255, 0.7); */
   }
 }
 .admin__content {

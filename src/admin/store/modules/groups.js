@@ -1,7 +1,23 @@
 export default {
   namespaced: true,
   state: {
-    groups: [],
+    groups: [
+      {
+        group_id: 1,
+        groupName: "ИДБ 16 01",
+        headmanEmail: "test@mail.ru",
+        studentsInGroup: [
+          {
+            name: "Никита",
+            surname: "Еремеев",
+            thirdname: "Владиславович",
+            fullName: "Еремеев Никита Владиславович",
+            group_id: 1,
+            student_id: 1,
+          },
+        ],
+      },
+    ],
   },
   actions: {
     addNewGroup(store, newGroup) {

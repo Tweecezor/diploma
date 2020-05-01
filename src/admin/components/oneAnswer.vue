@@ -60,8 +60,10 @@
       //- input(type="file" @change="loadAnswerPhoto" accept="image/*" id="answer_img").input_question_img 
       //- label(for="answer_img" v-if="answerWithPhoto" ).question_img
       //-   .question_avatar(:style="{'background-image':`url(${this.answerPhotoURl})`}")
-        
-    button(type="submit" @click="subitQuestion").save Сохранить вопрос
+    .actions__button-wrap
+      button(@click="endWorkWithQUestion").actions__button-end Завершить
+      button(@click="subitQuestion").save.btn Создать вопрос 
+    //- button(type="submit" @click="subitQuestion").save Сохранить вопрос
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
@@ -99,6 +101,10 @@ export default {
     };
   },
   methods: {
+    endWorkWithQUestion() {
+      this.$emit("emitEndWork");
+    },
+
     resetAnswerUrl() {
       this.$emit("resetAnswerUrl");
     },
@@ -280,6 +286,12 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+.wrapper- {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .wrapper {
   width: 100%;
   /* height: 300px; */
@@ -289,6 +301,7 @@ export default {
 .question {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
 }
 .question__title-wrapper {
   display: flex;
@@ -300,10 +313,10 @@ export default {
   justify-self: flex-end;
 }
 .save {
-  margin-top: 20px;
+  /* margin-top: 20px;
   margin-bottom: 20px;
   padding: 0;
-  color: darkblue;
+  color: darkblue; */
 }
 .question__type {
   margin-bottom: 10px;
@@ -509,6 +522,14 @@ export default {
   display: flex;
   position: relative;
   margin-top: 10px;
+}
+.actions__button-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.actions__button-end {
+  margin-right: 10px;
 }
 .answer_new__btn {
   /* display: -webkit-box;

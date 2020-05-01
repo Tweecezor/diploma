@@ -45,6 +45,7 @@
             v-on:resetAnswerUrl="dropAnswerURL"
             v-on:showCurrentAnswerIMG="setAnswerURL"
             v-on:emitResetData="resetData"
+            v-on:emitEndWork="subitQuestion"
             )
           MULTIPLE_ANSWER(
             :prevAnswerPhotoURl="prevAnswerPhotoURl" :answerPhotoURl="answerPhotoURl" :questionPhotoURl="questionPhotoURl" :currentQuestion="currentQuestion" :currentLevel="currentLevel"
@@ -52,13 +53,18 @@
             v-on:resetAnswerUrl="dropAnswerURL"
             v-on:showCurrentAnswerIMG="setAnswerURL"
             v-on:emitResetData="resetData"
+            v-on:emitEndWork="subitQuestion"
             )
-          .current_level__btn-wrap
-            button(@click="subitQuestion").save.btn Завершить
+          //- .current_level__btn-wrap
+          //-   button(@click="subitQuestion").save.btn Завершить
         .current_level-data--hand(v-if="typeOfQuestion === 'handwritingAnswer'")
-          HANDWRITING_ANSWER(:currentLevel="currentLevel" )
-          .current_level__btn-wrap
-            button(@click="subitQuestion").save.btn Завершить
+          HANDWRITING_ANSWER(
+            :currentLevel="currentLevel" :questionPhotoURl="questionPhotoURl" :currentQuestion="currentQuestion"
+            v-on:emitResetData="resetData"  
+            v-on:emitEndWork="subitQuestion"
+          )
+          //- .current_level__btn-wrap
+          //-   button(@click="subitQuestion").save.btn Завершить
 </template>
 <script>
 import { mapActions } from "vuex";
@@ -77,7 +83,7 @@ export default {
   },
   data() {
     return {
-      typeOfQuestion: "multipleAnswer",
+      typeOfQuestion: "oneAnswer",
       currentQuestion: "",
       questionPhotoURl: "",
       answerPhotoURl: "",

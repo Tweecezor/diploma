@@ -18,6 +18,9 @@
     //-           label(for="question_img").question__change_img(v-if="questionPhotoURl && !editQuestion") Заменить
     //-     button( v-if="!showInputAnswer" type="button" @click="addQuestion").addQuestion Добавить вопрос
     //-     hr
+    //- pre {{currentQuestion}}
+    //- pre {{questionPhotoURl}}
+    //- pre {{currentLevel}}
     .keywords__add
       .keywords__add_label-wrap
         label(for="input-tag").keywords__add_label Ключевое слово
@@ -29,22 +32,26 @@
       ul.addWorks__tags-list()
         li(v-for="(item,index) in keywordsArray" v-if="keywordsArray.length!=0 && item!=''" ).addWorks__tags-item {{item}}
           .deleteTag(@click="removeKeyword(index)") x
-    button(@click="subitQuestion").save Сохранить вопрос
+    .actions__button-wrap
+      button(@click="endWorkWithQUestion").actions__button-end Завершить
+      button(@click="subitQuestion").save.btn Создать вопрос
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
 export default {
   props: {
-    currentLevel: Object
+    currentLevel: Object,
+    currentQuestion: String,
+    questionPhotoURl: String
   },
   data() {
     return {
       // correct: false,
 
-      questionPhotoURl: "",
+      // questionPhotoURl: "",
       questionWithPhoto: false,
       question: {},
-      currentQuestion: "",
+      // currentQuestion: "",
       question_title: "",
       typeOfQuestion: "",
       currentQuestion_id: "",
@@ -56,8 +63,22 @@ export default {
     };
   },
   methods: {
+    endWorkWithQUestion() {
+      this.$emit("emitEndWork");
+    },
+
     addKeyword() {
       if (this.keyword) {
+        // console.log(this.keyword);
+        console.log(this.keyword.length);
+        while (this.keyword.lastIndexOf(" ") != -1) {
+          // console.log("empty");
+          this.keyword = this.keyword.slice(0, this.keyword.length - 1);
+        }
+        // console.log(this.keyword.length);
+        // this.keyword = this.keyword.slice(0, this.keyword.length - 1);
+        // console.log(this.keyword.length);
+        console.log(this.keyword.length);
         this.keywordsArray.push(this.keyword);
         this.keyword = "";
       } else {
@@ -138,10 +159,10 @@ export default {
     //   console.log(e.target.checked);
     // },
     resetData() {
-      this.questionPhotoURl = "";
+      // this.questionPhotoURl = "";
       this.questionWithPhoto = false;
       this.question = {};
-      this.currentQuestion = "";
+      // this.currentQuestion = "";
       this.question_title = "";
       this.typeOfQuestion = "";
       this.currentQuestion_id = "";
@@ -153,18 +174,15 @@ export default {
     },
     subitQuestion() {
       console.log(this.keywordsArray);
-      // if (this.isCorrectAnswerSet) {
-      // console.log("Нудная id для вопроса");
+
       let qId = this.question_id(
         this.currentLevel.levelId,
         this.currentLevel.testid
       );
-      // console.log("qID = " + qId);
+
       if (qId === "empty") {
-        // console.log("TRUE TRUE TRUE");
         this.currentQuestion_id = 1;
       } else {
-        // console.log(qId);
         this.currentQuestion_id = qId + 1;
       }
 
@@ -183,6 +201,7 @@ export default {
       console.log(questionWithKeywords);
       this.addNew(questionWithKeywords);
       this.resetData();
+      this.$emit("emitResetData");
 
       //   this.changeCurrentLevelStatus(false);
       // } else {
@@ -278,8 +297,8 @@ export default {
   justify-self: flex-end;
 }
 .save {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  /* margin-top: 20px;
+  margin-bottom: 20px; */
 }
 .question__type {
   margin-bottom: 10px;
@@ -337,7 +356,7 @@ export default {
   top: 4px;
 }
 .addWorks__tags-list-wrap {
-  margin-bottom: 30px;
+  /* margin-bottom: 10px; */
 }
 .addWorks__label-wrap {
   display: flex;
@@ -348,5 +367,13 @@ export default {
 }
 .keywords__input {
   margin-bottom: 20px;
+}
+.actions__button-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.actions__button-end {
+  margin-right: 10px;
 }
 </style>
