@@ -14,7 +14,7 @@
         .answers__actions(v-if="!editMode && !editPhotoMode")
             .answers__actions_correct(@click="editMode = true") 
             .answer__actions-photo(@click="setAnswerImgUrl(answer)")
-            .answers__actions_trash(@click="deleteQuestion") 
+            .answers__actions_trash(@click="deleteCurrentAnswer") 
         .answers__actions(v-if="editMode")
           .answers__actions_update(@click="updateCurrentAnswer") 
           .answers__actions_cancel(@click="cancelUpdate") 
@@ -48,7 +48,7 @@ export default {
     question_id: Number,
     answerLength: Number,
     typeOfQuestion: String,
-    answerImgUrl: String
+    answerImgUrl: String,
   },
   data() {
     return {
@@ -61,17 +61,18 @@ export default {
       showAImg: false,
       prevCorrectAnswer: {
         correct: this.answer.correct,
-        text: this.answer.text
+        text: this.answer.text,
       },
       newImg: false,
-      prevAnswerImgUrl: ""
+      prevAnswerImgUrl: "",
     };
   },
   methods: {
     ...mapActions("questions", [
       "changeAnswerStatus",
       "updateAnswer",
-      "addNewAnswer"
+      "addNewAnswer",
+      "deleteAnswer",
     ]),
     cancelImgUpdate() {
       console.log("cancel");
@@ -88,7 +89,7 @@ export default {
         level_id: this.level_id,
         test_id: this.test_id,
         question_id: this.question_id,
-        imgURL: this.answerImgUrl
+        imgURL: this.answerImgUrl,
       });
       // console.log(this.answerImgUrl);
       this.$emit("emitResetAnswerImgUrl");
@@ -107,11 +108,11 @@ export default {
           text: this.newAnswer,
           correct: false,
           imgURL: this.newAnswerImgURL,
-          answer_id: this.answerLength + 1
+          answer_id: this.answerLength + 1,
         },
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id
+        question_id: this.question_id,
       };
       console.log(newAnswer);
       this.addNewAnswer(newAnswer);
@@ -136,7 +137,15 @@ export default {
     deleteImg() {
       this.currentAnswer.imgURL = "";
     },
-    deleteQuestion() {},
+    deleteCurrentAnswer() {
+      console.log(this.currentAnswer);
+      this.deleteAnswer({
+        answer_id: this.currentAnswer.answer_id,
+        level_id: this.level_id,
+        test_id: this.test_id,
+        question_id: this.question_id,
+      });
+    },
     updateCurrentAnswer() {
       this.updateAnswer({
         text: this.currentAnswer.text,
@@ -145,7 +154,7 @@ export default {
         level_id: this.level_id,
         test_id: this.test_id,
         question_id: this.question_id,
-        imgURL: this.currentAnswer.imgURL
+        imgURL: this.currentAnswer.imgURL,
       });
       this.editMode = !this.editMode;
       this.newImg = false;
@@ -157,7 +166,7 @@ export default {
         correct: this.prevCorrectAnswer.correct,
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id
+        question_id: this.question_id,
       });
       this.currentAnswer = { ...this.answer };
       this.editMode = !this.editMode;
@@ -175,16 +184,16 @@ export default {
         test_id: this.test_id,
         level_id: this.level_id,
         question_id: this.question_id,
-        type: this.typeOfQuestion
+        type: this.typeOfQuestion,
       });
-    }
+    },
   },
   watch: {
     answer: function(answer) {
       console.log(answer);
       this.currentAnswer = { ...this.answer };
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="postcss" scoped>

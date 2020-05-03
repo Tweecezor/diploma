@@ -9,8 +9,12 @@ export default {
     currentTestGroup: "",
     questionsForCurrentPassingTest: [],
     completedTestQuestions: [],
+    currentTestStudentData: {},
   },
   actions: {
+    setCurrentTestStudentData(store, studentData) {
+      store.commit("SET_CURRENT_TEST_STUDENT_DATA", studentData);
+    },
     setCompletedTestQuestions(store, questions) {
       store.commit("SET_COMPLETED_TEST_QUESTIONS", questions);
     },
@@ -44,6 +48,11 @@ export default {
     },
   },
   mutations: {
+    SET_CURRENT_TEST_STUDENT_DATA(state, studentData) {
+      state.currentTestStudentData = studentData;
+      console.log(state.currentTestStudentData);
+    },
+
     SET_COMPLETED_TEST_QUESTIONS(state, questions) {
       state.completedTestQuestions = questions;
     },

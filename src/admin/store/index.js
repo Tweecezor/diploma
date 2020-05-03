@@ -13,6 +13,7 @@ import tests from "./modules/tests";
 import questions from "./modules/questions";
 import helped from "./modules/helped";
 import groups from "./modules/groups";
+import results from "./modules/results";
 
 export default new Vuex.Store({
   modules: {
@@ -26,5 +27,6 @@ export default new Vuex.Store({
     questions,
     helped,
     groups,
+    results,
   },
 });

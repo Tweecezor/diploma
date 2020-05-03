@@ -27,8 +27,8 @@ export default [
     component: () => import("./../components/pages/test.vue"),
   },
   {
-    path: "/mySettings",
-    component: () => import("./../components/mySettings"),
+    path: "/showResult",
+    component: () => import("./../components/showResult"),
   },
   {
     path: "/adminSettings",

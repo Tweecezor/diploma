@@ -1,6 +1,7 @@
 <template lang="pug">
   li.answers__item.answer
     //- pre {{answerPhotoURl}}
+    //- pre {{answer}}
     .answer__text-wrap
       input(type="text" v-model="answer.text"  ).answers__text
     .answer__correct-wrap
@@ -8,7 +9,7 @@
     .answer__actions(v-if="!editAnswer")
       //- .answer__actions-edit(v-if="!editAnswer" @click="editAnswer = true")
       .answer__actions-photo( @click="showAnswerImg(answer)")
-      .answer__actions-delete 
+      .answer__actions-delete(@click="deleteCurrentAnswer(answer)")
     .answer__actions(v-if="editAnswer")
       .answer__actions-save( @click="changeAnswer(answer)")
       .answer__actions-cancel(@click="cancelChangeAnswer(answer)")
@@ -20,16 +21,20 @@ export default {
     answer: Object,
     answers: Array,
     answerPhotoURl: String,
-    prevAnswerPhotoURl: String
+    prevAnswerPhotoURl: String,
   },
   data() {
     return {
-      editAnswer: false
+      editAnswer: false,
     };
   },
   methods: {
+    deleteCurrentAnswer(answer) {
+      console.log(answer);
+      this.$emit("emitDeleteAnswer", answer);
+    },
     cancelChangeAnswer(answer) {
-      this.answers.forEach(item => {
+      this.answers.forEach((item) => {
         if (item.answer_id === answer.answer_id) {
           item.imgURL = this.prevAnswerPhotoURl;
         }
@@ -39,7 +44,7 @@ export default {
     },
     changeAnswer(answer) {
       console.log(answer);
-      this.answers.forEach(item => {
+      this.answers.forEach((item) => {
         if (item.answer_id === answer.answer_id) {
           item.imgURL = this.answerPhotoURl;
         }
@@ -71,8 +76,8 @@ export default {
       // this.isCorrectAnswerSet = true;
       // console.log(e.target.value);
       // console.log(e.target.checked);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -76,10 +76,10 @@ export default {
   components: {
     ONE_ANSWER,
     MULTIPLE_ANSWER,
-    HANDWRITING_ANSWER
+    HANDWRITING_ANSWER,
   },
   props: {
-    currentLevel: Object
+    currentLevel: Object,
   },
   data() {
     return {
@@ -88,13 +88,13 @@ export default {
       questionPhotoURl: "",
       answerPhotoURl: "",
       prevAnswerPhotoURl: "",
-      currentAnswer: ""
+      currentAnswer: "",
     };
   },
   methods: {
     ...mapActions("helped", [
       "changeCurrentTestStatus",
-      "changeCurrentLevelStatus"
+      "changeCurrentLevelStatus",
     ]),
     resetData() {
       this.currentQuestion = "";
@@ -159,8 +159,8 @@ export default {
     subitQuestion() {
       this.changeCurrentLevelStatus(false);
       this.changeCurrentTestStatus(true);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="postcss" scoped>

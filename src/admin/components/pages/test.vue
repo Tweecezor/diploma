@@ -80,7 +80,7 @@ export default {
     CURRENT_LEVEL_IN_TEST_GROUP,
     ALL_QUESTIONS_IN_GROUP,
     //
-    ACTIONS_WITH_CURRENT_TEST
+    ACTIONS_WITH_CURRENT_TEST,
   },
   data() {
     return {
@@ -92,8 +92,8 @@ export default {
       obj: {
         level: "3",
         name: "Тут название теста",
-        group: ""
-      }
+        group: "",
+      },
     };
   },
   methods: {
@@ -149,12 +149,12 @@ export default {
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus",
       "setCurrentLevelInTestGroup",
-      "setCurrentTestGroup"
+      "setCurrentTestGroup",
     ]),
     addNewTest() {
       const newTetsGroup = {
         id: this.tests.length + 1,
-        ...this.obj
+        ...this.obj,
       };
       this.addNew(newTetsGroup);
       this.showAddNew = false;
@@ -174,14 +174,14 @@ export default {
     addQuestion(obj) {
       console.log(obj);
       this.currentLevelInTestGroup = {
-        ...obj
+        ...obj,
       };
       console.log("my event !!");
       // this.isTestOpen = !this.isTestOpen;
       this.changeCurrentTestStatus(!this.isTestOpen);
       this.changeCurrentLevelStatus(!this.isCurrentLevelOpen);
       // this.isCurrentLevelOpen = !this.isCurrentLevelOpen;
-    }
+    },
   },
   mounted() {
     this.changeCurrentLevelStatus(false);
@@ -190,24 +190,24 @@ export default {
   },
   computed: {
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     ...mapState("tests", {
-      tests: state => state.tests
+      tests: (state) => state.tests,
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: state => state.isCurrentLevelOpen
+      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
     }),
     ...mapState("helped", {
-      isTestOpen: state => state.isTestOpen
+      isTestOpen: (state) => state.isTestOpen,
     }),
     ...mapState("helped", {
-      showQuestions: state => state.showQuestions
+      showQuestions: (state) => state.showQuestions,
     }),
     ...mapState("questions", {
-      questions: state => state.questions
-    })
-  }
+      questions: (state) => state.questions,
+    }),
+  },
 };
 </script>
 

@@ -92,207 +92,210 @@ export default {
         level_id: 1,
         test_id: 1,
       },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "12",
-          img: "",
-          question_id: 6,
-        },
-        answers: [
-          {
-            text: "qw",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "qwd",
-          img: "",
-          question_id: 7,
-        },
-        answers: [
-          {
-            text: "12",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "qwef",
-          img: "",
-          question_id: 8,
-        },
-        answers: [
-          {
-            text: "ewf",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "12",
-          img: "",
-          question_id: 9,
-        },
-        answers: [
-          {
-            text: "qwd",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "qd",
-          img: "",
-          question_id: 10,
-        },
-        answers: [
-          {
-            text: "we",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "wef",
-          img: "",
-          question_id: 11,
-        },
-        answers: [
-          {
-            text: "wef",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "12",
-          img: "",
-          question_id: 12,
-        },
-        answers: [
-          {
-            text: "wqd",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "123",
-          img: "",
-          question_id: 13,
-        },
-        answers: [
-          {
-            text: "eqw",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "qwd",
-          img: "",
-          question_id: 14,
-        },
-        answers: [
-          {
-            text: "qwd",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "qwe",
-          img: "",
-          question_id: 15,
-        },
-        answers: [
-          {
-            text: "wef",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
-      {
-        type: "oneAnswer",
-        question: {
-          text: "wef",
-          img: "",
-          question_id: 16,
-        },
-        answers: [
-          {
-            text: "wef",
-            correct: true,
-            imgURL: "",
-            answer_id: 1,
-          },
-        ],
-        level_id: 1,
-        test_id: 1,
-      },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "12",
+      //     img: "",
+      //     question_id: 6,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "qw",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "qwd",
+      //     img: "",
+      //     question_id: 7,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "12",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "qwef",
+      //     img: "",
+      //     question_id: 8,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "ewf",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "12",
+      //     img: "",
+      //     question_id: 9,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "qwd",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "qd",
+      //     img: "",
+      //     question_id: 10,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "we",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "wef",
+      //     img: "",
+      //     question_id: 11,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "wef",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "12",
+      //     img: "",
+      //     question_id: 12,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "wqd",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "123",
+      //     img: "",
+      //     question_id: 13,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "eqw",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "qwd",
+      //     img: "",
+      //     question_id: 14,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "qwd",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "qwe",
+      //     img: "",
+      //     question_id: 15,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "wef",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
+      // {
+      //   type: "oneAnswer",
+      //   question: {
+      //     text: "wef",
+      //     img: "",
+      //     question_id: 16,
+      //   },
+      //   answers: [
+      //     {
+      //       text: "wef",
+      //       correct: true,
+      //       imgURL: "",
+      //       answer_id: 1,
+      //     },
+      //   ],
+      //   level_id: 1,
+      //   test_id: 1,
+      // },
     ],
   },
   actions: {
+    deleteAnswer(store, deletedAnswer) {
+      store.commit("DELETE_ANSWER", deletedAnswer);
+    },
     addNew(store, newQuestion) {
       // console.log(newQuestion);
       store.commit("ADD_NEW_QUESTIONS", newQuestion);
@@ -318,6 +321,22 @@ export default {
     },
   },
   mutations: {
+    DELETE_ANSWER(state, deletedAnswer) {
+      // console.log(deletedAnswer);
+      // console.log(state.questions);
+      state.questions = state.questions.map((item) => {
+        if (
+          item.level_id === deletedAnswer.level_id &&
+          item.test_id === deletedAnswer.test_id
+        ) {
+          item.answers = item.answers.filter((answer) => {
+            return answer.answer_id != deletedAnswer.answer_id ? answer : "";
+          });
+        }
+        return item;
+      });
+      console.log(state.questions);
+    },
     CHANGE_KEYWORDS(state, newKeywordsArray) {
       state.questions.map((item) => {
         console.log(item);

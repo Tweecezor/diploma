@@ -67,10 +67,10 @@ export default {
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
     KEYWORDS_ANSWER,
-    CURRENT_QUESTION
+    CURRENT_QUESTION,
   },
   props: {
-    questions: Array
+    questions: Array,
   },
   data() {
     return {
@@ -84,7 +84,7 @@ export default {
       isTestOpen: false,
       currentQuestionID: 1,
       currentAnswerImgUrl: "",
-      breadcrumbs: []
+      breadcrumbs: [],
       // answerImgUrl: ""
     };
   },
@@ -92,7 +92,7 @@ export default {
     ...mapActions("helped", [
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus",
-      "changeShowQuestionsStatus"
+      "changeShowQuestionsStatus",
     ]),
     setCurrentQuestion() {
       this.item = this.questions[this.activeQuestion];
@@ -157,12 +157,12 @@ export default {
     closeSection() {
       this.changeShowQuestionsStatus(false);
       this.changeCurrentTestStatus(true);
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      showQuestions: state => state.showQuestions
-    })
+      showQuestions: (state) => state.showQuestions,
+    }),
   },
   created() {
     this.setCurrentQuestion();
@@ -174,7 +174,7 @@ export default {
     for (var i = 1; i < this.breadcrumbs.length; i++) {
       this.breadcrumbs[i].classList.remove("breadcrumb--active");
     }
-  }
+  },
 };
 </script>
 

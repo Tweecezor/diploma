@@ -4,14 +4,16 @@ mixin main-menu(mod)
       //- -var menu = ['Главная', 'Обо мне', 'Навыки', 'Работы', 'Отзывы', 'Связаться']
       //- each item in menu 
       li.main-menu__item
-        a(href="#main-section").main-menu__link Главная
+        a(href="#").main-menu__link Главная
+      //- li.main-menu__item
+      //-   a(href="#about-section").main-menu__link Обо мне
+      //- li.main-menu__item
+      //-   a(href="#skills-section").main-menu__link Навыки
       li.main-menu__item
-        a(href="#about-section").main-menu__link Обо мне
+        a(href="#").main-menu__link Тестирование
       li.main-menu__item
-        a(href="#skills-section").main-menu__link Навыки
-      li.main-menu__item
-        a(href="#works-section").main-menu__link Работы
-      li.main-menu__item
-        a(href="#reviews").main-menu__link Отзывы
-      li.main-menu__item
-        a(href="#contact-section").main-menu__link Связаться
+        a(href="admin").main-menu__link Панель администратора
+      //- li.main-menu__item
+      //-   a(href="#reviews").main-menu__link Отзывы
+      //- li.main-menu__item
+      //-   a(href="#contact-section").main-menu__link Связаться

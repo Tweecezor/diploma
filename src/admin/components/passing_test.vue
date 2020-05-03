@@ -1,48 +1,48 @@
 <template lang="pug">
   .container
-    .passing_test__breadcrumbs-wrap
-      ul.passing_test__breadcrumbs-list
-        li.passing_test__breadcrumbs-item.breadcrumb( ref="breadcrumb" v-for="(question,pos) in questions" @click="")
-          .breadcrumb__content(@click="changeCurrentQuestion($event,question,pos)") {{pos+1}}
-    //- pre {{copyQuestions}}
-    //- pre {{activeQuestion}}
-    //- .d(v-for="item in copyQuestions")
-    //-   pre {{item}}
-    //- hr
-    //- pre {{questionsWithUsersAnswers}}
-    //- pre {{currentQuestion}}
-    //- pre {{activeQuestion}}
-    //- pre {{questions.length}}
-    .passing_test__question-wrap
-      .passing_test__question.question
-        .question__text-wrap
-          p.question__text {{currentQuestion.question.text}}
-        .question__img-wrap(v-if="currentQuestion.question.img")
-          .question__img(:style="{'background-image':`url(${currentQuestion.question.img})`}")
-      .passing_test__answers
-        .passing_test_answers_label Варианты ответов
-        MULTY_ANSWER(
-          v-if="currentQuestion.type==='multipleAnswer'"
-          :question_id="currentQuestion.question.question_id"
-          :answers="currentQuestion.answers"
-          v-on:changeAnswer="setAnswerWithUsersSelect_multy"
-        )
-        ONE_ANSWER(
-          v-if="currentQuestion.type==='oneAnswer'"
-          :question_id="currentQuestion.question.question_id"
-          :answers="currentQuestion.answers"
-           v-on:changeAnswer_one="setAnswerWithUsersSelect_one"
-        )
-        HANDWRITING_ANSWER( 
-          v-if="currentQuestion.type==='handwritingAnswer'"
-          :keywords="currentQuestion.keywordsArray"
-          :question_id="currentQuestion.question.question_id"
-          :userHandwriteAnswer="currentQuestion.userHandwriteAnswer"
-          v-on:saveHandwrite="saveUsersHandwriteAnswer"
-        )
-      .passing_test__answers_next-wrap
-        button(type="button" @click="completeTest" v-if="activeQuestion == questions.length-1").passing_test__answers_next.btn Завершить тестирование
-        button(type="button" @click="setNextQuestion" v-else).passing_test__answers_next.btn Следующий вопрос
+    //- pre {{currentStudentData}}
+    TEST_RESULT(
+      v-if="showResult"
+      :countOfCorrect="countOfCorrect"
+      :countOfQuestions="questions.length"
+      :finalMark="finalMark"
+      v-on:showUsersAnswers="showAnswers"
+    )
+    .passing_test(v-else)
+      .passing_test__breadcrumbs-wrap
+        ul.passing_test__breadcrumbs-list
+          li.passing_test__breadcrumbs-item.breadcrumb( ref="breadcrumb" v-for="(question,pos) in questions" @click="")
+            .breadcrumb__content(@click="changeCurrentQuestion($event,question,pos)") {{pos+1}}
+      .passing_test__question-wrap
+        .passing_test__question.question
+          .question__text-wrap
+            p.question__text {{currentQuestion.question.text}}
+          .question__img-wrap(v-if="currentQuestion.question.img")
+            .question__img(:style="{'background-image':`url(${currentQuestion.question.img})`}")
+        .passing_test__answers
+          .passing_test_answers_label Варианты ответов
+          MULTY_ANSWER(
+            v-if="currentQuestion.type==='multipleAnswer'"
+            :question_id="currentQuestion.question.question_id"
+            :answers="currentQuestion.answers"
+            v-on:changeAnswer="setAnswerWithUsersSelect_multy"
+          )
+          ONE_ANSWER(
+            v-if="currentQuestion.type==='oneAnswer'"
+            :question_id="currentQuestion.question.question_id"
+            :answers="currentQuestion.answers"
+            v-on:changeAnswer_one="setAnswerWithUsersSelect_one"
+          )
+          HANDWRITING_ANSWER( 
+            v-if="currentQuestion.type==='handwritingAnswer'"
+            :keywords="currentQuestion.keywordsArray"
+            :question_id="currentQuestion.question.question_id"
+            :userHandwriteAnswer="currentQuestion.userHandwriteAnswer"
+            v-on:saveHandwrite="saveUsersHandwriteAnswer"
+          )
+        .passing_test__answers_next-wrap
+          button(type="button" @click="completeTest" v-if="activeQuestion == questions.length-1").passing_test__answers_next.btn Завершить тестирование
+          button(type="button" @click="setNextQuestion" v-else).passing_test__answers_next.btn Следующий вопрос
 
 
     //- pre {{questions}}
@@ -53,34 +53,191 @@ import { mapActions, mapState } from "vuex";
 import MULTY_ANSWER from "./passing_test_-answer_multy";
 import ONE_ANSWER from "./passing_test-answer_one";
 import HANDWRITING_ANSWER from "./pasing_test-answer_hand";
+import TEST_RESULT from "./passing_test_result_public";
 export default {
   components: {
     MULTY_ANSWER,
     ONE_ANSWER,
-    HANDWRITING_ANSWER
+    HANDWRITING_ANSWER,
+    TEST_RESULT,
   },
   props: {},
   data() {
     return {
+      showResult: false,
       currentQuestion: "",
       activeQuestion: 0,
       usersAnswer: [], //массив из ответов студента. Изначально забиваем его на каждый вопрос ложным и потом меняем.
       questionsWithUsersAnswers: [],
       copyQuestions: "",
-      breadcrumbs: []
+      breadcrumbs: [],
+      countOfCorrect: 0,
+      // countOfQuestions: this.questions.length,
+      finalMark: "",
     };
   },
   methods: {
     ...mapActions("helped", ["setCompletedTestQuestions"]),
-    completeTest() {
-      console.log(this.copyQuestions);
+    ...mapActions("results", ["addNewResult"]),
+    calculateResult() {},
+    showAnswers() {
       this.setCompletedTestQuestions(this.copyQuestions);
       this.$router.push("/completedTest");
     },
+    completeTest() {
+      console.log(this.copyQuestions);
+      this.countOfCorrect = this.countCorrectAnswers();
+      console.log(this.countOfCorrect);
+      this.calc(this.countOfCorrect);
+      let studentResult = {
+        ...this.currentStudentData,
+        mark: this.finalMark,
+      };
+      console.log(studentResult);
+      this.showResult = true;
+      this.addNewResult(studentResult);
+      // this.setCompletedTestQuestions(this.copyQuestions);
+      // this.$router.push("/completedTest");
+    },
+    calculateMark(correct, all, half, mark, percentOfCorrect) {
+      if (correct < half) {
+        mark = 0;
+      }
+      if (correct == half) {
+        percentOfCorrect = (correct / all) * 100;
+        console.log(correct + " : precent of correct " + percentOfCorrect);
+        console.log("Оценка 25");
+        // mark = 25;
+      } else if (correct > half) {
+        percentOfCorrect = (correct / all) * 100;
+        console.log(correct + " : precent of correct " + percentOfCorrect);
 
+        if (55 < percentOfCorrect && percentOfCorrect <= 60) {
+          console.log("оценка 26");
+          mark += 1;
+        }
+        if (60 < percentOfCorrect && percentOfCorrect <= 65) {
+          console.log("оценка 27");
+          mark += 2;
+        }
+        if (65 < percentOfCorrect && percentOfCorrect <= 70) {
+          console.log("оценка 28");
+          mark += 3;
+        }
+        if (70 < percentOfCorrect && percentOfCorrect <= 75) {
+          console.log("оценка 29");
+          mark += 4;
+        }
+        if (75 < percentOfCorrect && percentOfCorrect <= 80) {
+          console.log("оценка 30");
+          mark += 5;
+        }
+        if (80 < percentOfCorrect && percentOfCorrect <= 85) {
+          console.log("оценка 31");
+          mark += 6;
+        }
+        if (85 < percentOfCorrect && percentOfCorrect <= 90) {
+          console.log("оценка 32");
+          mark += 7;
+        }
+        if (90 < percentOfCorrect && percentOfCorrect <= 95) {
+          console.log("оценка 33");
+          mark += 8;
+        }
+        if (95 < percentOfCorrect && percentOfCorrect <= 100) {
+          console.log("оценка 34");
+          mark += 9;
+        }
+      }
+      this.finalMark = mark;
+    },
+    calc(correct) {
+      let all = this.questions.length;
+      console.log(all);
+      let half = this.questions.length / 2;
+      half = Math.floor(half);
+      console.log(half + " = half");
+      console.log("correct = " + correct);
+      let mark = 0;
+      var percentOfCorrect;
+      switch (this.currentStudentData.test_level) {
+        case 1:
+          mark = 25;
+          this.calculateMark(correct, all, half, mark, percentOfCorrect);
+          break;
+        case 2:
+          mark = 35;
+          this.calculateMark(correct, all, half, mark, percentOfCorrect);
+          break;
+        case 3:
+          mark = 45;
+          this.calculateMark(correct, all, half, mark, percentOfCorrect);
+          break;
+      }
+      // this.calculateMark(correct, all, half, mark, percentOfCorrect);
+      // if (correct < half) {
+      //   mark = 0;
+      // }
+      // if (correct == half) {
+      //   percentOfCorrect = (correct / all) * 100;
+      //   console.log(correct + " : precent of correct " + percentOfCorrect);
+      //   console.log("Оценка 25");
+      //   mark = 25;
+      // } else if (correct > half) {
+      //   percentOfCorrect = (correct / all) * 100;
+      //   console.log(correct + " : precent of correct " + percentOfCorrect);
+
+      //   if (55 <= percentOfCorrect && percentOfCorrect <= 60) {
+      //     console.log("оценка 26");
+      //     mark = 26;
+      //   }
+      //   if (60 <= percentOfCorrect && percentOfCorrect <= 65) {
+      //     console.log("оценка 27");
+      //     mark = 27;
+      //   }
+      //   if (65 <= percentOfCorrect && percentOfCorrect <= 70) {
+      //     console.log("оценка 28");
+      //     mark = 28;
+      //   }
+      //   if (70 <= percentOfCorrect && percentOfCorrect <= 75) {
+      //     console.log("оценка 29");
+      //     mark = 29;
+      //   }
+      //   if (75 <= percentOfCorrect && percentOfCorrect <= 80) {
+      //     console.log("оценка 30");
+      //     mark = 30;
+      //   }
+      //   if (80 <= percentOfCorrect && percentOfCorrect <= 85) {
+      //     console.log("оценка 31");
+      //     mark = 31;
+      //   }
+      //   if (85 <= percentOfCorrect && percentOfCorrect <= 90) {
+      //     console.log("оценка 32");
+      //     mark = 32;
+      //   }
+      //   if (90 <= percentOfCorrect && percentOfCorrect <= 95) {
+      //     console.log("оценка 33");
+      //     mark = 33;
+      //   }
+      //   if (95 <= percentOfCorrect && percentOfCorrect <= 100) {
+      //     console.log("оценка 34");
+      //     mark = 34;
+      //   }
+      // }
+      // this.finalMark = mark;
+    },
+    countCorrectAnswers() {
+      let countOfCorrect = 0;
+      this.copyQuestions.forEach((item) => {
+        console.log(item);
+        item.isAnswerCorrect ? countOfCorrect++ : "";
+      });
+      // console.log(countOfCorrect);
+      return countOfCorrect;
+    },
     saveUsersHandwriteAnswer(answerText, question_id, isAnswerCorrect) {
       console.log("emit event after select Handwrite");
-      let updatedQuestions = this.questions.map(item => {
+      let updatedQuestions = this.copyQuestions.map((item) => {
         console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
@@ -107,11 +264,11 @@ export default {
     },
     setAnswerWithUsersSelect_one(answer, question_id, isAnswerCorrect) {
       console.log("emit event after select OneAsnwer");
-      let updatedQuestions = this.questions.map(item => {
+      let updatedQuestions = this.questions.map((item) => {
         // console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map(item => {
+          item.answers.map((item) => {
             if (item.answer_id == answer.answer_id) {
               item.selectedByStudent = true;
             } else {
@@ -128,13 +285,13 @@ export default {
     setAnswerWithUsersSelect_multy(answer, question_id, isAnswerCorrect) {
       // console.log("emit event after select MultyAsnwer");
       // console.log(answer);
-      let updatedQuestions = this.questions.map(item => {
+      let updatedQuestions = this.questions.map((item) => {
         // console.log(item);
 
         // console.log(question_id);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map(prevAnswer => {
+          item.answers.map((prevAnswer) => {
             prevAnswer.answer_id == answer.answer_id ? answer : prevAnswer;
           });
         }
@@ -149,10 +306,10 @@ export default {
     //   console.log(answer.correct);
     // },
     createQuestionsArrayWithUsersAnswers(questions) {
-      let newQuestionsArray = questions.forEach(item => {
+      let newQuestionsArray = this.questions.forEach((item) => {
         // console.log(item);
         if (item.type !== "handwritingAnswer") {
-          item.answers.forEach(answer => {
+          item.answers.forEach((answer) => {
             answer.selectedByStudent = false;
             return answer;
           });
@@ -177,12 +334,18 @@ export default {
     },
     setCurrentQuestion() {
       this.currentQuestion = this.copyQuestions[this.activeQuestion];
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      questions: state => state.questionsForCurrentPassingTest
-    })
+      questions: (state) => state.questionsForCurrentPassingTest,
+    }),
+    ...mapState("helped", {
+      currentStudentData: (state) => state.currentTestStudentData,
+    }),
+    // ...mapState("results", {
+    //   results: (state) => state.results,
+    // }),
   },
   mounted() {
     this.breadcrumbs = this.$refs.breadcrumb;
@@ -195,7 +358,7 @@ export default {
     this.copyQuestions = { ...this.questions };
     this.setCurrentQuestion();
     this.createQuestionsArrayWithUsersAnswers(this.questions);
-  }
+  },
 };
 </script>
 

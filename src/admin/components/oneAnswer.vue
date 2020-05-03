@@ -1,6 +1,6 @@
 <template lang="pug">
   .wrapper-
-    //- pre {{currentQuestion}}
+    pre {{currentLevel}}
     //- pre {{questionPhotoURl}}
     //- pre {{answerPhotoURl}}
     .question
@@ -52,6 +52,7 @@
             v-on:emitSetCorrectAnswer="setCorrectAnswer" 
             v-on:emitShowAnswerImg="showAnswerImg"
             v-on:emitDropAnswerURL="resetAnswerUrl"
+            v-on:emitDeleteAnswer="deleteCurrentAnswer"
           )
       
 
@@ -70,14 +71,14 @@ import { mapActions, mapState, mapGetters } from "vuex";
 import ANSWER_ITEM from "./answer_item-one";
 export default {
   components: {
-    ANSWER_ITEM
+    ANSWER_ITEM,
   },
   props: {
     currentLevel: Object,
     currentQuestion: String,
     questionPhotoURl: String,
     answerPhotoURl: String,
-    prevAnswerPhotoURl: String
+    prevAnswerPhotoURl: String,
   },
   data() {
     return {
@@ -97,7 +98,7 @@ export default {
       currentQuestion_id: "",
       editQuestion: false,
       editQuestionMode: false,
-      editAnswer: false
+      editAnswer: false,
     };
   },
   methods: {
@@ -108,9 +109,16 @@ export default {
     resetAnswerUrl() {
       this.$emit("resetAnswerUrl");
     },
+    deleteCurrentAnswer(answer) {
+      // console.log(answer);
+      this.answers = this.answers.filter((item) => {
+        console.log(item);
+        return item.answer_id !== answer.answer_id ? item : "";
+      });
+    },
     changeAnswer(answer) {
       console.log(answer);
-      this.answers.forEach(item => {
+      this.answers.forEach((item) => {
         if (item.answer_id === answer.answer_id) {
           item.imgURL = this.answerPhotoURl;
         }
@@ -127,7 +135,7 @@ export default {
       console.log(this.editAnswer);
       this.editAnswer = !this.editAnswer;
       console.log(this.editAnswer);
-      this.answers.filter(item => {
+      this.answers.filter((item) => {
         if (item.answer_id === id) {
           item.text = newAnswerText;
           return item;
@@ -217,11 +225,11 @@ export default {
           question: {
             text: this.currentQuestion,
             img: this.questionPhotoURl,
-            question_id: this.currentQuestion_id
+            question_id: this.currentQuestion_id,
           },
           answers: this.answers,
           level_id: this.currentLevel.levelId,
-          test_id: this.currentLevel.testid
+          test_id: this.currentLevel.testid,
         };
 
         console.log(questionWithAnswers);
@@ -256,7 +264,7 @@ export default {
           text: this.currentAnswer,
           correct: false,
           imgURL: this.answerPhotoURl,
-          answer_id: this.answers.length + 1
+          answer_id: this.answers.length + 1,
         };
         this.answers.push(answer);
         this.currentAnswer = "";
@@ -266,10 +274,10 @@ export default {
       }
       // console.log(this.answers);
       this.$emit("resetAnswerUrl");
-    }
+    },
   },
   computed: {
-    ...mapGetters("questions", ["question_id"])
+    ...mapGetters("questions", ["question_id"]),
   },
   watch: {
     questionWithPhoto: function(status) {
@@ -281,8 +289,8 @@ export default {
     },
     answerPhotoURl: function(url) {
       console.log(url);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="postcss" scoped>

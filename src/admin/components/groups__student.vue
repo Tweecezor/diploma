@@ -1,13 +1,14 @@
 <template lang="pug">
 div
   //- pre {{student}}
+  //- pre {{currentStudent}}
   div.student
     input(type="text" :disabled="!editMode" v-model="currentStudent.surname").student__input
     input(type="text" :disabled="!editMode" v-model="currentStudent.name").student__input.student__input--surname
     input(type="text" :disabled="!editMode" v-model="currentStudent.thirdname").student__input.student__input--thirdname
     .student__buttons(v-if="!editMode")
       .student__buttons--edit(@click="editStudent")
-      .student__buttons--delete(@click="deleteStudent")
+      .student__buttons--delete(@click="deleteCurrentStudent")
     .student__buttons(v-else)
       .student__buttons--save(@click="saveStudent")
       .student__buttons--cancel(@click="cancelEditStudent")
@@ -17,21 +18,24 @@ div
 import { mapActions, mapState } from "vuex";
 export default {
   props: {
-    student: Object
+    student: Object,
   },
   data() {
     return {
       currentStudent: { ...this.student },
       editMode: false,
-      new: ""
+      new: "",
     };
   },
   methods: {
-    ...mapActions("groups", ["editStudentInGroup"]),
+    ...mapActions("groups", ["editStudentInGroup", "deleteStudent"]),
     editStudent() {
       this.editMode = !this.editMode;
     },
-    deleteStudent() {},
+    deleteCurrentStudent() {
+      console.log(this.currentStudent);
+      this.deleteStudent(this.currentStudent);
+    },
     saveStudent() {
       this.editMode = !this.editMode;
       console.log(this.currentStudent);
@@ -40,8 +44,13 @@ export default {
     cancelEditStudent() {
       this.currentStudent = { ...this.student };
       this.editMode = !this.editMode;
-    }
-  }
+    },
+  },
+  watch: {
+    student: function(student) {
+      this.currentStudent = { ...this.student };
+    },
+  },
 };
 </script>
 <style lang="postcss" scoped>

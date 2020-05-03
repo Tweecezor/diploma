@@ -9,8 +9,8 @@
         //- pre {{filteredQuestions}}
         .group_breadcrumbs
           ul.group_breadcrumbs__list
-            li.group_breadcrumbs_item.breadcrumb(v-for="item in groups")
-              .breadcrumb__text-wrap(@click="filterTestByGroup(item)") 
+            li.group_breadcrumbs_item.breadcrumb(v-for="(item,id) in groups" ref="breadcrumb_group")
+              .breadcrumb__text-wrap(@click="filterTestByGroup(item,id)") 
                 .breadcrumb__text {{item.groupName}}
         .test__content
           ul.test__list
@@ -56,7 +56,7 @@ import TEST_PREVIEW from "./tests_preview_public";
 // import PASSING_TEST from "./passing_test";
 export default {
   components: {
-    TEST_PREVIEW
+    TEST_PREVIEW,
     // PASSING_TEST
   },
   data() {
@@ -65,7 +65,7 @@ export default {
       studentsInCurrentGroup: [],
       currentTest: "",
       opened: false,
-      filteredQuestions: ""
+      filteredQuestions: "",
     };
   },
   methods: {
@@ -74,7 +74,7 @@ export default {
       this.currentTest = item;
       console.log();
       let studentsInCurrentGroup;
-      this.groups.filter(group =>
+      this.groups.filter((group) =>
         group.groupName === item.group
           ? (studentsInCurrentGroup = group.studentsInGroup)
           : ""
@@ -86,44 +86,60 @@ export default {
     },
     filterQuestionsByTest(currentTest) {
       console.log(currentTest);
-      let filteredQuestionsByTest = this.questions.filter(item =>
+      let filteredQuestionsByTest = this.questions.filter((item) =>
         item.test_id === currentTest.id ? item : ""
       );
       console.log(filteredQuestionsByTest);
       return filteredQuestionsByTest;
     },
-    filterTestByGroup(group) {
+    filterTestByGroup(group, id) {
       console.log(group);
-      let filteredTests = this.tests.filter(item =>
+      let filteredTests = this.tests.filter((item) =>
         item.group === group.groupName ? item : ""
       );
       console.log(filteredTests);
       this.currentTestsList = filteredTests;
-    }
+      this.setActiveBreadcrumbGroup(id);
+    },
+    setActiveBreadcrumbGroup(id) {
+      for (var i = 0; i < this.breadcrumbGroup.length; i++) {
+        if (i === id) {
+          this.breadcrumbGroup[i].firstChild.classList.add(
+            "breadcrumb--active"
+          );
+        } else {
+          this.breadcrumbGroup[i].firstChild.classList.remove(
+            "breadcrumb--active"
+          );
+        }
+      }
+    },
   },
   computed: {
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     ...mapState("tests", {
-      tests: state => state.tests
+      tests: (state) => state.tests,
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: state => state.isCurrentLevelOpen
+      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
     }),
     ...mapState("helped", {
-      isTestOpen: state => state.isTestOpen
+      isTestOpen: (state) => state.isTestOpen,
     }),
     ...mapState("helped", {
-      showQuestions: state => state.showQuestions
+      showQuestions: (state) => state.showQuestions,
     }),
     ...mapState("questions", {
-      questions: state => state.questions
-    })
+      questions: (state) => state.questions,
+    }),
   },
   mounted() {
     this.currentTestsList = this.tests;
-  }
+    this.breadcrumbGroup = this.$refs.breadcrumb_group;
+    console.log(this.breadcrumbGroup);
+  },
 };
 </script>
 
@@ -202,5 +218,9 @@ export default {
 }
 .current_test_actions-wrap {
   width: 45%;
+}
+.breadcrumb--active {
+  color: #db9600;
+  border: 1px solid #db9600;
 }
 </style>

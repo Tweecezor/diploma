@@ -1,12 +1,42 @@
 import Vue from "vue";
-import App from "./tests_public";
+import App from "./App";
+import VueRouter from "vue-router";
+
 import store from "../admin/store/index";
+// import router from "./router";
 const axios = require("axios");
 axios.defaults.baseURL = "https://webdev-api.loftschool.com";
+import _ from "lodash";
+Object.defineProperty(Vue.prototype, "$_", { value: _ });
+
+Vue.use(VueRouter);
+
+const routes = [
+  {
+    path: "/",
+    component: () => import("./tests_public"),
+  },
+  {
+    path: "/testPreview",
+    component: () => import("./tests_preview_public"),
+  },
+  {
+    path: "/passingTest",
+    component: () => import("./passing_test"),
+  },
+  {
+    path: "/completedTest",
+    component: () => import("./completed_test"),
+  },
+];
+
+const router = new VueRouter({
+  routes, // сокращённая запись для `routes: routes`
+});
 
 new Vue({
   el: "#myWorks__component",
-  // router,
+  router,
   store,
   render: (h) => h(App),
 });

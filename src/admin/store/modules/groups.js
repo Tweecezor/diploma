@@ -20,6 +20,9 @@ export default {
     ],
   },
   actions: {
+    deleteStudent(store, currentStudent) {
+      store.commit("DELETE_STUDENT", currentStudent);
+    },
     addNewGroup(store, newGroup) {
       store.commit("ADD_NEW_GROUP", newGroup);
     },
@@ -39,6 +42,25 @@ export default {
     },
   },
   mutations: {
+    DELETE_STUDENT(state, currentStudent) {
+      state.groups = state.groups.map((item) => {
+        console.log(item);
+        if (item.group_id === currentStudent.group_id) {
+          // console.log(item.studentsInGroup);
+          item.studentsInGroup = item.studentsInGroup.filter((student) => {
+            console.log(student.student_id);
+            console.log(currentStudent.student_id);
+            return student.student_id != currentStudent.student_id
+              ? student
+              : "";
+          });
+          console.log(item.studentsInGroup);
+        }
+        return item;
+      });
+      console.log(state.groups);
+    },
+
     ADD_STUDENT(state, newStudent) {
       // console.log(newStudent);
       state.groups = state.groups.map((item) => {
