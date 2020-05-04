@@ -54,7 +54,10 @@ export default {
     };
   },
   methods: {
-    ...mapActions("helped", ["setQuestionsForCurrentPassingTest"]),
+    ...mapActions("helped", [
+      "setQuestionsForCurrentPassingTest",
+      "setCurrentTestStudentData",
+    ]),
 
     filterQuestionsByLevel(level) {
       let deepCopyQuestions = this.$_.cloneDeep(this.questions);
@@ -74,12 +77,15 @@ export default {
         fullName: this.selectedStudent,
         test_level: this.selectedLevel,
         group: this.currentTest.group,
+        test_id: this.currentTest.id,
+        test_name: this.currentTest.name,
       };
       this.filteredQuestionsByLevel = this.filterQuestionsByLevel(
         this.selectedLevel
       );
       console.log(this.filteredQuestionsByLevel);
       console.log(studentData);
+      this.setCurrentTestStudentData(studentData); // добавить на галвную прохожеления теста
       this.setQuestionsForCurrentPassingTest(this.filteredQuestionsByLevel);
       this.$router.push("./passingTest");
     },

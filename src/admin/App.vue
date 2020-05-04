@@ -12,7 +12,6 @@
           tooltips  
 </template>
 
-
 <script>
 import headerComponent from "./components/header";
 import navComponent from "./components/navigation";
@@ -30,15 +29,15 @@ export default {
     // works,
     // reviews,
     // login,
-    tooltips: () => import("./components/tooltips")
+    tooltips: () => import("./components/tooltips"),
   },
   computed: {
     ...mapState("tooltips", {
-      status: state => state.toolData.active
-    })
+      status: (state) => state.toolData.active,
+    }),
   },
   methods: {
-    ...mapActions("tooltips", ["hideTooltip"])
+    ...mapActions("tooltips", ["hideTooltip"]),
   },
   watch: {
     status: function() {
@@ -49,16 +48,13 @@ export default {
           this.hideTooltip();
         }, 3000);
       }
-    }
-  }
+    },
+  },
   // created(){
   //   const isLoggin = store.getters["user/userIsLogged"];
   // }
 };
 </script>
-
-
-
 
 <style lang="postcss">
 @import "normalize.css";
@@ -118,7 +114,7 @@ export default {
 }
 
 .wrapper__container {
-  /* background: url("../images/content/background-main.jpg") no-repeat; */
+  background: url("../images/content/background-main.jpg") no-repeat;
   background: #f7f8f9;
   /* background: #dbdbdb; */
 
@@ -155,4 +151,3 @@ input[type="text"] {
   }
 }
 </style>
-

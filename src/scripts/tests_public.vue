@@ -1,7 +1,8 @@
 <template lang="pug">
-  .container_
+  .container-
     .wrap
       .admin__content(v-if="!opened")
+        //- pre {{results}}
         //- pre {{questions}}
         //- pre {{groups}}
         //- pre {{currentTestsList}}
@@ -66,7 +67,6 @@ export default {
       currentTest: "",
       opened: false,
       filteredQuestions: "",
-      breadcrumbGroup: "",
     };
   },
   methods: {
@@ -84,7 +84,6 @@ export default {
       console.log(this.studentsInCurrentGroup);
       this.opened = true;
       this.filteredQuestions = this.filterQuestionsByTest(item);
-      console.log(this.$route);
     },
     filterQuestionsByTest(currentTest) {
       console.log(currentTest);
@@ -136,6 +135,9 @@ export default {
     ...mapState("questions", {
       questions: (state) => state.questions,
     }),
+    ...mapState("results", {
+      results: (state) => state.results,
+    }),
   },
   mounted() {
     this.currentTestsList = this.tests;
@@ -155,7 +157,10 @@ export default {
 .breadcrumb {
   &:hover {
     cursor: pointer;
-    color: #edb947;
+    color: #db9600;
+    .breadcrumb__text-wrap {
+      border: 1px solid #db9600;
+    }
   }
 }
 .breadcrumb__text-wrap {

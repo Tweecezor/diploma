@@ -1,5 +1,6 @@
 <template lang="pug">
   .container_
+    //- pre {{currentStudentData}}
     TEST_RESULT(
       v-if="showResult"
       :countOfCorrect="countOfCorrect"
@@ -77,6 +78,7 @@ export default {
   },
   methods: {
     ...mapActions("helped", ["setCompletedTestQuestions"]),
+    ...mapActions("results", ["addNewResult"]),
     calculateResult() {},
     showAnswers() {
       this.setCompletedTestQuestions(this.copyQuestions);
@@ -87,9 +89,67 @@ export default {
       this.countOfCorrect = this.countCorrectAnswers();
       console.log(this.countOfCorrect);
       this.calc(this.countOfCorrect);
+      let studentResult = {
+        ...this.currentStudentData,
+        mark: this.finalMark,
+      };
+      console.log(studentResult);
       this.showResult = true;
+      this.addNewResult(studentResult);
       // this.setCompletedTestQuestions(this.copyQuestions);
       // this.$router.push("/completedTest");
+    },
+    calculateMark(correct, all, half, mark, percentOfCorrect) {
+      if (correct < half) {
+        mark = 0;
+      }
+      if (correct == half) {
+        percentOfCorrect = (correct / all) * 100;
+        console.log(correct + " : precent of correct " + percentOfCorrect);
+        console.log("Оценка 25");
+        // mark = 25;
+      } else if (correct > half) {
+        percentOfCorrect = (correct / all) * 100;
+        console.log(correct + " : precent of correct " + percentOfCorrect);
+
+        if (55 < percentOfCorrect && percentOfCorrect <= 60) {
+          console.log("оценка 26");
+          mark += 1;
+        }
+        if (60 < percentOfCorrect && percentOfCorrect <= 65) {
+          console.log("оценка 27");
+          mark += 2;
+        }
+        if (65 < percentOfCorrect && percentOfCorrect <= 70) {
+          console.log("оценка 28");
+          mark += 3;
+        }
+        if (70 < percentOfCorrect && percentOfCorrect <= 75) {
+          console.log("оценка 29");
+          mark += 4;
+        }
+        if (75 < percentOfCorrect && percentOfCorrect <= 80) {
+          console.log("оценка 30");
+          mark += 5;
+        }
+        if (80 < percentOfCorrect && percentOfCorrect <= 85) {
+          console.log("оценка 31");
+          mark += 6;
+        }
+        if (85 < percentOfCorrect && percentOfCorrect <= 90) {
+          console.log("оценка 32");
+          mark += 7;
+        }
+        if (90 < percentOfCorrect && percentOfCorrect <= 95) {
+          console.log("оценка 33");
+          mark += 8;
+        }
+        if (95 < percentOfCorrect && percentOfCorrect <= 100) {
+          console.log("оценка 34");
+          mark += 9;
+        }
+      }
+      this.finalMark = mark;
     },
     calc(correct) {
       let all = this.questions.length;
@@ -100,60 +160,71 @@ export default {
       console.log("correct = " + correct);
       let mark = 0;
       var percentOfCorrect;
-      if (correct < half) {
-        mark = 0;
+      switch (this.currentStudentData.test_level) {
+        case 1:
+          mark = 25;
+          this.calculateMark(correct, all, half, mark, percentOfCorrect);
+          break;
+        case 2:
+          mark = 35;
+          this.calculateMark(correct, all, half, mark, percentOfCorrect);
+          break;
+        case 3:
+          mark = 45;
+          this.calculateMark(correct, all, half, mark, percentOfCorrect);
+          break;
       }
-      if (correct == half) {
-        percentOfCorrect = (correct / all) * 100;
-        console.log(correct + " : precent of correct " + percentOfCorrect);
-        console.log("Оценка 25");
-        mark = 25;
-      } else if (correct > half) {
-        percentOfCorrect = (correct / all) * 100;
-        console.log(correct + " : precent of correct " + percentOfCorrect);
+      // this.calculateMark(correct, all, half, mark, percentOfCorrect);
+      // if (correct < half) {
+      //   mark = 0;
+      // }
+      // if (correct == half) {
+      //   percentOfCorrect = (correct / all) * 100;
+      //   console.log(correct + " : precent of correct " + percentOfCorrect);
+      //   console.log("Оценка 25");
+      //   mark = 25;
+      // } else if (correct > half) {
+      //   percentOfCorrect = (correct / all) * 100;
+      //   console.log(correct + " : precent of correct " + percentOfCorrect);
 
-        if (55 <= percentOfCorrect && percentOfCorrect <= 60) {
-          console.log("оценка 26");
-          mark = 26;
-        }
-        if (60 <= percentOfCorrect && percentOfCorrect <= 65) {
-          console.log("оценка 27");
-          mark = 27;
-        }
-        if (65 <= percentOfCorrect && percentOfCorrect <= 70) {
-          console.log("оценка 28");
-          mark = 28;
-        }
-        if (70 <= percentOfCorrect && percentOfCorrect <= 75) {
-          console.log("оценка 29");
-          mark = 29;
-        }
-        if (75 <= percentOfCorrect && percentOfCorrect <= 80) {
-          console.log("оценка 30");
-          mark = 30;
-        }
-        if (80 <= percentOfCorrect && percentOfCorrect <= 85) {
-          console.log("оценка 31");
-          mark = 31;
-        }
-        if (85 <= percentOfCorrect && percentOfCorrect <= 90) {
-          console.log("оценка 32");
-          mark = 32;
-        }
-        if (90 <= percentOfCorrect && percentOfCorrect <= 95) {
-          console.log("оценка 33");
-          mark = 33;
-        }
-        if (95 <= percentOfCorrect && percentOfCorrect <= 100) {
-          console.log("оценка 34");
-          mark = 34;
-        }
-        // if (95 <= percentOfCorrect && percentOfCorrect <= 100) {
-        //   console.log("оценка 35");
-        //   mark = 35;
-        // }
-      }
-      this.finalMark = mark;
+      //   if (55 <= percentOfCorrect && percentOfCorrect <= 60) {
+      //     console.log("оценка 26");
+      //     mark = 26;
+      //   }
+      //   if (60 <= percentOfCorrect && percentOfCorrect <= 65) {
+      //     console.log("оценка 27");
+      //     mark = 27;
+      //   }
+      //   if (65 <= percentOfCorrect && percentOfCorrect <= 70) {
+      //     console.log("оценка 28");
+      //     mark = 28;
+      //   }
+      //   if (70 <= percentOfCorrect && percentOfCorrect <= 75) {
+      //     console.log("оценка 29");
+      //     mark = 29;
+      //   }
+      //   if (75 <= percentOfCorrect && percentOfCorrect <= 80) {
+      //     console.log("оценка 30");
+      //     mark = 30;
+      //   }
+      //   if (80 <= percentOfCorrect && percentOfCorrect <= 85) {
+      //     console.log("оценка 31");
+      //     mark = 31;
+      //   }
+      //   if (85 <= percentOfCorrect && percentOfCorrect <= 90) {
+      //     console.log("оценка 32");
+      //     mark = 32;
+      //   }
+      //   if (90 <= percentOfCorrect && percentOfCorrect <= 95) {
+      //     console.log("оценка 33");
+      //     mark = 33;
+      //   }
+      //   if (95 <= percentOfCorrect && percentOfCorrect <= 100) {
+      //     console.log("оценка 34");
+      //     mark = 34;
+      //   }
+      // }
+      // this.finalMark = mark;
     },
     countCorrectAnswers() {
       let countOfCorrect = 0;
@@ -269,6 +340,12 @@ export default {
     ...mapState("helped", {
       questions: (state) => state.questionsForCurrentPassingTest,
     }),
+    ...mapState("helped", {
+      currentStudentData: (state) => state.currentTestStudentData,
+    }),
+    // ...mapState("results", {
+    //   results: (state) => state.results,
+    // }),
   },
   mounted() {
     this.breadcrumbs = this.$refs.breadcrumb;
@@ -281,9 +358,6 @@ export default {
     this.copyQuestions = { ...this.questions };
     this.setCurrentQuestion();
     this.createQuestionsArrayWithUsersAnswers(this.questions);
-    if (!this.questions.length) {
-      this.$router.push("/");
-    }
   },
 };
 </script>
