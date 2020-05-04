@@ -1,15 +1,16 @@
-.header{
+.header {
   display: flex;
-  justify-content:space-between;
-  padding-top:70px;
+  justify-content: space-between;
+  padding-top: 70px;
+  align-items: center;
 }
-.header__links-wrap{
-  @include tablets{
+.header__links-wrap {
+  @include tablets {
     display: flex;
     justify-content: space-between;
     width: 35%;
   }
-  @include phones{
+  @include phones {
     width: initial;
   }
 }
