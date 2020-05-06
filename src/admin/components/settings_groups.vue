@@ -7,6 +7,9 @@
         li.groups__item.groups__add_new(@click="showAddNew")
           .groups__new  
             .groups__new-icon
+              <svg version="1.1" class="groups__new-icon-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
+              </svg>
             .groups__new-text Добавить группу
         li.groups__item(v-for="group in groups")
           GROUP_ITEM(:group="group")
@@ -126,7 +129,7 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   position: relative;
-  &:before {
+  /* &:before {
     content: "";
     background: svg-load("remove.svg", fill= "#fff") center center no-repeat /
       contain;
@@ -136,12 +139,21 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
-  }
+  } */
   @include phones {
     width: 4.375rem;
     height: 4.375rem;
     margin-bottom: 0;
   }
+}
+.groups__new-icon-icon {
+  top: 50%;
+  left: 50%;
+  fill: white;
+  position: absolute;
+  width: 2.125rem;
+  height: 2.125rem;
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 .groups__new-text {
   font-size: 18px;

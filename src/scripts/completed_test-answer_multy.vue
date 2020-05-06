@@ -17,7 +17,10 @@
         //- pre {{answer}}
         p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
         .answer__checkbox-wrap
-          .answer__checkbox( ref="checkbox_list" :class="{answer__checkbox_active:answer.selectedByStudent}")
+          .answer__checkbox( ref="checkbox_list" )
+            <svg v-if="answer.selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+              <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+            </svg>
         .question__img-wrap(v-if="answer.imgURL")
           label.question__img(:style="{'background-image':`url(${answer.imgURL})`}")
       
@@ -250,5 +253,17 @@ export default {
 .answerTextWithImg {
   /* color: red; */
   width: 50%;
+}
+.answer__checkbox_correct {
+  fill: #434573;
+  width: 15px;
+  height: 15px;
+  width: 15px;
+  height: 15px;
+  opacity: initial;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

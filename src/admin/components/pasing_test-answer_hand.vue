@@ -7,8 +7,15 @@
     .handwrite__text-wrap
 
       input(type="text" v-model="usersAnswer" :disabled="editMode").handwrite__text
-      .handwrite__actions_save(v-if="!editMode" @click="saveAnswer")
-      .handwrite__actions_edit(v-if="editMode" @click="editMode = !editMode")
+      //- .handwrite__actions_save(v-if="!editMode" @click="saveAnswer")
+      .handwrite__actions
+        <svg version="1.1" v-if="!editMode"  @click="saveAnswer" class="handwrite__actions_save" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+          <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+        </svg>
+        //- .handwrite__actions_edit(v-if="editMode" @click="editMode = !editMode")
+        <svg v-if="editMode" @click="editMode = !editMode" class="handwrite__actions_edit" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
+          <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
+        </svg>
 
   
 </template>
@@ -97,6 +104,10 @@ export default {
 .handwrite__label-wrap {
   margin-bottom: 0.625rem;
 }
+.handwrite__actions {
+  display: flex;
+  align-items: flex-end;
+}
 .handwrite__label {
   display: block;
   opacity: 0.5;
@@ -112,18 +123,21 @@ export default {
   border-bottom: 2px solid #414c63;
   padding: 0 0.3125rem 0.625rem;
   width: 100%;
-  margin-bottom: 1.875rem;
+  margin-right: 10px;
 }
 .handwrite__text-wrap {
   display: flex;
+  margin-bottom: 1.875rem;
+  /* align-istems: center; */
 }
 .handwrite__actions_save {
   position: relative;
-  margin-right: 20px;
+  margin-right: 15px;
   cursor: pointer;
   width: 20px;
   height: 20px;
-  &:before {
+  fill: #edb947;
+  /* &:before {
     content: "";
     background: svg-load("tick.svg", fill= "#edb947") center center no-repeat /
       contain;
@@ -133,15 +147,16 @@ export default {
     position: absolute;
     top: 15%;
     left: 63%;
-  }
+  } */
 }
 .handwrite__actions_edit {
   position: relative;
-  margin-right: 20px;
+  margin-right: 15px;
   cursor: pointer;
   width: 20px;
   height: 20px;
-  &:before {
+  fill: #434573;
+  /* &:before {
     content: "";
     background: svg-load("pencil.svg", fill= "#434573") center center no-repeat /
       contain;
@@ -151,6 +166,6 @@ export default {
     position: absolute;
     top: 15%;
     left: 63%;
-  }
+  } */
 }
 </style>

@@ -13,7 +13,10 @@
         ul.created_test-list
           li(v-if="" :class="{testAdding:showAddNew}").created_test-item.test.test--new
             .test__preview#preview(v-if="!showAddNew" @click="showAddNew = true")
-              .test__preview_logo
+              .test__preview_logo 
+                <svg version="1.1" class="test__preview_logo-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                  <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
+                </svg>
               //- .test__preview_test-wrap
               .test__preview_test Добавить тест
             .test__add_new(v-else)
@@ -80,7 +83,7 @@ export default {
     CURRENT_LEVEL_IN_TEST_GROUP,
     ALL_QUESTIONS_IN_GROUP,
     //
-    ACTIONS_WITH_CURRENT_TEST,
+    ACTIONS_WITH_CURRENT_TEST
   },
   data() {
     return {
@@ -92,8 +95,8 @@ export default {
       obj: {
         level: "3",
         name: "Тут название теста",
-        group: "",
-      },
+        group: ""
+      }
     };
   },
   methods: {
@@ -149,12 +152,12 @@ export default {
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus",
       "setCurrentLevelInTestGroup",
-      "setCurrentTestGroup",
+      "setCurrentTestGroup"
     ]),
     addNewTest() {
       const newTetsGroup = {
         id: this.tests.length + 1,
-        ...this.obj,
+        ...this.obj
       };
       this.addNew(newTetsGroup);
       this.showAddNew = false;
@@ -174,14 +177,14 @@ export default {
     addQuestion(obj) {
       console.log(obj);
       this.currentLevelInTestGroup = {
-        ...obj,
+        ...obj
       };
       console.log("my event !!");
       // this.isTestOpen = !this.isTestOpen;
       this.changeCurrentTestStatus(!this.isTestOpen);
       this.changeCurrentLevelStatus(!this.isCurrentLevelOpen);
       // this.isCurrentLevelOpen = !this.isCurrentLevelOpen;
-    },
+    }
   },
   mounted() {
     this.changeCurrentLevelStatus(false);
@@ -190,24 +193,24 @@ export default {
   },
   computed: {
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
     ...mapState("tests", {
-      tests: (state) => state.tests,
+      tests: state => state.tests
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
+      isCurrentLevelOpen: state => state.isCurrentLevelOpen
     }),
     ...mapState("helped", {
-      isTestOpen: (state) => state.isTestOpen,
+      isTestOpen: state => state.isTestOpen
     }),
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
+      showQuestions: state => state.showQuestions
     }),
     ...mapState("questions", {
-      questions: (state) => state.questions,
-    }),
-  },
+      questions: state => state.questions
+    })
+  }
 };
 </script>
 
@@ -365,7 +368,7 @@ select {
   align-items: center;
   margin-bottom: 1.25rem;
   position: relative;
-  &:before {
+  /* &:before {
     content: "";
     background: svg-load("remove.svg", fill= "#fff") center center no-repeat /
       contain;
@@ -375,12 +378,21 @@ select {
     top: 28%;
     left: 50%;
     transform: translate(-50%, 50%) rotate(45deg);
-  }
+  } */
   @include phones {
     width: 4.375rem;
     height: 4.375rem;
     margin-bottom: 0;
   }
+}
+.test__preview_logo-icon {
+  width: 2.125rem;
+  height: 2.125rem;
+  position: absolute;
+  transform: translate(-50%, 50%) rotate(45deg);
+  fill: white;
+  top: 28%;
+  left: 50%;
 }
 .testAdding {
   background: white;

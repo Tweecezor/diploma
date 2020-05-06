@@ -1,3 +1,4 @@
+
 <template lang="pug">
   div
     .wrapper__container
@@ -29,15 +30,15 @@ export default {
     // works,
     // reviews,
     // login,
-    tooltips: () => import("./components/tooltips"),
+    tooltips: () => import("./components/tooltips")
   },
   computed: {
     ...mapState("tooltips", {
-      status: (state) => state.toolData.active,
-    }),
+      status: state => state.toolData.active
+    })
   },
   methods: {
-    ...mapActions("tooltips", ["hideTooltip"]),
+    ...mapActions("tooltips", ["hideTooltip"])
   },
   watch: {
     status: function() {
@@ -48,8 +49,8 @@ export default {
           this.hideTooltip();
         }, 3000);
       }
-    },
-  },
+    }
+  }
   // created(){
   //   const isLoggin = store.getters["user/userIsLogged"];
   // }

@@ -12,15 +12,37 @@
         .answers__data_correct-wrap(v-if="typeOfQuestion === 'multipleAnswer'")
           input( type="checkbox" :name="question_id" v-bind:value="currentAnswer.text" :disabled="!editMode" :checked="answer.correct"  @change="setCorrectAnswer").answers__data_status
         .answers__actions(v-if="!editMode && !editPhotoMode")
-            .answers__actions_correct(@click="editMode = true") 
-            .answer__actions-photo(@click="setAnswerImgUrl(answer)")
-            .answers__actions_trash(@click="deleteCurrentAnswer") 
+            //- .answers__actions_correct(@click="editMode = true") 
+            <svg @click="editMode = true" class="answers__actions_correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
+              <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
+            </svg>
+            //- .answer__actions-photo(@click="setAnswerImgUrl(answer)")
+            <svg height="512pt" class="answer__actions-photo" @click="setAnswerImgUrl(answer)" viewBox="0 -64 512 512" width="512pt" xmlns="http://www.w3.org/2000/svg">
+              <path d="m149.332031 106.667969c0 23.5625-19.101562 42.664062-42.664062 42.664062-23.566407 0-42.667969-19.101562-42.667969-42.664062 0-23.566407 19.101562-42.667969 42.667969-42.667969 23.5625 0 42.664062 19.101562 42.664062 42.667969zm0 0" />
+              <path d="m448 0h-384c-35.285156 0-64 28.714844-64 64v256c0 1.195312.296875 2.324219.363281 3.519531-.300781 2.558594-.171875 5.140625.765625 7.574219 5.269532 29.996094 31.382813 52.90625 62.871094 52.90625h384c35.285156 0 64-28.714844 64-64v-256c0-35.285156-28.714844-64-64-64zm-384 42.667969h384c11.753906 0 21.332031 9.578125 21.332031 21.332031v169.367188l-112.210937-112.214844c-14.59375-14.59375-38.335938-14.59375-52.90625 0l-101.546875 101.546875-26.882813-26.878907c-14.589844-14.59375-38.335937-14.59375-52.90625 0l-80.210937 80.210938v-212.03125c0-11.753906 9.578125-21.332031 21.332031-21.332031zm0 0" />
+            </svg>
+            //- .answers__actions_trash(@click="deleteCurrentAnswer") 
+            <svg class="answers__actions_trash" @click="deleteCurrentAnswer" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="459px" height="459px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
+              <path d="M76.5,408c0,28.05,22.95,51,51,51h204c28.05,0,51-22.95,51-51V102h-306V408z M408,25.5h-89.25L293.25,0h-127.5l-25.5,25.5 H51v51h357V25.5z"/>
+            </svg>
         .answers__actions(v-if="editMode")
-          .answers__actions_update(@click="updateCurrentAnswer") 
-          .answers__actions_cancel(@click="cancelUpdate") 
+          //- .answers__actions_update(@click="updateCurrentAnswer") 
+          <svg version="1.1" @click="updateCurrentAnswer" class="answers__actions_update" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+            <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+          </svg>
+          //- .answers__actions_cancel(@click="cancelUpdate") 
+          <svg version="1.1" @click="cancelUpdate" class="answers__actions_cancel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+            <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
+          </svg>
         .answers__actions(v-if="editPhotoMode")
-          .answers__actions_update(@click="saveNewImg") 
-          .answers__actions_cancel(@click="cancelImgUpdate") 
+          //- .answers__actions_update(@click="saveNewImg") 
+          <svg version="1.1" @click="saveNewImg" class="answers__actions_update" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+            <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+          </svg>
+          //- .answers__actions_cancel(@click="cancelImgUpdate") 
+          <svg version="1.1" @click="cancelImgUpdate" class="answers__actions_cancel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+            <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
+          </svg>
 
       //- div(v-if="currentAnswer.imgURL && !newImg").answer__image_actions
       //-   button(@click.prevent="showAnswerImage" ).btn.answer__image_show-btn Показать изображение ответа
@@ -48,7 +70,7 @@ export default {
     question_id: Number,
     answerLength: Number,
     typeOfQuestion: String,
-    answerImgUrl: String,
+    answerImgUrl: String
   },
   data() {
     return {
@@ -61,10 +83,10 @@ export default {
       showAImg: false,
       prevCorrectAnswer: {
         correct: this.answer.correct,
-        text: this.answer.text,
+        text: this.answer.text
       },
       newImg: false,
-      prevAnswerImgUrl: "",
+      prevAnswerImgUrl: ""
     };
   },
   methods: {
@@ -72,7 +94,7 @@ export default {
       "changeAnswerStatus",
       "updateAnswer",
       "addNewAnswer",
-      "deleteAnswer",
+      "deleteAnswer"
     ]),
     cancelImgUpdate() {
       console.log("cancel");
@@ -89,7 +111,7 @@ export default {
         level_id: this.level_id,
         test_id: this.test_id,
         question_id: this.question_id,
-        imgURL: this.answerImgUrl,
+        imgURL: this.answerImgUrl
       });
       // console.log(this.answerImgUrl);
       this.$emit("emitResetAnswerImgUrl");
@@ -108,11 +130,11 @@ export default {
           text: this.newAnswer,
           correct: false,
           imgURL: this.newAnswerImgURL,
-          answer_id: this.answerLength + 1,
+          answer_id: this.answerLength + 1
         },
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id,
+        question_id: this.question_id
       };
       console.log(newAnswer);
       this.addNewAnswer(newAnswer);
@@ -143,7 +165,7 @@ export default {
         answer_id: this.currentAnswer.answer_id,
         level_id: this.level_id,
         test_id: this.test_id,
-        question_id: this.question_id,
+        question_id: this.question_id
       });
     },
     updateCurrentAnswer() {
@@ -154,7 +176,7 @@ export default {
         level_id: this.level_id,
         test_id: this.test_id,
         question_id: this.question_id,
-        imgURL: this.currentAnswer.imgURL,
+        imgURL: this.currentAnswer.imgURL
       });
       this.editMode = !this.editMode;
       this.newImg = false;
@@ -166,7 +188,7 @@ export default {
         correct: this.prevCorrectAnswer.correct,
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id,
+        question_id: this.question_id
       });
       this.currentAnswer = { ...this.answer };
       this.editMode = !this.editMode;
@@ -184,16 +206,16 @@ export default {
         test_id: this.test_id,
         level_id: this.level_id,
         question_id: this.question_id,
-        type: this.typeOfQuestion,
+        type: this.typeOfQuestion
       });
-    },
+    }
   },
   watch: {
     answer: function(answer) {
       console.log(answer);
       this.currentAnswer = { ...this.answer };
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="postcss" scoped>
@@ -209,6 +231,7 @@ export default {
 
 .answers__actions {
   display: flex;
+  align-items: flex-end;
 }
 .answer_img {
   /* width: 100%;
@@ -244,6 +267,10 @@ export default {
 }
 .answers__data_correct-wrap {
   heigth: 100%;
+  display: flex;
+  align-items: flex-end;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 .answers__data_text {
   width: 100%;
@@ -255,11 +282,12 @@ export default {
 }
 .answers__actions_correct {
   position: relative;
-  margin-right: 20px;
+  margin-right: 15px;
   cursor: pointer;
   width: 20px;
   height: 20px;
-  &:before {
+  fill: blue;
+  /* &:before {
     content: "";
     background: svg-load("pencil.svg", fill= "#383bcf") center center no-repeat /
       contain;
@@ -269,15 +297,16 @@ export default {
     position: absolute;
     top: 15%;
     left: 63%;
-  }
+  } */
 }
 .answers__actions_trash {
   position: relative;
-  margin-right: 20px;
+  /* margin-right: 20px; */
   cursor: pointer;
   width: 20px;
   height: 20px;
-  &:before {
+  fill: red;
+  /* &:before {
     content: "";
     background: svg-load("trash.svg", fill= "red") center center no-repeat /
       contain;
@@ -287,15 +316,16 @@ export default {
     position: absolute;
     top: 15%;
     left: 63%;
-  }
+  } */
 }
 .answers__actions_update {
   position: relative;
-  margin-right: 20px;
+  margin-right: 15px;
   cursor: pointer;
   width: 20px;
   height: 20px;
-  &:before {
+  fill: green;
+  /* &:before {
     content: "";
     background: svg-load("tick.svg", fill= "green") center center no-repeat /
       contain;
@@ -305,15 +335,16 @@ export default {
     position: absolute;
     top: 15%;
     left: 63%;
-  }
+  } */
 }
 .answers__actions_cancel {
   position: relative;
-  margin-right: 20px;
+  margin-right: 15px;
   cursor: pointer;
-  width: 20px;
-  height: 20px;
-  &:before {
+  width: 17px;
+  height: 17px;
+  fill: red;
+  /* &:before {
     content: "";
     background: svg-load("remove.svg", fill= "red") center center no-repeat /
       contain;
@@ -323,16 +354,17 @@ export default {
     position: absolute;
     top: 15%;
     left: 63%;
-  }
+  } */
 }
 .answer__actions-photo {
   /* padding-right: 50px; */
   position: relative;
-  margin-right: 20px;
+  margin-right: 15px;
   cursor: pointer;
   width: 20px;
   height: 20px;
-  &:before {
+  fill: blue;
+  /* &:before {
     content: "";
     background: svg-load("photo.svg", fill= "#383bcf") center center no-repeat /
       contain;
@@ -342,7 +374,7 @@ export default {
     position: absolute;
     top: 15%;
     left: 63%;
-  }
+  } */
 }
 
 .current_level__files {
