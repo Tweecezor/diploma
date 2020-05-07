@@ -255,6 +255,7 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
 .keywords__add_label {
   display: block;
   opacity: 0.5;
@@ -271,6 +272,9 @@ export default {
   padding: 0 0.3125rem 0.625rem;
   width: 100%;
   margin-bottom: 1.875rem;
+  @include tablets {
+    font-size: 20px;
+  }
 }
 .keywords__add_text-wrap {
   display: flex;

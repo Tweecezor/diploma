@@ -57,7 +57,7 @@ import TEST_PREVIEW from "./tests_preview_public";
 // import PASSING_TEST from "./passing_test";
 export default {
   components: {
-    TEST_PREVIEW,
+    TEST_PREVIEW
     // PASSING_TEST
   },
   data() {
@@ -66,7 +66,7 @@ export default {
       studentsInCurrentGroup: [],
       currentTest: "",
       opened: false,
-      filteredQuestions: "",
+      filteredQuestions: ""
     };
   },
   methods: {
@@ -75,7 +75,7 @@ export default {
       this.currentTest = item;
       console.log();
       let studentsInCurrentGroup;
-      this.groups.filter((group) =>
+      this.groups.filter(group =>
         group.groupName === item.group
           ? (studentsInCurrentGroup = group.studentsInGroup)
           : ""
@@ -87,7 +87,7 @@ export default {
     },
     filterQuestionsByTest(currentTest) {
       console.log(currentTest);
-      let filteredQuestionsByTest = this.questions.filter((item) =>
+      let filteredQuestionsByTest = this.questions.filter(item =>
         item.test_id === currentTest.id ? item : ""
       );
       console.log(filteredQuestionsByTest);
@@ -95,7 +95,7 @@ export default {
     },
     filterTestByGroup(group, id) {
       console.log(group);
-      let filteredTests = this.tests.filter((item) =>
+      let filteredTests = this.tests.filter(item =>
         item.group === group.groupName ? item : ""
       );
       console.log(filteredTests);
@@ -114,40 +114,41 @@ export default {
           );
         }
       }
-    },
+    }
   },
   computed: {
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
     ...mapState("tests", {
-      tests: (state) => state.tests,
+      tests: state => state.tests
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
+      isCurrentLevelOpen: state => state.isCurrentLevelOpen
     }),
     ...mapState("helped", {
-      isTestOpen: (state) => state.isTestOpen,
+      isTestOpen: state => state.isTestOpen
     }),
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
+      showQuestions: state => state.showQuestions
     }),
     ...mapState("questions", {
-      questions: (state) => state.questions,
+      questions: state => state.questions
     }),
     ...mapState("results", {
-      results: (state) => state.results,
-    }),
+      results: state => state.results
+    })
   },
   mounted() {
     this.currentTestsList = this.tests;
     this.breadcrumbGroup = this.$refs.breadcrumb_group;
     console.log(this.breadcrumbGroup);
-  },
+  }
 };
 </script>
 
 <style lang="postcss" scoped>
+@import url("../styles/mixins.pcss");
 .group_breadcrumbs {
   margin-bottom: 20px;
 }
@@ -195,6 +196,26 @@ export default {
   border-radius: 6px;
   &:nth-child(3n) {
     margin-right: 0px;
+  }
+  @include tablets {
+    width: calc((100%-3%) / 2);
+    margin-right: 2%;
+    &:nth-child(2n) {
+      margin-right: 0px;
+    }
+    &:nth-child(3n) {
+      margin-right: 2%;
+    }
+  }
+  @include phones {
+    width: 100%;
+    margin-right: 0%;
+    &:nth-child(2n) {
+      margin-right: 0px;
+    }
+    &:nth-child(3n) {
+      margin-right: 0%;
+    }
   }
 }
 .test__label {

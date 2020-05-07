@@ -42,7 +42,7 @@ export default {
   props: {
     currentTest: Object,
     questions: Array,
-    studentsInCurrentGroup: Array,
+    studentsInCurrentGroup: Array
   },
   data() {
     return {
@@ -50,19 +50,19 @@ export default {
       selectedStudent: "",
       filteredQuestionsByLevel: "",
       description:
-        "Выберите один из трех предложенных уровней теста. 1 уровень соответствует оценке 25-34. 2 уровень оценке 35-44. 3 уровень оценке 45-54.Для успешного заврешения теста необходимо ответить на половину вопросов.",
+        "Выберите один из трех предложенных уровней теста. 1 уровень соответствует оценке 25-34. 2 уровень оценке 35-44. 3 уровень оценке 45-54.Для успешного заврешения теста необходимо ответить на половину вопросов."
     };
   },
   methods: {
     ...mapActions("helped", [
       "setQuestionsForCurrentPassingTest",
-      "setCurrentTestStudentData",
+      "setCurrentTestStudentData"
     ]),
 
     filterQuestionsByLevel(level) {
       let deepCopyQuestions = this.$_.cloneDeep(this.questions);
       console.log(deepCopyQuestions);
-      let filteredQuestions = deepCopyQuestions.filter((item) =>
+      let filteredQuestions = deepCopyQuestions.filter(item =>
         item.level_id === level ? item : ""
       );
       return filteredQuestions;
@@ -78,7 +78,7 @@ export default {
         test_level: this.selectedLevel,
         group: this.currentTest.group,
         test_id: this.currentTest.id,
-        test_name: this.currentTest.name,
+        test_name: this.currentTest.name
       };
       this.filteredQuestionsByLevel = this.filterQuestionsByLevel(
         this.selectedLevel
@@ -95,42 +95,43 @@ export default {
     },
     selectLevel(e, level) {
       this.selectedLevel = level;
-      this.$refs.levelList.forEach((item) => {
+      this.$refs.levelList.forEach(item => {
         item.firstChild.classList.remove("level__value--active");
       });
       e.target.classList.add("level__value--active");
-    },
+    }
   },
   computed: {
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
     ...mapState("tests", {
-      tests: (state) => state.tests,
+      tests: state => state.tests
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
+      isCurrentLevelOpen: state => state.isCurrentLevelOpen
     }),
     ...mapState("helped", {
-      isTestOpen: (state) => state.isTestOpen,
+      isTestOpen: state => state.isTestOpen
     }),
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
-    }),
+      showQuestions: state => state.showQuestions
+    })
     // ...mapState("questions", {
     //   questions: state => state.questions
     // })
   },
   mounted() {},
   watch: {
-    questions: (item) => {
+    questions: item => {
       console.log(item);
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="postcss" scoped>
+@import url("../styles/mixins.pcss");
 .current_test_info {
   display: flex;
   width: 100%;
@@ -139,17 +140,34 @@ export default {
   background: white;
   border-radius: 6px;
   box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0.14);
+  @include tablets {
+    flex-direction: column;
+  }
 }
 .current_test_info__desc-wrap {
   width: 55%;
   margin-right: 5%;
+  @include tablets {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
 }
 .current_test_actions-wrap {
   width: 45%;
+  @include tablets {
+    width: 100%;
+    margin-right: 0;
+    /* margin-bottom: 20px; */
+  }
 }
 .current_test_level_list {
   display: flex;
 }
+/* .level {
+  width: 100px;
+  height: 50px;
+} */
 .current_test_label {
   color: #363636;
   /* color: black; */
@@ -173,6 +191,10 @@ export default {
     border: 2px solid #db9600;
     border-radius: 4px;
   }
+  @include tablets {
+    width: 70px;
+    line-height: 70px;
+  }
 }
 .current_test_start-wrap {
   width: 100%;
@@ -181,6 +203,13 @@ export default {
 }
 .current_test_select {
   margin-bottom: 20px;
+  background: transparent;
+  border: none;
+  @include tablets {
+    /* box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0); */
+    border: 1px solid grey;
+    border-radius: 5px;
+  }
 }
 .current_test_actions-level {
   margin-bottom: 10px;

@@ -59,7 +59,7 @@ export default {
     MULTY_ANSWER,
     ONE_ANSWER,
     HANDWRITING_ANSWER,
-    TEST_RESULT,
+    TEST_RESULT
   },
   props: {},
   data() {
@@ -73,7 +73,7 @@ export default {
       breadcrumbs: [],
       countOfCorrect: 0,
       // countOfQuestions: this.questions.length,
-      finalMark: "",
+      finalMark: ""
     };
   },
   methods: {
@@ -91,7 +91,7 @@ export default {
       this.calc(this.countOfCorrect);
       let studentResult = {
         ...this.currentStudentData,
-        mark: this.finalMark,
+        mark: this.finalMark
       };
       console.log(studentResult);
       this.showResult = true;
@@ -228,7 +228,7 @@ export default {
     },
     countCorrectAnswers() {
       let countOfCorrect = 0;
-      this.copyQuestions.forEach((item) => {
+      this.copyQuestions.forEach(item => {
         console.log(item);
         item.isAnswerCorrect ? countOfCorrect++ : "";
       });
@@ -237,7 +237,7 @@ export default {
     },
     saveUsersHandwriteAnswer(answerText, question_id, isAnswerCorrect) {
       console.log("emit event after select Handwrite");
-      let updatedQuestions = this.copyQuestions.map((item) => {
+      let updatedQuestions = this.copyQuestions.map(item => {
         console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
@@ -264,11 +264,11 @@ export default {
     },
     setAnswerWithUsersSelect_one(answer, question_id, isAnswerCorrect) {
       console.log("emit event after select OneAsnwer");
-      let updatedQuestions = this.questions.map((item) => {
+      let updatedQuestions = this.questions.map(item => {
         // console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map((item) => {
+          item.answers.map(item => {
             if (item.answer_id == answer.answer_id) {
               item.selectedByStudent = true;
             } else {
@@ -285,13 +285,13 @@ export default {
     setAnswerWithUsersSelect_multy(answer, question_id, isAnswerCorrect) {
       // console.log("emit event after select MultyAsnwer");
       // console.log(answer);
-      let updatedQuestions = this.questions.map((item) => {
+      let updatedQuestions = this.questions.map(item => {
         // console.log(item);
 
         // console.log(question_id);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map((prevAnswer) => {
+          item.answers.map(prevAnswer => {
             prevAnswer.answer_id == answer.answer_id ? answer : prevAnswer;
           });
         }
@@ -306,10 +306,10 @@ export default {
     //   console.log(answer.correct);
     // },
     createQuestionsArrayWithUsersAnswers(questions) {
-      let newQuestionsArray = this.questions.forEach((item) => {
+      let newQuestionsArray = this.questions.forEach(item => {
         // console.log(item);
         if (item.type !== "handwritingAnswer") {
-          item.answers.forEach((answer) => {
+          item.answers.forEach(answer => {
             answer.selectedByStudent = false;
             return answer;
           });
@@ -334,15 +334,15 @@ export default {
     },
     setCurrentQuestion() {
       this.currentQuestion = this.copyQuestions[this.activeQuestion];
-    },
+    }
   },
   computed: {
     ...mapState("helped", {
-      questions: (state) => state.questionsForCurrentPassingTest,
+      questions: state => state.questionsForCurrentPassingTest
     }),
     ...mapState("helped", {
-      currentStudentData: (state) => state.currentTestStudentData,
-    }),
+      currentStudentData: state => state.currentTestStudentData
+    })
     // ...mapState("results", {
     //   results: (state) => state.results,
     // }),
@@ -358,11 +358,13 @@ export default {
     this.copyQuestions = { ...this.questions };
     this.setCurrentQuestion();
     this.createQuestionsArrayWithUsersAnswers(this.questions);
-  },
+  }
 };
 </script>
 
 <style lang="postcss" scoped>
+@import url("../styles/mixins.pcss");
+
 .passing_test__breadcrumbs-list {
   display: flex;
   margin-bottom: 20px;

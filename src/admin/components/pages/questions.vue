@@ -321,6 +321,12 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+@import url("../../../styles/mixins.pcss");
+.answers__list {
+  @include tablets {
+    margin-bottom: 30px;
+  }
+}
 .answer__list-wrapper {
   height: 100px;
   overflow: auto;
@@ -345,6 +351,10 @@ export default {
   box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0.14);
   padding: 3.125rem 1.25rem;
   &:nth-child(2n) {
+    margin-right: 0;
+  }
+  @include phones {
+    width: 100%;
     margin-right: 0;
   }
   /* display: flex; */
@@ -396,6 +406,11 @@ export default {
   &--answer {
     height: 15.3875rem;
   }
+  @include tablets {
+    width: 100%;
+    margin-right: 0;
+    height: 250px;
+  }
 }
 .current_level__file-upload {
   height: 100%;
@@ -432,12 +447,21 @@ export default {
 }
 .answers__data {
   display: flex;
+  @include tablets {
+    flex-direction: column;
+  }
 }
 .answers__data_img {
   width: 40%;
+  @include tablets {
+    width: 100%;
+  }
 }
 .answers__data_content {
   width: 60%;
+  @include tablets {
+    width: 100%;
+  }
 }
 .questions__belongs {
   display: flex;

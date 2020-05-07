@@ -94,6 +94,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
 .answer {
   display: flex;
   flex-direction: row;
@@ -102,6 +103,9 @@ export default {
 .answer__text-wrap {
   width: 75%;
   margin-right: 2%;
+  @include tablets {
+    width: 100%;
+  }
 }
 .answer__correct-wrap {
   margin-right: 2%;
@@ -214,11 +218,15 @@ export default {
     left: 63%;
   } */
 }
+
 .answer__actions {
   width: 15%;
   display: flex;
   position: relative;
   /* margin-top: 10px; */
   align-items: center;
+  @include tablets {
+    width: auto;
+  }
 }
 </style>

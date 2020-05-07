@@ -67,10 +67,10 @@ export default {
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
     KEYWORDS_ANSWER,
-    CURRENT_QUESTION,
+    CURRENT_QUESTION
   },
   props: {
-    questions: Array,
+    questions: Array
   },
   data() {
     return {
@@ -84,7 +84,7 @@ export default {
       isTestOpen: false,
       currentQuestionID: 1,
       currentAnswerImgUrl: "",
-      breadcrumbs: [],
+      breadcrumbs: []
       // answerImgUrl: ""
     };
   },
@@ -92,7 +92,7 @@ export default {
     ...mapActions("helped", [
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus",
-      "changeShowQuestionsStatus",
+      "changeShowQuestionsStatus"
     ]),
     setCurrentQuestion() {
       this.item = this.questions[this.activeQuestion];
@@ -157,12 +157,12 @@ export default {
     closeSection() {
       this.changeShowQuestionsStatus(false);
       this.changeCurrentTestStatus(true);
-    },
+    }
   },
   computed: {
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
-    }),
+      showQuestions: state => state.showQuestions
+    })
   },
   created() {
     this.setCurrentQuestion();
@@ -174,19 +174,30 @@ export default {
     for (var i = 1; i < this.breadcrumbs.length; i++) {
       this.breadcrumbs[i].classList.remove("breadcrumb--active");
     }
-  },
+  }
 };
 </script>
 
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
 .answers__data {
   display: flex;
+  @include tablets {
+    flex-direction: column;
+  }
 }
 .answers__data_img {
   width: 40%;
+  @include tablets {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 }
 .answers__data_content {
   width: 60%;
+  @include tablets {
+    width: 100%;
+  }
 }
 .answer__content {
   padding: 10px;
@@ -293,6 +304,11 @@ export default {
   background-position: 50%;
   &--answer {
     height: 15.3875rem;
+  }
+  @include tablets {
+    margin-right: 0;
+    width: 100%;
+    height: 250px;
   }
 }
 .current_level__file-upload {

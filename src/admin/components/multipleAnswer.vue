@@ -280,6 +280,7 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
 .wrapper- {
   height: 100%;
   display: flex;
@@ -488,6 +489,9 @@ export default {
   border-bottom: 2px solid #414c63;
   padding: 0 0.3125rem 0.625rem;
   width: 100%;
+  @include tablets {
+    font-size: 20px;
+  }
 }
 .answer_new {
   display: flex;

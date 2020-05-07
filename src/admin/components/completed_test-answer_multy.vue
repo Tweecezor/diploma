@@ -17,7 +17,7 @@
         //- pre {{answer}}
         p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
         .answer__checkbox-wrap
-          .answer__checkbox( ref="checkbox_list" )
+          .answer__checkbox( ref="checkbox_list" :class="{answer__checkbox_active:answer.selectedByStudent}")
             <svg v-if="answer.selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
               <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
             </svg>
@@ -223,7 +223,7 @@ export default {
   right: 1.5%;
   cursor: pointer;
   border: 2px solid #434573;
-  &:before {
+  /* &:before {
     content: "";
     background: svg-load("tick.svg", fill= "#434573") center center no-repeat /
       contain;
@@ -233,7 +233,7 @@ export default {
     position: absolute;
     top: 15%;
     left: 16%;
-  }
+  } */
 }
 .question__img-wrap {
   width: 500px;

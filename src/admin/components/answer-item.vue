@@ -219,6 +219,7 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
 /* .answers__wrapper {
   display: flex;
 }

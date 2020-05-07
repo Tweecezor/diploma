@@ -240,6 +240,16 @@ export default {
   &:nth-child(3n) {
     margin-right: 0px;
   }
+  @include tablets {
+    width: calc((100%-2%) / 2);
+    &:nth-child(3n) {
+      margin-right: 1%;
+    }
+  }
+  @include phones {
+    width: 100%;
+    margin-right: 0;
+  }
 }
 input {
   margin-bottom: 10px;
@@ -380,18 +390,18 @@ select {
     transform: translate(-50%, 50%) rotate(45deg);
   } */
   @include phones {
-    width: 4.375rem;
-    height: 4.375rem;
-    margin-bottom: 0;
+    /* width: 4.375rem; */
+    /* height: 4.375rem; */
+    margin-bottom: 5px;
   }
 }
 .test__preview_logo-icon {
   width: 2.125rem;
   height: 2.125rem;
   position: absolute;
-  transform: translate(-50%, 50%) rotate(45deg);
+  transform: translate(-50%, -50%) rotate(45deg);
   fill: white;
-  top: 28%;
+  top: 50%;
   left: 50%;
 }
 .testAdding {
@@ -409,5 +419,9 @@ select {
   color: #fff;
   width: 5.875rem;
   text-align: center;
+  @include tablets {
+    width: 100%;
+    font-size: 23px;
+  }
 }
 </style>

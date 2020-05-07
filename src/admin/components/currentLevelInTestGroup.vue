@@ -76,10 +76,10 @@ export default {
   components: {
     ONE_ANSWER,
     MULTIPLE_ANSWER,
-    HANDWRITING_ANSWER,
+    HANDWRITING_ANSWER
   },
   props: {
-    currentLevel: Object,
+    currentLevel: Object
   },
   data() {
     return {
@@ -88,13 +88,13 @@ export default {
       questionPhotoURl: "",
       answerPhotoURl: "",
       prevAnswerPhotoURl: "",
-      currentAnswer: "",
+      currentAnswer: ""
     };
   },
   methods: {
     ...mapActions("helped", [
       "changeCurrentTestStatus",
-      "changeCurrentLevelStatus",
+      "changeCurrentLevelStatus"
     ]),
     resetData() {
       this.currentQuestion = "";
@@ -159,11 +159,12 @@ export default {
     subitQuestion() {
       this.changeCurrentLevelStatus(false);
       this.changeCurrentTestStatus(true);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
 .current_level-wrapper {
   box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0.14);
   border-radius: 6px;
@@ -176,6 +177,9 @@ export default {
 .current_level__content-top,
 .current_level__content-bottom {
   display: flex;
+  @include tablets {
+    flex-direction: column;
+  }
 }
 .current_level__content-top {
   margin-bottom: 20px;
@@ -196,12 +200,20 @@ export default {
   &--answer {
     height: 15.3875rem;
   }
+  @include tablets {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 20px;
+  }
 }
 .current_level__file-upload {
   height: 100%;
 }
 .current_level-data {
   width: 65%;
+  @include tablets {
+    width: 100%;
+  }
 }
 .current_level__load-text {
   color: #414c63;
@@ -287,7 +299,10 @@ export default {
   color: #414c63;
   font-size: 1rem;
   line-height: 1.875rem;
-  opacity: 0.5;
+  opacity: 0.75;
+  @include tablets {
+    font-size: 18px;
+  }
 }
 .current_level__topic {
   padding-bottom: 1.25rem;
@@ -304,15 +319,22 @@ export default {
   padding: 0 0.3125rem 0.625rem;
   width: 100%;
   margin-bottom: 1.875rem;
+  @include tablets {
+    font-size: 20px;
+  }
 }
 .question__label {
   /* margin-bottom: 1.25rem; */
   display: block;
-  opacity: 0.5;
+  opacity: 0.75;
   color: #414c63;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.875rem;
+  @include tablets {
+    opacity: 0.75;
+    font-size: 18px;
+  }
 }
 .current_level-data--hand {
   width: 100%;

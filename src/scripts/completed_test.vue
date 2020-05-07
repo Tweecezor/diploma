@@ -50,7 +50,7 @@ export default {
   components: {
     MULTY_ANSWER,
     ONE_ANSWER,
-    HANDWRITING_ANSWER,
+    HANDWRITING_ANSWER
   },
   props: {},
   data() {
@@ -60,7 +60,7 @@ export default {
       usersAnswer: [], //массив из ответов студента. Изначально забиваем его на каждый вопрос ложным и потом меняем.
       questionsWithUsersAnswers: [],
       copyQuestions: "",
-      breadcrumbs: [],
+      breadcrumbs: []
     };
   },
   methods: {
@@ -170,12 +170,12 @@ export default {
     },
     setCurrentQuestion() {
       this.currentQuestion = this.copyQuestions[this.activeQuestion];
-    },
+    }
   },
   computed: {
     ...mapState("helped", {
-      questions: (state) => state.completedTestQuestions,
-    }),
+      questions: state => state.completedTestQuestions
+    })
   },
   mounted() {
     this.breadcrumbs = this.$refs.breadcrumb;
@@ -191,11 +191,12 @@ export default {
       this.$router.push("/");
     }
     // this.createQuestionsArrayWithUsersAnswers(this.questions);
-  },
+  }
 };
 </script>
 
 <style lang="postcss" scoped>
+@import url("../styles/mixins.pcss");
 .passing_test__breadcrumbs-list {
   display: flex;
   margin-bottom: 20px;
