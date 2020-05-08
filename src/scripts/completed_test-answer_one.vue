@@ -9,9 +9,10 @@
     )
       .answer__text-wrap()
         //- pre {{answer}}
-        p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
-        .answer__checkbox-wrap
-          .answer__checkbox( ref="checkbox_list" :class="{answer__checkbox_active:answer.selectedByStudent}")
+        .answer__text_content-wrap
+          p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
+          .answer__checkbox-wrap
+            .answer__checkbox( ref="checkbox_list" :class="{answer__checkbox_active:answer.selectedByStudent}")
         .question__img-wrap(v-if="answer.imgURL")
           label.question__img(:style="{'background-image':`url(${answer.imgURL})`}")
       //- pre {{answer.text}}
@@ -169,6 +170,7 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+@import url("../styles/mixins.pcss");
 .answer {
   margin-bottom: 1px;
   /* &:hover {
@@ -188,6 +190,9 @@ export default {
   position: relative;
   /* padding-top: 5px;
   padding-bottom: 5px; */
+  @include tablets {
+    flex-direction: column;
+  }
 }
 .answer__text {
   color: #414c63;
@@ -239,6 +244,9 @@ export default {
   height: 250px;
   /* border: 1px dashed #ccc; */
   padding: 7px;
+  @include tablets {
+    width: 100%;
+  }
 }
 .question__img {
   display: block;
@@ -250,6 +258,16 @@ export default {
 }
 .answerTextWithImg {
   /* color: red; */
+  width: 100%;
+  @include tablets {
+    width: 90%;
+  }
+}
+.answer__text_content-wrap {
+  display: flex;
   width: 50%;
+  @include tablets {
+    width: 100%;
+  }
 }
 </style>

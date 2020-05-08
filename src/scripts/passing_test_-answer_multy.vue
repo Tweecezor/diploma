@@ -16,15 +16,16 @@
         //- pre {{answer.correct}}
         //- pre {{answer.selectedByStudent}}
         //- pre {{answer}}
-        p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
-        .answer__checkbox-wrap
-          .answer__checkbox( ref="checkbox_list" )
-            <svg v-if="answer.selectedByStudent || answersCopy[id].selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
-              <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
-            </svg>
-            <svg v-if="answersCopy[id].selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
-              <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
-            </svg>
+        .answer__text_content-wrap
+          p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
+          .answer__checkbox-wrap
+            .answer__checkbox( ref="checkbox_list" )
+              <svg v-if="answer.selectedByStudent || answersCopy[id].selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+                <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+              </svg>
+              <svg v-if="answersCopy[id].selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+                <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+              </svg>
         .question__img-wrap(v-if="answer.imgURL")
           label.question__img(:style="{'background-image':`url(${answer.imgURL})`}")
       
@@ -94,14 +95,14 @@ export default {
             answer.selectedByStudent
           );
           console.log(isAnswerCorrect);
-          this.answersCopy[id].selectedByStudent = !answersCopy[id]
+          this.answersCopy[id].selectedByStudent = !this.answersCopy[id]
             .selectedByStudent;
           answer.selectedByStudent = !answer.selectedByStudent;
           this.$emit("changeAnswer", answer, this.question_id, isAnswerCorrect);
           e.target.parentNode.parentNode.parentNode.classList.toggle(
             "answer__active"
           );
-          e.target.parentNode.previousSibling.firstChild.classList.toggle(
+          e.target.parentNode.previousSibling.lastChild.firstChild.classList.toggle(
             "answer__checkbox_active"
           );
 
@@ -192,6 +193,7 @@ export default {
 };
 </script>
 <style lang="postcss" scoped>
+@import url("../styles/mixins.pcss");
 .answer {
   margin-bottom: 1px;
   &:hover {
@@ -211,6 +213,9 @@ export default {
   position: relative;
   /* padding-top: 5px;
   padding-bottom: 5px; */
+  @include tablets {
+    flex-direction: column;
+  }
 }
 .answer__text {
   color: #414c63;
@@ -256,6 +261,9 @@ export default {
   height: 250px;
   /* border: 1px dashed #ccc; */
   padding: 7px;
+  @include tablets {
+    width: 100%;
+  }
 }
 .question__img {
   display: block;
@@ -267,7 +275,10 @@ export default {
 }
 .answerTextWithImg {
   /* color: red; */
-  width: 50%;
+  width: 100%;
+  @include tablets {
+    width: 90%;
+  }
 }
 .answer__checkbox_correct {
   fill: #434573;
@@ -280,5 +291,12 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.answer__text_content-wrap {
+  display: flex;
+  width: 50%;
+  @include tablets {
+    width: 100%;
+  }
 }
 </style>
