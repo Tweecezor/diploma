@@ -104,6 +104,7 @@ export default {
 .answer__text-wrap {
   width: 75%;
   margin-right: 2%;
+  width: 100%;
   @include tablets {
     width: 100%;
   }

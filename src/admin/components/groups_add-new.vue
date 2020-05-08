@@ -64,6 +64,7 @@ export default {
   methods: {
     ...mapActions("groups", ["addNewGroup"]),
     ...mapActions("helped", ["changeShowGroupStatus"]),
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
     addGroup() {
       if (this.groupName) {
         let groupId = this.groupId();
@@ -101,6 +102,10 @@ export default {
       console.log(groupWithStudents);
       this.addNewGroup(groupWithStudents);
       this.changeShowGroupStatus(false);
+      this.showTooltip({
+        type: "success",
+        text: "Группа успешно создана"
+      });
     },
     ...mapActions("helped", ["changeShowGroupStatus"]),
     closeEdit() {

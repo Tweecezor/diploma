@@ -227,16 +227,25 @@ export default {
   /* width: calc(100% / 4); */
   width: 100%;
   padding: 10px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  @include phones {
+    padding: 5px;
+    font-size: 14px;
+  }
 }
 .result__table-head-wrap,
 .result__table-content-wrap {
-  width: 100%;
+  width: calc(100% / 4);
   display: flex;
   align-items: center;
   /* border: 1px solid black; */
   border-right: 1px solid black;
   &:last-child {
     border-right: 0;
+  }
+  @include phones {
+    /* font-size: 14px; */
   }
   /* &:last-child {
     border-right: 1px solid black;

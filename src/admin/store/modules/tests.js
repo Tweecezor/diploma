@@ -5,27 +5,27 @@ export default {
       {
         id: 1,
         level: "3",
-        name: "Тут название теста",
+        name: "Тест по первой лекции",
         group: "ИДБ 16 01",
       },
-      {
-        id: 2,
-        level: "3",
-        name: "Тест по 1 лекции",
-        group: "МДБ 17 02",
-      },
-      {
-        id: 3,
-        level: "3",
-        name: "Тест по 2 лекции",
-        group: "МДБ 17 02",
-      },
-      {
-        id: 4,
-        level: "3",
-        name: "Лекция 1. ТЕстирование",
-        group: "ИДБ 16 01",
-      },
+      // {
+      //   id: 2,
+      //   level: "3",
+      //   name: "Тест по 1 лекции",
+      //   group: "МДБ 17 02",
+      // },
+      // {
+      //   id: 3,
+      //   level: "3",
+      //   name: "Тест по 2 лекции",
+      //   group: "МДБ 17 02",
+      // },
+      // {
+      //   id: 4,
+      //   level: "3",
+      //   name: "Лекция 1. ТЕстирование",
+      //   group: "ИДБ 16 01",
+      // },
     ],
   },
   actions: {
@@ -37,7 +37,7 @@ export default {
   mutations: {
     ADD_NEW_GROUP(state, obj) {
       console.log(state);
-      state.tests.push(obj);
+      state.tests.unshift(obj);
     },
   },
   getters: {

@@ -4,12 +4,7 @@
     //- pre {{tests}}
     //- pre {{questions}}
     .wrapper-test
-      //- CURRENT_LEVEL_IN_TEST_GROUP(:currentLevel="this.currentLevelInTestGroup" v-if="isCurrentLevelOpen")
-      //- CURRENT_TEST_GROUP(@showAllQuestionsInGroup="showAllQuestionsInGroup" v-if="isTestOpen" :currentTestGroup="this.currentTestGroup" :levelsCount="+this.currentTestGroup.level" @addNewQuestion="addQuestion")
-      //- ALL_QUESTIONS_IN_GROUP(v-if="showQuestions" :questions="filteredQuestions")
-      //- .a(@click="openN") HEY
       .addedWrapper(v-if="showAllTests")
-        //- pre {{showAddNew}};
         ul.created_test-list
           li(v-if="" :class="{testAdding:showAddNew}").created_test-item.test.test--new
             .test__preview#preview(v-if="!showAddNew" @click="showAddNew = true")
@@ -24,7 +19,7 @@
                 .test__name-wrap
                   label.test__name-label.test__label Введите название теста
                 .test__name-wrap
-                  input(type="text" v-model="obj.name").test__name-input
+                  input(type="text" v-model="obj.name" placeholder="Название теста").test__name-input
               .test__levels
                 .test__levels-wrap
                   label.test__levels-label.test__label Количество уровней
@@ -94,7 +89,7 @@ export default {
       showAddNew: false,
       obj: {
         level: "3",
-        name: "Тут название теста",
+        name: "",
         group: ""
       }
     };

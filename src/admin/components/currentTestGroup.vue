@@ -2,11 +2,11 @@
   .currentTest
     //- pre {{currentTestGroup}}
     ul.currentTest__list
-      li.currentTest__item.level(v-for="(item,levelId) in +currentTestGroup.level")
+      li.currentTest__item.level(v-for="(item,levelId) in +currentTestGroup.level" @mouseleave="removeActive($event)" @mouseover="addActive($event)")
         .level__title-wrap
           h2.level__title Уровень {{levelId+1}}
         .level__actions
-          button(@click="addQuestions(levelId+1)").level__actions_btn Добавить вопросы
+          button(@click="addQuestions(levelId+1)").level__actions_btn Создать вопрос
           button(@click="downloadQuestions").level__actions_btn Загрузить вопрос
           button(@click="showQuestions(levelId+1)").level__actions_btn Показать вопросы
 </template> 
@@ -27,6 +27,15 @@ export default {
   },
   methods: {
     ...mapActions("helped", ["changeShowQuestionsStatus"]),
+    removeActive(e) {
+      e.currentTarget.classList.remove("level--active");
+    },
+    addActive(e) {
+      // e.stopPropagation();
+      console.log(e.currentTarget);
+
+      e.currentTarget.classList.add("level--active");
+    },
     filterQuestion(questions, levelId, groupId) {
       let filteredQuestions = questions.filter(function(question) {
         // console.log(question);
@@ -70,6 +79,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
 .currentTest {
   width: 100%;
   padding: 40px;
@@ -80,6 +90,16 @@ export default {
 }
 .currentTest__list {
   display: flex;
+  @include phones {
+    flex-direction: column;
+  }
+}
+.level--active {
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
 .level {
   /* border: 1px solid black; */
@@ -90,11 +110,21 @@ export default {
   background: white;
 
   position: relative;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+  /* &:hover {
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+      0 0 40px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+      0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  } */
+  /* -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
     0 0 40px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
     0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset; */
+
+  /* background: grey;
+  /* box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0); */
   &:after,
   &:before {
     content: "";
@@ -120,8 +150,13 @@ export default {
     transform: skew(8deg) rotate(3deg);
   }
   margin-right: 2%;
-  :&nth-child(3) {
+  :&nth-child(3)  {
     margin-right: 0px;
+  }
+  @include phones {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 30px;
   }
 }
 .level__title {

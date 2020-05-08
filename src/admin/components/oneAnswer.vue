@@ -1,38 +1,9 @@
 <template lang="pug">
   .wrapper-
-    pre {{currentLevel}}
+    //- pre {{currentLevel}}
     //- pre {{questionPhotoURl}}
     //- pre {{answerPhotoURl}}
     .question
-      //- .question__wrapper
-      //-   //- .question__title-wrapper
-      //-   //-   label(for="question__title"  v-model="question_title").question__label.question__title Введите вопрос
-      //-   //- .question__input-wrapper
-      //-   //-   input(type="text" :disabled="editQuestion" v-model="currentQuestion").question__input
-      //-   .question__actions
-      //-     .questions__actions_btn(v-if="editQuestionMode")
-      //-       button(type="button" @click="editQuestion = false").question__actions_btn-edit Редактировать
-      //-       button(type="button" ).question__actions_btn-delete Удалить
-      //-     //- .questions__actions_btn(v-if="editQuestionMode")
-      //-     //-   button(@click.prevent="editQuestion = true").question__actions_btn-save Сохранить
-      //-     //-   button(@click.prevent="editQuestion = true").question__actions_btn-save Сохранить
-      //-     .questions__actions_img
-      //-       .questions__actions_img-wrap
-      //-         label(for="addQuestionImg").questions__actions_img-label Добавить изображение?
-      //-       .questions__actions_img-wrap 
-      //-         input(type="checkbox" id="addQuestionImg" v-model="questionWithPhoto" ).questions__actions_img-input
-      //- input(type="file" @change="loadPhoto" accept="image/*" id="question_img").input_question_img 
-      //- label(for="question_img" v-if="questionWithPhoto" ).question_img
-      //-   .question_avatar(:style="{'background-image':`url(${this.questionPhotoURl})`}")
-      //-     label(for="question_img").question__change_img(v-if="questionPhotoURl && !editQuestion") Заменить
-      //- //- .question__title-wrapper(v-if="showInputAnswer")
-      //- //-   label(for="question__title" v-model="question_title").question__label Текст вопроса
-      //- //-   b(v-model="currentQuestion").question__titile {{this.currentQuestion}}
-      //- //-   label Изображение
-      //- //-   div(v-if="questionWithPhoto").question_img 
-      //- //-     .question_avatar(:style="{'background-image':`url(${this.questionPhotoURl})`}")
-      //- button( v-if="!showInputAnswer" type="button" @click="addQuestion") Добавить вопрос
-      //- hr
       .answer_new
         .answer_new__data
           .answer_new__topic-wrap
@@ -54,17 +25,9 @@
             v-on:emitDropAnswerURL="resetAnswerUrl"
             v-on:emitDeleteAnswer="deleteCurrentAnswer"
           )
-      
-
-      //- label(for="addAnswerImg") Добавить изображение?
-      //-   input(type="checkbox" id="addAnswerImg" v-model="answerWithPhoto" )
-      //- input(type="file" @change="loadAnswerPhoto" accept="image/*" id="answer_img").input_question_img 
-      //- label(for="answer_img" v-if="answerWithPhoto" ).question_img
-      //-   .question_avatar(:style="{'background-image':`url(${this.answerPhotoURl})`}")
     .actions__button-wrap
       button(@click="endWorkWithQUestion").actions__button-end Завершить
       button(@click="subitQuestion").save.btn Создать вопрос 
-    //- button(type="submit" @click="subitQuestion").save Сохранить вопрос
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";

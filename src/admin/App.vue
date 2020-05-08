@@ -63,6 +63,9 @@ export default {
 @import "../styles/layout/base.pcss";
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800");
 
+button {
+  background: transparent;
+}
 .title-wrap {
   display: flex;
   margin-bottom: 30px;
@@ -139,6 +142,7 @@ input[type="text"] {
   border-bottom: 2px solid #000;
 }
 input[type="text"]:disabled {
+  background: transparent;
   &:hover {
     border-bottom: 2px solid #000;
   }
