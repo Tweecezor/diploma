@@ -2,7 +2,7 @@
   .currentTest
     //- pre {{currentTestGroup}}
     ul.currentTest__list
-      li.currentTest__item.level(v-for="(item,levelId) in +currentTestGroup.level" @mouseleave="removeActive($event)" @mouseover="addActive($event)")
+      li.currentTest__item.level(v-for="(item,levelId) in +currentTestGroup.level")
         .level__title-wrap
           h2.level__title Уровень {{levelId+1}}
         .level__actions
@@ -27,15 +27,15 @@ export default {
   },
   methods: {
     ...mapActions("helped", ["changeShowQuestionsStatus"]),
-    removeActive(e) {
-      e.currentTarget.classList.remove("level--active");
-    },
-    addActive(e) {
-      // e.stopPropagation();
-      console.log(e.currentTarget);
+    // removeActive(e) {
+    //   e.currentTarget.classList.remove("level--active");
+    // },
+    // addActive(e) {
+    //   // e.stopPropagation();
+    //   console.log(e.currentTarget);
 
-      e.currentTarget.classList.add("level--active");
-    },
+    //   e.currentTarget.classList.add("level--active");
+    // },
     filterQuestion(questions, levelId, groupId) {
       let filteredQuestions = questions.filter(function(question) {
         // console.log(question);
@@ -117,11 +117,11 @@ export default {
       0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   } */
-  /* -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
     0 0 40px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
     0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset; */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 
   /* background: grey;
   /* box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0); */
