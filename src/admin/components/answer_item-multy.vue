@@ -5,7 +5,7 @@
       input(type="text" v-model="answer.text"  ).answers__text
     .answer__correct-wrap
       input(type="checkbox" name="isCorrect" v-bind:value="answer.text" id="isCorrect" @change="setCorrectAnswer").answer__correct 
-    .answer__actions(v-if="!editAnswer")
+    .answer__actions(v-if="!editAnswer" :class="{answers__actions__disabled:isActiveModeActive}")
       //- .answer__actions-edit(v-if="!editAnswer" @click="editAnswer = true")
       <svg height="512pt" class="answer__actions-photo" @click="showAnswerImg(answer)" viewBox="0 -64 512 512" width="512pt" xmlns="http://www.w3.org/2000/svg">
         <path d="m149.332031 106.667969c0 23.5625-19.101562 42.664062-42.664062 42.664062-23.566407 0-42.667969-19.101562-42.667969-42.664062 0-23.566407 19.101562-42.667969 42.667969-42.667969 23.5625 0 42.664062 19.101562 42.664062 42.667969zm0 0" />
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   props: {
     answer: Object,
@@ -40,10 +41,13 @@ export default {
     };
   },
   methods: {
-    // deleteCurrentAnswer(answer) {
-    //   console.log(answer);
-    //   this.$emit("emitDeleteAnswer", answer);
-    // },
+    deleteCurrentAnswer(answer) {
+      if (!this.isActiveModeActive) {
+        console.log(answer);
+        this.$emit("emitDeleteAnswer", answer);
+      }
+    },
+    ...mapActions("helped", ["setEditStatus"]),
     cancelChangeAnswer(answer) {
       this.answers.forEach(item => {
         if (item.answer_id === answer.answer_id) {
@@ -51,6 +55,7 @@ export default {
         }
       });
       this.editAnswer = false;
+      this.setEditStatus(false);
       this.$emit("emitDropAnswerURL");
     },
     changeAnswer(answer) {
@@ -61,11 +66,15 @@ export default {
         }
       });
       this.editAnswer = false;
+      this.setEditStatus(false);
       this.$emit("emitDropAnswerURL");
     },
     showAnswerImg(answer) {
-      this.editAnswer = true;
-      this.$emit("emitShowAnswerImg", { answer });
+      if (!this.isActiveModeActive) {
+        this.editAnswer = true;
+        this.$emit("emitShowAnswerImg", { answer });
+        this.setEditStatus(true);
+      }
     },
     setCorrectAnswer(e) {
       console.log(this.answers);
@@ -89,6 +98,14 @@ export default {
       // console.log(e.target.value);
       // console.log(e.target.checked);
     }
+  },
+  computed: {
+    ...mapState("helped", {
+      isActiveModeActive: state => state.isEditActive
+    })
+  },
+  mounted() {
+    this.setEditStatus(false);
   }
 };
 </script>
@@ -228,6 +245,11 @@ export default {
   align-items: center;
   @include tablets {
     width: auto;
+  }
+}
+.answers__actions__disabled {
+  svg {
+    opacity: 0.5;
   }
 }
 </style>

@@ -6,6 +6,7 @@
       //- .group_item(v-for="group in groups")
       //- pre {{filteredTestByGroup}}
       //- pre {{currentGroup}}
+      //- pre {{results}}
       .group_breadcrumbs
         ul.group_breadcrumbs__list
           li.group_breadcrumbs_item.breadcrumb( ref="breadcrumb_group" v-for="(item,id) in groups" @click="changeCurrentGroup(item,id)")
@@ -228,7 +229,10 @@ export default {
   width: 100%;
   padding: 10px;
   word-wrap: break-word;
-  white-space: pre-wrap;
+  /* white-space: pre-wrap;  */
+  /* -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto; */
   @include phones {
     padding: 5px;
     font-size: 14px;

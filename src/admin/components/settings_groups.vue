@@ -22,34 +22,52 @@
 import { mapActions, mapState } from "vuex";
 import ADD_NEW_GROUP from "./groups_add-new";
 import GROUP_ITEM from "./groups_item";
+// import axios from "axios";
 export default {
   components: {
     ADD_NEW_GROUP,
-    GROUP_ITEM
+    GROUP_ITEM,
   },
   data() {
     return {
-      // currentGroup: "",
-      // groupsArray: []
+      info: "",
     };
   },
   methods: {
     ...mapActions("helped", ["changeShowGroupStatus"]),
     showAddNew() {
       this.changeShowGroupStatus(true);
-    }
+    },
   },
   computed: {
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     ...mapState("helped", {
-      showAddGroup: state => state.showAddGroup
-    })
+      showAddGroup: (state) => state.showAddGroup,
+    }),
   },
-  mounted() {
+  async mounted() {
     this.changeShowGroupStatus(false);
-  }
+    // await axios({
+    //   url: "http://localhost:3000/test",
+    //   method: "get",
+    //   data: {
+    //     name: this.name,
+    //     email: this.email,
+    //     address: this.address,
+    //     gender: this.gender,
+    //   },
+    // });
+    this.$axios
+      .get("https://api.coindesk.com/v1/bpi/currentprice.json")
+      .then((response) => (this.info = response.data.bpi));
+  },
+  // watch: {
+  //   groups: function() {
+  //     this.groups = this.groups;
+  //   }
+  // }
 };
 </script>
 

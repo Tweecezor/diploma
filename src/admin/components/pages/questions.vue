@@ -68,22 +68,6 @@
                 h1.question__add_topic Загрузка вопроса 
            
             QUESTION_SELECT(:question="question")
-          //- pre {{question}}
-          //- div Текст вопроса
-          //-   input(type="text" v-model="question.question.text")
-          //- hr
-          //- .answer__list-wrapper(v-if="question.type!='handwritingAnswer'")
-          //-   ul().answers__list Список ответов
-          //-     li.answers__item(v-for="answer in question.answers")
-          //-       //- pre {{answer}}
-          //-       input(type="text" v-model="answer.text" disabled)
-          //-       input(v-if="question.type=='multipleAnswer'" type="checkbox" v-model="answer.correct" disabled)
-          //-       input(v-if="question.type=='oneAnswer'" type="radio" :name="answer.answer_id" :checked="answer.correct" v-model="answer.correct" )
-          //- .answer__list-wrapper(v-else)
-          //-   ul.answers__list Список ключевых слов
-          //-     li.answers__item(v-for="keyword in question.keywordsArray")
-          //-       pre {{keyword}}
-         
           
 </template>
 

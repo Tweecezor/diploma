@@ -1,26 +1,5 @@
 <template lang="pug">
   .wrapper-
-    //- pre {{keywordsArray}}
-    //- div Рукописный ввод 
-    //- form(@submit.prevent="subitQuestion").question
-    //-   .question__wrapper
-    //-     .question__title-wrapper()
-    //-       label(for="question__title"  v-model="question_title").question__label Введите вопрос
-    //-       input(type="text" :disabled="editQuestion" v-model="currentQuestion").question__titile
-    //-       div(v-if="editQuestionMode")
-    //-         button(type="button" @click="editQuestion = false") Редактировать
-    //-         button(@click.prevent="editQuestion = true") Сохранить
-    //-       label(for="addQuestionImg") Добавить изображение?
-    //-         input(type="checkbox" id="addQuestionImg" v-model="questionWithPhoto" )
-    //-       input(type="file" @change="loadPhoto" accept="image/*" id="question_img").input_question_img 
-    //-       label(for="question_img" v-if="questionWithPhoto" ).question_img
-    //-         .question_avatar(:style="{'background-image':`url(${this.questionPhotoURl})`}")
-    //-           label(for="question_img").question__change_img(v-if="questionPhotoURl && !editQuestion") Заменить
-    //-     button( v-if="!showInputAnswer" type="button" @click="addQuestion").addQuestion Добавить вопрос
-    //-     hr
-    //- pre {{currentQuestion}}
-    //- pre {{questionPhotoURl}}
-    //- pre {{currentLevel}}
     .keywords__add
       .keywords__add_label-wrap
         label(for="input-tag").keywords__add_label Ключевое слово
@@ -46,12 +25,8 @@ export default {
   },
   data() {
     return {
-      // correct: false,
-
-      // questionPhotoURl: "",
       questionWithPhoto: false,
       question: {},
-      // currentQuestion: "",
       question_title: "",
       typeOfQuestion: "",
       currentQuestion_id: "",
@@ -63,68 +38,51 @@ export default {
     };
   },
   methods: {
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
     endWorkWithQUestion() {
       this.$emit("emitEndWork");
     },
 
     addKeyword() {
       if (this.keyword) {
-        // console.log(this.keyword);
         console.log(this.keyword.length);
-        while (this.keyword.lastIndexOf(" ") != -1) {
-          // console.log("empty");
-          this.keyword = this.keyword.slice(0, this.keyword.length - 1);
-        }
-        // console.log(this.keyword.length);
-        // this.keyword = this.keyword.slice(0, this.keyword.length - 1);
-        // console.log(this.keyword.length);
+        // while (this.keyword.lastIndexOf(" ") != -1) {
+        //   // console.log("empty");
+        //   this.keyword = this.keyword.slice(0, this.keyword.length - 1);
+        // }
+        this.keyword = this.keyword.trim();
+
         console.log(this.keyword.length);
-        this.keywordsArray.push(this.keyword);
+        this.keywordsArray.push(this.keyword.toLowerCase());
         this.keyword = "";
+        this.showTooltip({
+          type: "success",
+          text: "Ключевое слово добавлено"
+        });
       } else {
-        alert("Введите что-то");
+        this.showTooltip({
+          type: "error",
+          text: "Введите ключевое слово"
+        });
       }
     },
     removeKeyword(currentKeyword) {
       console.log(currentKeyword);
       this.keywordsArray.splice(currentKeyword, 1);
+      this.showTooltip({
+        type: "success",
+        text: "Ключевое слово успешно удалено"
+      });
       console.log(this.keywordsArray);
     },
-    // saveChangedAnswer(id, newAnswerText) {
-    //   // console.log(newAnswerText);
-    //   // console.log(id);
-    //   // console.log(this.answers);
-    //   console.log(this.editAnswer);
-    //   this.editAnswer = !this.editAnswer;
-    //   console.log(this.editAnswer);
-    //   this.answers.filter(item => {
-    //     if (item.answer_id === id) {
-    //       item.text = newAnswerText;
-    //       return item;
-    //     } else {
-    //       return item;
-    //     }
-    //   });
-    // },
+
     editCurrentQuestion() {
       this.editQuestion = false;
     },
     saveEditedQuestion() {
       this.editQuestion = true;
     },
-    // loadAnswerPhoto(e) {
-    //   const file = e.target.files[0];
-    //   const reader = new FileReader();
-    //   try {
-    //     reader.readAsDataURL(file);
-    //     reader.onload = () => {
-    //       this.answerPhotoURl = reader.result;
-    //     };
-    //   } catch (error) {
-    //     alert(error.message);
-    //     console.log(error.message.errors.photo);
-    //   }
-    // },
+
     loadPhoto(e) {
       const file = e.target.files[0];
       console.log(file);
@@ -140,29 +98,9 @@ export default {
       }
     },
     ...mapActions("questions", ["addNew"]),
-    // setCorrectAnswer(e) {
-    //   // console.log(this.answers);
-    //   let updatedAnswers = this.answers.map(function(item) {
-    //     // console.log(item);
-    //     if (item.text === e.target.value) {
-    //       item.correct = e.target.checked;
-    //       return item;
-    //     } else {
-    //       // item.correct = false;
-    //       return item;
-    //     }
-    //   });
-    //   // console.log(updatedAnswers);
-    //   this.answers = updatedAnswers;
-    //   this.isCorrectAnswerSet = true;
-    //   console.log(e.target.value);
-    //   console.log(e.target.checked);
-    // },
     resetData() {
-      // this.questionPhotoURl = "";
       this.questionWithPhoto = false;
       this.question = {};
-      // this.currentQuestion = "";
       this.question_title = "";
       this.typeOfQuestion = "";
       this.currentQuestion_id = "";
@@ -174,39 +112,45 @@ export default {
     },
     subitQuestion() {
       console.log(this.keywordsArray);
+      if (this.keywordsArray.length) {
+        let qId = this.question_id(
+          this.currentLevel.levelId,
+          this.currentLevel.testid
+        );
 
-      let qId = this.question_id(
-        this.currentLevel.levelId,
-        this.currentLevel.testid
-      );
+        if (qId === "empty") {
+          this.currentQuestion_id = 1;
+        } else {
+          this.currentQuestion_id = qId + 1;
+        }
 
-      if (qId === "empty") {
-        this.currentQuestion_id = 1;
+        const questionWithKeywords = {
+          type: "handwritingAnswer",
+          question: {
+            text: this.currentQuestion,
+            img: this.questionPhotoURl,
+            question_id: Date.now()
+            // question_id: this.currentQuestion_id
+          },
+          keywordsArray: this.keywordsArray,
+          level_id: this.currentLevel.levelId,
+          test_id: this.currentLevel.testid
+        };
+
+        console.log(questionWithKeywords);
+        this.addNew(questionWithKeywords);
+        this.resetData();
+        this.$emit("emitResetData");
+        this.showTooltip({
+          type: "success",
+          text: "Вопрос успешно создан"
+        });
       } else {
-        this.currentQuestion_id = qId + 1;
+        this.showTooltip({
+          type: "error",
+          text: "Сначала добавьте ключевые слова"
+        });
       }
-
-      const questionWithKeywords = {
-        type: "handwritingAnswer",
-        question: {
-          text: this.currentQuestion,
-          img: this.questionPhotoURl,
-          question_id: this.currentQuestion_id
-        },
-        keywordsArray: this.keywordsArray,
-        level_id: this.currentLevel.levelId,
-        test_id: this.currentLevel.testid
-      };
-
-      console.log(questionWithKeywords);
-      this.addNew(questionWithKeywords);
-      this.resetData();
-      this.$emit("emitResetData");
-
-      //   this.changeCurrentLevelStatus(false);
-      // } else {
-      //   alert("Выберите верный вариант ответа");
-      // }
     },
     addQuestion() {
       console.log(this.currentQuestion);
@@ -221,33 +165,13 @@ export default {
         this.editQuestionMode = !this.editQuestionMode;
       }
     }
-    // addAnswer() {
-    //   // console.log(this.currentAnswer);
-    //   if (!this.currentAnswer && !this.answerPhotoURl) {
-    //     alert("Добавьте текст или изображение");
-    //   } else {
-    //     let answer = {
-    //       text: this.currentAnswer,
-    //       correct: false,
-    //       imgURL: this.answerPhotoURl,
-    //       answer_id: this.answers.length + 1
-    //     };
-    //     this.answers.push(answer);
-    //     this.currentAnswer = "";
-    //     this.answerWithPhoto = false;
-    //     this.answerPhotoURl = "";
-    //     this.editAnswer = true;
-    //   }
-    // }
   },
   computed: {
     ...mapGetters("questions", ["question_id"])
   },
   watch: {
     questionWithPhoto: function(status) {
-      // console.log(status);
       if (!status) {
-        // console.log(this.photoURl);
         this.questionPhotoURl = "";
       }
     }

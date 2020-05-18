@@ -32,8 +32,8 @@ export default {
         case "Прохождение":
           return this.$router.push("/publicTests");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

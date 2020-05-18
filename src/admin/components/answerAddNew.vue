@@ -24,6 +24,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
     ...mapActions("questions", [
       "changeAnswerStatus",
       "updateAnswer",
@@ -44,6 +45,10 @@ export default {
       console.log(newAnswer);
       this.newAnswer = "";
       this.addNewAnswer(newAnswer);
+      this.showTooltip({
+        type: "success",
+        text: "Ответ успешно добавлен"
+      });
       this.$emit("emitResetAnswerImgUrl");
     }
     // loadImg(e) {

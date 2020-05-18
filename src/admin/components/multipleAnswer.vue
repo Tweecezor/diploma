@@ -1,23 +1,6 @@
 <template lang="pug">
   .wrapper-
-    //- pre {{editQuestion}}
-    //- div МНОЖЕСТВЕННЫЙ ОТВЕТ 
-    //- form(@submit.prevent="subitQuestion").question
     .question
-      //- .question__title-wrapper()
-      //-   label(for="question__title"  v-model="question_title").question__label Введите вопрос
-      //-   input(type="text" :disabled="editQuestion" v-model="currentQuestion").question__titile
-      //-   div(v-if="editQuestionMode")
-      //-     button(type="button" @click="editQuestion = false") Редактировать
-      //-     button(@click.prevent="editQuestion = true") Сохранить
-      //-   label(for="addQuestionImg") Добавить изображение?
-      //-     input(type="checkbox" id="addQuestionImg" v-model="questionWithPhoto" )
-      //-   input(type="file" @change="loadPhoto" accept="image/*" id="question_img").input_question_img 
-      //-   label(for="question_img" v-if="questionWithPhoto" ).question_img
-      //-     .question_avatar(:style="{'background-image':`url(${this.questionPhotoURl})`}")
-      //-       label(for="question_img").question__change_img(v-if="questionPhotoURl && !editQuestion") Заменить
-      //- button( v-if="!showInputAnswer" type="button" @click="addQuestion") Добавить вопрос
-      //- hr
       .answer_new
         .answer_new__data
           .answer_new__topic-wrap
@@ -37,23 +20,12 @@
             v-on:emitSetCorrectAnswer="setCorrectAnswer" 
             v-on:emitShowAnswerImg="showAnswerImg"
             v-on:emitDropAnswerURL="resetAnswerUrl"
+             v-on:emitDeleteAnswer="deleteCurrentAnswer"
           )
-         
-      
-      //- .answer()
-      //-   label.answer__label Введите ответ
-      //-   input(type="text" v-model="currentAnswer")
-      //-   //- label(for="addAnswerImg") Добавить изображение?
-      //-   //-   input(type="checkbox" id="addAnswerImg" v-model="answerWithPhoto" )
-      //-   //- input(type="file" @change="loadAnswerPhoto" accept="image/*" id="answer_img").input_question_img 
-      //-   //- label(for="answer_img" v-if="answerWithPhoto" ).question_img
-      //-   //-   .question_avatar(:style="{'background-image':`url(${this.answerPhotoURl})`}")
-      //-   button(type="button" @click="addAnswer").addAnswer__button Добавить ответ
-
     .actions__button-wrap
       button(@click="endWorkWithQUestion").actions__button-end Завершить
       button(@click="subitQuestion").save.btn Создать вопрос 
-    //- button( @click="subitQuestion").save Сохранить вопрос
+
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
@@ -91,6 +63,17 @@ export default {
     };
   },
   methods: {
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
+    deleteCurrentAnswer(answer) {
+      this.answers = this.answers.filter(item => {
+        console.log(item);
+        return item.answer_id !== answer.answer_id ? item : "";
+      });
+      this.showTooltip({
+        type: "success",
+        text: "Ответ успешно удален"
+      });
+    },
     endWorkWithQUestion() {
       this.$emit("emitEndWork");
     },
@@ -162,31 +145,12 @@ export default {
     ...mapActions("questions", ["addNew"]),
 
     setCorrectAnswer(updatedAnswers) {
-      // console.log(this.answers);
-      // let updatedAnswers = this.answers.map(function(item) {
-      //   // console.log(item);
-      //   if (item.text === e.target.value) {
-      //     item.correct = e.target.checked;
-      //     return item;
-      //   } else {
-      //     // item.correct = false;
-      //     return item;
-      //   }
-      // });
-      // console.log(updatedAnswers);
       this.answers = updatedAnswers.updatedAnswers;
       this.isCorrectAnswerSet = true;
-      // console.log(e.target.value);
-      // console.log(e.target.checked);
     },
     resetData() {
       this.answerWithPhoto = false;
-      // this.answerPhotoURl = "";
-      // this.questionPhotoURl = "";
-      // this.questionWithPhoto = false;
-      // this.currentAnswer = "";
       this.question = {};
-      // this.currentQuestion = "";
       this.question_title = "";
       this.showInputAnswer = false;
       this.answers = [];
@@ -195,17 +159,14 @@ export default {
     subitQuestion() {
       console.log(this.answers);
       if (this.isCorrectAnswerSet) {
-        // console.log("Нудная id для вопроса");
         let qId = this.question_id(
           this.currentLevel.levelId,
           this.currentLevel.testid
         );
-        // console.log("qID = " + qId);
+
         if (qId === "empty") {
-          // console.log("TRUE TRUE TRUE");
           this.currentQuestion_id = 1;
         } else {
-          // console.log(qId);
           this.currentQuestion_id = qId + 1;
         }
 
@@ -214,7 +175,8 @@ export default {
           question: {
             text: this.currentQuestion,
             img: this.questionPhotoURl,
-            question_id: this.currentQuestion_id
+            question_id: Date.now()
+            // question_id: this.currentQuestion_id
           },
           answers: this.answers,
           level_id: this.currentLevel.levelId,
@@ -222,13 +184,19 @@ export default {
         };
 
         console.log(questionWithAnswers);
+        console.log(typeof questionWithAnswers.question.question_id);
         this.addNew(questionWithAnswers);
         this.resetData();
         this.$emit("emitResetData");
-
-        //   this.changeCurrentLevelStatus(false);
+        this.showTooltip({
+          type: "success",
+          text: " Вопрос успешно создан"
+        });
       } else {
-        alert("Выберите верный вариант ответа");
+        this.showTooltip({
+          type: "error",
+          text: "Выберите верные варианты ответа"
+        });
       }
     },
     addQuestion() {
@@ -253,13 +221,11 @@ export default {
           text: this.currentAnswer,
           correct: false,
           imgURL: this.answerPhotoURl,
-          answer_id: this.answers.length + 1
+          answer_id: Date.now()
+          // answer_id: this.answers.length + 1
         };
         this.answers.push(answer);
         this.currentAnswer = "";
-        // this.answerWithPhoto = false;
-        // this.answerPhotoURl = "";
-        // this.editAnswer = true;
       }
       console.log(this.answers);
       this.$emit("resetAnswerUrl");
@@ -270,9 +236,7 @@ export default {
   },
   watch: {
     questionWithPhoto: function(status) {
-      // console.log(status);
       if (!status) {
-        // console.log(this.photoURl);
         this.questionPhotoURl = "";
       }
     }

@@ -58,6 +58,7 @@ export default {
       "setQuestionsForCurrentPassingTest",
       "setCurrentTestStudentData"
     ]),
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
 
     filterQuestionsByLevel(level) {
       let deepCopyQuestions = this.$_.cloneDeep(this.questions);
@@ -69,7 +70,11 @@ export default {
     },
     startTest() {
       if (this.selectedStudent === "" || this.selectedLevel === "") {
-        alert("Выберите уровень теста и ФИО");
+        // alert("Выберите уровень теста и ФИО");
+        this.showTooltip({
+          type: "error",
+          text: "Выберите уровень теста и ФИО"
+        });
         return;
       }
 
@@ -132,6 +137,7 @@ export default {
 
 <style lang="postcss" scoped>
 @import url("../styles/mixins.pcss");
+
 .current_test_info {
   display: flex;
   width: 100%;
@@ -203,8 +209,8 @@ export default {
 }
 .current_test_select {
   margin-bottom: 20px;
-  background: transparent;
-  border: none;
+  /* background: transparent; */
+  /* border: none; */
   @include tablets {
     /* box-shadow: 0.25rem 0.1875rem 1.25rem rgba(0, 0, 0, 0); */
     border: 1px solid grey;

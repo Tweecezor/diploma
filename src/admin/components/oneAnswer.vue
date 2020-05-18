@@ -3,6 +3,7 @@
     //- pre {{currentLevel}}
     //- pre {{questionPhotoURl}}
     //- pre {{answerPhotoURl}}
+    //- pre {{isCorrectAnswerSet}}
     .question
       .answer_new
         .answer_new__data
@@ -65,6 +66,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
+
     endWorkWithQUestion() {
       this.$emit("emitEndWork");
     },
@@ -73,10 +76,13 @@ export default {
       this.$emit("resetAnswerUrl");
     },
     deleteCurrentAnswer(answer) {
-      // console.log(answer);
       this.answers = this.answers.filter(item => {
         console.log(item);
         return item.answer_id !== answer.answer_id ? item : "";
+      });
+      this.showTooltip({
+        type: "success",
+        text: "Ответ успешно удален"
       });
     },
     changeAnswer(answer) {
@@ -91,7 +97,6 @@ export default {
     showAnswerImg(answer) {
       console.log(answer);
       let currentAnswer = answer.answer;
-      // this.editAnswer = true;
       this.$emit("showCurrentAnswerIMG", { answer: currentAnswer });
     },
     saveChangedAnswer(id, newAnswerText) {
@@ -133,26 +138,8 @@ export default {
     //   "changeCurrentLevelStatus"
     // ]),
     setCorrectAnswer(updatedAnswers) {
-      // console.log(this.answers);
-      // console.log(e.target.value);
-      // console.log(e.target.checked);
-      // let updatedAnswers = this.answers.map(function(item) {
-      //   // console.log(item);
-      //   if (item.text === e.target.value) {
-      //     item.correct = e.target.checked;
-      //     return item;
-      //   } else {
-      //     item.correct = false;
-      //     return item;
-      //   }
-      // });
-      // console.log(updatedAnswers.updatedAnswers);
       this.answers = updatedAnswers.updatedAnswers;
-      // console.log(this.answers);
-
       this.isCorrectAnswerSet = true;
-      // console.log(e.target.value);
-      // console.log(e.target.checked);
     },
     resetData() {
       this.answerWithPhoto = false;
@@ -166,20 +153,17 @@ export default {
       this.showInputAnswer = false;
       this.answers = [];
       this.typeOfQuestion = "";
+      this.isCorrectAnswerSet = false;
     },
     subitQuestion() {
       if (this.isCorrectAnswerSet) {
-        // console.log("Нудная id для вопроса");
         let qId = this.question_id(
           this.currentLevel.levelId,
           this.currentLevel.testid
         );
-        // console.log("qID = " + qId);
         if (qId === "empty") {
-          // console.log("TRUE TRUE TRUE");
           this.currentQuestion_id = 1;
         } else {
-          // console.log(qId);
           this.currentQuestion_id = qId + 1;
         }
 
@@ -188,7 +172,7 @@ export default {
           question: {
             text: this.currentQuestion,
             img: this.questionPhotoURl,
-            question_id: this.currentQuestion_id
+            question_id: Date.now()
           },
           answers: this.answers,
           level_id: this.currentLevel.levelId,
@@ -199,10 +183,15 @@ export default {
         this.addNew(questionWithAnswers);
         this.resetData();
         this.$emit("emitResetData");
-
-        //   this.changeCurrentLevelStatus(false);
+        this.showTooltip({
+          type: "success",
+          text: "Вопрос успешно создан"
+        });
       } else {
-        alert("Выберите верный вариант ответа");
+        this.showTooltip({
+          type: "error",
+          text: "Выберите верный вариант ответа"
+        });
       }
     },
     addQuestion() {
@@ -219,7 +208,6 @@ export default {
       }
     },
     addAnswer() {
-      // console.log(this.currentAnswer);
       if (!this.currentAnswer && !this.answerPhotoURl) {
         alert("Добавьте текст или изображение");
       } else {
@@ -227,15 +215,11 @@ export default {
           text: this.currentAnswer,
           correct: false,
           imgURL: this.answerPhotoURl,
-          answer_id: this.answers.length + 1
+          answer_id: Date.now()
         };
         this.answers.push(answer);
         this.currentAnswer = "";
-        // this.answerWithPhoto = false;
-        // this.answerPhotoURl = "";
-        // this.editAnswer = true;
       }
-      // console.log(this.answers);
       this.$emit("resetAnswerUrl");
     }
   },

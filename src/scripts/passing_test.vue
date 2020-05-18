@@ -174,57 +174,6 @@ export default {
           this.calculateMark(correct, all, half, mark, percentOfCorrect);
           break;
       }
-      // this.calculateMark(correct, all, half, mark, percentOfCorrect);
-      // if (correct < half) {
-      //   mark = 0;
-      // }
-      // if (correct == half) {
-      //   percentOfCorrect = (correct / all) * 100;
-      //   console.log(correct + " : precent of correct " + percentOfCorrect);
-      //   console.log("Оценка 25");
-      //   mark = 25;
-      // } else if (correct > half) {
-      //   percentOfCorrect = (correct / all) * 100;
-      //   console.log(correct + " : precent of correct " + percentOfCorrect);
-
-      //   if (55 <= percentOfCorrect && percentOfCorrect <= 60) {
-      //     console.log("оценка 26");
-      //     mark = 26;
-      //   }
-      //   if (60 <= percentOfCorrect && percentOfCorrect <= 65) {
-      //     console.log("оценка 27");
-      //     mark = 27;
-      //   }
-      //   if (65 <= percentOfCorrect && percentOfCorrect <= 70) {
-      //     console.log("оценка 28");
-      //     mark = 28;
-      //   }
-      //   if (70 <= percentOfCorrect && percentOfCorrect <= 75) {
-      //     console.log("оценка 29");
-      //     mark = 29;
-      //   }
-      //   if (75 <= percentOfCorrect && percentOfCorrect <= 80) {
-      //     console.log("оценка 30");
-      //     mark = 30;
-      //   }
-      //   if (80 <= percentOfCorrect && percentOfCorrect <= 85) {
-      //     console.log("оценка 31");
-      //     mark = 31;
-      //   }
-      //   if (85 <= percentOfCorrect && percentOfCorrect <= 90) {
-      //     console.log("оценка 32");
-      //     mark = 32;
-      //   }
-      //   if (90 <= percentOfCorrect && percentOfCorrect <= 95) {
-      //     console.log("оценка 33");
-      //     mark = 33;
-      //   }
-      //   if (95 <= percentOfCorrect && percentOfCorrect <= 100) {
-      //     console.log("оценка 34");
-      //     mark = 34;
-      //   }
-      // }
-      // this.finalMark = mark;
     },
     countCorrectAnswers() {
       let countOfCorrect = 0;
@@ -257,10 +206,6 @@ export default {
           ? this.breadcrumbs[i].classList.add("breadcrumb--active")
           : this.breadcrumbs[i].classList.remove("breadcrumb--active");
       }
-      // this.changeCurrentQuestion(
-      //   this.copyQuestions[this.activeQuestion],
-      //   this.activeQuestion
-      // );
     },
     setAnswerWithUsersSelect_one(answer, question_id, isAnswerCorrect) {
       console.log("emit event after select OneAsnwer");
@@ -283,12 +228,7 @@ export default {
       this.copyQuestions = updatedQuestions;
     },
     setAnswerWithUsersSelect_multy(answer, question_id, isAnswerCorrect) {
-      // console.log("emit event after select MultyAsnwer");
-      // console.log(answer);
       let updatedQuestions = this.questions.map(item => {
-        // console.log(item);
-
-        // console.log(question_id);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
           item.answers.map(prevAnswer => {
@@ -297,14 +237,9 @@ export default {
         }
         return item;
       });
-      // console.log(updatedQuestions);
-      // console.log(this.questions);
       this.copyQuestions = updatedQuestions;
     },
-    // selectAnswer(e, answer) {
-    //   console.log(e.target.innerText);
-    //   console.log(answer.correct);
-    // },
+
     createQuestionsArrayWithUsersAnswers(questions) {
       let newQuestionsArray = this.questions.forEach(item => {
         // console.log(item);
@@ -319,11 +254,8 @@ export default {
         return item;
       });
       console.log(newQuestionsArray);
-      // this.questionsWithUsersAnswers = newQuestionsArray;
     },
     changeCurrentQuestion(e, question, id) {
-      // console.log(e.target);
-
       for (var i = 0; i < this.breadcrumbs.length; i++) {
         i == id
           ? this.breadcrumbs[i].classList.add("breadcrumb--active")
@@ -358,6 +290,10 @@ export default {
     this.copyQuestions = { ...this.questions };
     this.setCurrentQuestion();
     this.createQuestionsArrayWithUsersAnswers(this.questions);
+    if (!this.questions.length) {
+      console.log("hei heo");
+      this.$router.push("./");
+    }
   }
 };
 </script>

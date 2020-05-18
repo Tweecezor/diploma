@@ -150,6 +150,11 @@ module.exports = (env, argv) => {
         cache: true,
         parallel: true,
         sourceMap: false,
+        terserOptions: {
+          output: {
+            ascii_only: true, // <- Add this to keep the regex valid
+          },
+        },
       }),
       new OptimizeCSSAssetsPlugin({}),
     ];

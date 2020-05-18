@@ -295,6 +295,7 @@ export default {
 .answer__text_content-wrap {
   display: flex;
   width: 50%;
+  width: 95%;
   @include tablets {
     width: 100%;
   }

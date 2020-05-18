@@ -10,8 +10,8 @@
     )
       .answer__text-wrap(@click="selectAnswer($event,answer)")
         //- pre {{answer}}
-        .answer__text_content-wrap
-          p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
+        .answer__text_content-wrap(:class="{answerTextWithImg:answer.imgURL}")
+          p.answer__text() {{answer.text}}
           .answer__checkbox-wrap
             .answer__checkbox( ref="checkbox_list" :class="{answer__checkbox_active:answer.selectedByStudent}")
         .question__img-wrap(v-if="answer.imgURL")
@@ -263,18 +263,20 @@ export default {
   background-position: center center;
   border: 1px dashed #000;
 }
-.answerTextWithImg {
-  /* color: red; */
-  width: 100%;
-  @include tablets {
-    width: 90%;
-  }
-}
+
 .answer__text_content-wrap {
   display: flex;
-  width: 50%;
+  /* width: 50%; */
+  width: 95%;
   @include tablets {
     width: 100%;
+  }
+}
+.answerTextWithImg {
+  /* color: red; */
+  width: 50%;
+  @include tablets {
+    width: 90%;
   }
 }
 </style>

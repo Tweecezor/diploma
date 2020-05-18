@@ -155,4 +155,7 @@ input[type="text"] {
     border-bottom: 2px solid #edb947;
   }
 }
+svg:disabled {
+  opacity: 0.5;
+}
 </style>

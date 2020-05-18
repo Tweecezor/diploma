@@ -50,6 +50,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
     fn() {
       console.log("asfew");
     },
@@ -108,22 +109,30 @@ export default {
         +this.level,
         +this.test_id
       );
-      // console.log(filtered);
-      // console.log(this.$refs.selectedGroup);
-      // console.log(questionOld.question);
       let newQuestion = {
         ...questionOld,
         question: {
           text: questionOld.question.text,
           img: questionOld.question.img,
-          question_id: filtered.length + 1
+          question_id: Date.now()
+          // question_id: filtered.length + 1
         },
         level_id: +this.level,
         test_id: +this.test_id
       };
-
+      if (+this.level && +this.test_id) {
+        this.addNew(newQuestion);
+        this.showTooltip({
+          type: "success",
+          text: "Вопрос успешно загружен"
+        });
+      } else {
+        this.showTooltip({
+          type: "error",
+          text: "ВЫберите группу и уровень теста"
+        });
+      }
       console.log(newQuestion);
-      this.addNew(newQuestion);
     },
     filterQuestion(questions, levelId, groupId) {
       let filteredQuestions = questions.filter(function(question) {

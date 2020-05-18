@@ -1,35 +1,15 @@
 <template lang="pug">
-  div
+  div.test_content
       router-view  
-      //- .admin__content
-      //-   div(v-if="$route.meta.public")
-      //-     router-view
-      //-     tooltips
-      //-   div(v-else)
-      //-     headerComponent
-      //-     navComponent
-      //-     router-view
-      //-     tooltips  
+      tooltips
 </template>
 
 <script>
-// import headerComponent from "./components/header";
-// import navComponent from "./components/navigation";
-// import about from "./components/pages/about";
-// import works from "./components/pages/works";
-// import reviews from "./components/pages/reviews";
-// import login from "./components/pages/login";
 import { mapActions, mapState, mapGetters } from "vuex";
 import store from "@/store";
 export default {
   components: {
-    // headerComponent,
-    // navComponent,
-    // about,
-    // works,
-    // reviews,
-    // login,
-    // tooltips: () => import("./components/tooltips")
+    tooltips: () => import("../admin/components/tooltips"),
   },
   computed: {
     ...mapState("tooltips", {
@@ -50,9 +30,6 @@ export default {
       }
     },
   },
-  // created(){
-  //   const isLoggin = store.getters["user/userIsLogged"];
-  // }
 };
 </script>
 
@@ -61,7 +38,9 @@ export default {
 @import "../styles/mixins.pcss";
 @import "../styles/layout/base.pcss";
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800");
-
+.test_content {
+  position: relative;
+}
 .title-wrap {
   display: flex;
   margin-bottom: 30px;

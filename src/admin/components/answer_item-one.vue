@@ -1,12 +1,12 @@
 <template lang="pug">
   li.answers__item.answer
     //- pre {{answerPhotoURl}}
-    //- pre {{answer}}
+    //- pre {{isActiveModeActive}}
     .answer__text-wrap
       input(type="text" v-model="answer.text"  ).answers__text
     .answer__correct-wrap
       input(type="radio" name="isCorrect" v-bind:value="answer.text" id="isCorrect" @change="setCorrectAnswer").answer__correct 
-    .answer__actions(v-if="!editAnswer")
+    .answer__actions(v-if="!editAnswer" :class="{answers__actions__disabled:isActiveModeActive}") 
       //- .answer__actions-edit(v-if="!editAnswer" @click="editAnswer = true")
       <svg height="512pt" class="answer__actions-photo" @click="showAnswerImg(answer)" viewBox="0 -64 512 512" width="512pt" xmlns="http://www.w3.org/2000/svg">
         <path d="m149.332031 106.667969c0 23.5625-19.101562 42.664062-42.664062 42.664062-23.566407 0-42.667969-19.101562-42.667969-42.664062 0-23.566407 19.101562-42.667969 42.667969-42.667969 23.5625 0 42.664062 19.101562 42.664062 42.667969zm0 0" />
@@ -16,19 +16,20 @@
       <svg id="deleteIcon" class="answer__actions-delete" @click="deleteCurrentAnswer(answer)" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="459px" height="459px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
         <path d="M76.5,408c0,28.05,22.95,51,51,51h204c28.05,0,51-22.95,51-51V102h-306V408z M408,25.5h-89.25L293.25,0h-127.5l-25.5,25.5 H51v51h357V25.5z"/>
       </svg>
-      //- .answer__actions-delete(@click="deleteCurrentAnswer(answer)")
+
     .answer__actions(v-if="editAnswer")
       <svg version="1.1" @click="changeAnswer(answer)" class="answer__actions-save" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
         <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
       </svg>
-      //- .answer__actions-save( @click="changeAnswer(answer)")
+
       <svg version="1.1" @click="cancelChangeAnswer(answer)" class="answer__actions-cancel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
         <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
       </svg>
-      //- .answer__actions-cancel(@click="cancelChangeAnswer(answer)")
+
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   props: {
     answer: Object,
@@ -42,9 +43,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions("helped", ["setEditStatus"]),
     deleteCurrentAnswer(answer) {
-      console.log(answer);
-      this.$emit("emitDeleteAnswer", answer);
+      if (!this.isActiveModeActive) {
+        console.log(answer);
+        this.$emit("emitDeleteAnswer", answer);
+        // this.setEditStatus(true);
+      }
     },
     cancelChangeAnswer(answer) {
       this.answers.forEach(item => {
@@ -53,6 +58,7 @@ export default {
         }
       });
       this.editAnswer = false;
+      this.setEditStatus(false);
       this.$emit("emitDropAnswerURL");
     },
     changeAnswer(answer) {
@@ -63,11 +69,15 @@ export default {
         }
       });
       this.editAnswer = false;
+      this.setEditStatus(false);
       this.$emit("emitDropAnswerURL");
     },
     showAnswerImg(answer) {
-      this.editAnswer = true;
-      this.$emit("emitShowAnswerImg", { answer });
+      if (!this.isActiveModeActive) {
+        this.editAnswer = true;
+        this.$emit("emitShowAnswerImg", { answer });
+        this.setEditStatus(true);
+      }
     },
     setCorrectAnswer(e) {
       console.log(this.answers);
@@ -90,6 +100,14 @@ export default {
       // console.log(e.target.value);
       // console.log(e.target.checked);
     }
+  },
+  computed: {
+    ...mapState("helped", {
+      isActiveModeActive: state => state.isEditActive
+    })
+  },
+  mounted() {
+    this.setEditStatus(false);
   }
 };
 </script>
@@ -228,6 +246,11 @@ export default {
   align-items: center;
   @include tablets {
     width: auto;
+  }
+}
+.answers__actions__disabled {
+  svg {
+    opacity: 0.5;
   }
 }
 </style>

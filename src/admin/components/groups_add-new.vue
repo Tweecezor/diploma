@@ -48,18 +48,18 @@ export default {
       isNewGroup: true,
       currentGroup: "",
       mode: "add",
-      groupName: "ИДБ 16 01",
-      student_name: "Никита",
-      student_surname: "Еремеев",
-      student_thirdname: "Владиславович",
+      groupName: "",
+      student_name: "",
+      student_surname: "",
+      student_thirdname: "",
       showStudent: false,
       studentsArray: [],
       headmanEmail: "test@mail.ru",
-      group_id: ""
+      group_id: Date.now()
     };
   },
   mounted() {
-    this.addGroup();
+    // this.addGroup();
   },
   methods: {
     ...mapActions("groups", ["addNewGroup"]),
@@ -67,6 +67,7 @@ export default {
     ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
     addGroup() {
       if (this.groupName) {
+        console.log("adfsgret");
         let groupId = this.groupId();
         if (groupId === "empty") {
           this.group_id = 1;
@@ -85,12 +86,24 @@ export default {
         thirdname: this.student_thirdname,
         fullName: `${this.student_surname} ${this.student_name} ${this.student_thirdname}`,
         group_id: this.group_id,
-        student_id: this.studentsArray.length + 1
+        student_id: Date.now()
       };
-      this.studentsArray.push(studentsData);
-      this.student_name = "";
-      this.student_surname = "";
-      this.student_thirdname = "";
+      console.log(studentsData);
+      if (this.student_name && this.student_surname && this.student_thirdname) {
+        this.studentsArray.push(studentsData);
+        this.showTooltip({
+          type: "success",
+          text: "Студент успешно добавлен"
+        });
+        this.student_name = "";
+        this.student_surname = "";
+        this.student_thirdname = "";
+      } else {
+        this.showTooltip({
+          type: "error",
+          text: "Введите ФИО нового студента"
+        });
+      }
     },
     submitNewGroup() {
       let groupWithStudents = {

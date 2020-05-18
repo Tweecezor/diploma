@@ -10,8 +10,12 @@ export default {
     questionsForCurrentPassingTest: [],
     completedTestQuestions: [],
     currentTestStudentData: {},
+    isEditActive: false,
   },
   actions: {
+    setEditStatus(store, status) {
+      store.commit("SET_EDIT_STATUS", status);
+    },
     setCurrentTestStudentData(store, studentData) {
       store.commit("SET_CURRENT_TEST_STUDENT_DATA", studentData);
     },
@@ -48,6 +52,10 @@ export default {
     },
   },
   mutations: {
+    SET_EDIT_STATUS(state, status) {
+      state.isEditActive = status;
+    },
+
     SET_CURRENT_TEST_STUDENT_DATA(state, studentData) {
       state.currentTestStudentData = studentData;
       console.log(state.currentTestStudentData);

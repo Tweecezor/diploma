@@ -12,7 +12,6 @@
                 <svg version="1.1" class="test__preview_logo-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
                   <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
                 </svg>
-              //- .test__preview_test-wrap
               .test__preview_test Добавить тест
             .test__add_new(v-else)
               .test__header
@@ -35,11 +34,10 @@
                   select(name="groups" required v-model="obj.group").test__group-select
                     option(v-for="group in groups" :value="group.groupName").test__group-option {{group.groupName}}
               button(@click="addNewTest").btn Создать
-          //- li.created_test-item.test.test--add-new()
 
 
           li.created_test-item.test(v-if="tests" v-for="item in tests")
-            //- pre {{item.name}}
+            //- pre {{item}}
             .test__header
               .test__name-wrap
                 label.test__label Название теста
@@ -95,6 +93,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
     mouseover(e) {
       console.log(e.target);
     },
@@ -151,11 +150,17 @@ export default {
     ]),
     addNewTest() {
       const newTetsGroup = {
-        id: this.tests.length + 1,
+        // id: this.tests.length + 1,
+        id: Date.now(),
+        group_id: "",
         ...this.obj
       };
       this.addNew(newTetsGroup);
       this.showAddNew = false;
+      this.showTooltip({
+        type: "success",
+        text: "Тест успешно создан"
+      });
     },
     CLICK() {
       console.log(this.tests);
