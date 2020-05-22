@@ -7,26 +7,27 @@
     .keywords__add
      .keywords__add_label-wrap
       label(for="input-tag").keywords__add_label Ключевое слово
-    .keywords__add_text-wrap
-      input(type="text" name="tag" id="input-tag" v-model='keyword').keywords__add_text
-      button(type="button" @click="addKeyword").addKeyword.btn +
-      //- div.error-input()
     .addWorks__tags-list-wrap
       //- pre {{keywords}}
       ul.addWorks__tags-list
         li(v-for="(item,index) in keywords" v-if="keywords.length!=0 && item!=''" ).addWorks__tags-item {{item}}
           .deleteTag(@click="removeKeyword(index)") x
+    .keywords__add_text-wrap
+      input(type="text" name="tag" id="input-tag" v-model='keyword').keywords__add_text
+      button(type="button" @click="addKeyword").addKeyword.btn +
+      //- div.error-input()
 </template>
 <script>
 import { mapActions } from "vuex";
 export default {
   props: {
     keywords: Array,
-    typeOfQuestion: String
+    typeOfQuestion: String,
+    _id: String,
   },
   data() {
     return {
-      keyword: ""
+      keyword: "",
     };
   },
   methods: {
@@ -34,20 +35,32 @@ export default {
     removeKeyword(currentKeyword) {
       // console.log(currentKeyword);
       this.keywords.splice(currentKeyword, 1);
+      let newKeywords = {
+        _id: this._id,
+        keywords: this.keywords,
+      };
+      this.changeKeywords(newKeywords);
       // console.log(this.keywords);
     },
     addKeyword() {
       this.keywords.push(this.keyword);
       // console.log(this.keywords);
-      this.changeKeywords(this.keywords);
-    }
-  }
+      let newKeywords = {
+        _id: this._id,
+        keywords: this.keywords,
+      };
+      this.changeKeywords(newKeywords);
+      this.keyword = "";
+    },
+  },
 };
 </script>
 
 <style lang="postcss" scoped>
 .keywords_wrap {
   padding: 0.625rem;
+  /* padding-left: 0;
+  padding-right: 0; */
 }
 .keywords__title {
   padding-bottom: 1.25rem;
@@ -89,7 +102,7 @@ export default {
   padding-right: 30px;
   position: relative;
   display: flex;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   &:last-child {
     /* margin-right: 0px; */
   }

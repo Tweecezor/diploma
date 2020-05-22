@@ -1,6 +1,6 @@
 <template lang="pug">
   section.questions
-    //- pre {{questions}}
+    //- pre {{questions.length}}
     ul.breadcrumbs_list
       li.breadcrumbs_item.breadcrumb( ref="breadcrumb" v-for="(currentQuestion,id) in questions")
         .breadcrumb_item( @click="changeCurrentQuestion($event,currentQuestion,id)" :class="") {{id+1}}
@@ -11,7 +11,7 @@
         .questions__item.question()
           //- pre {{item}}
           //- pre {{item}}
-          QUESTION_ITEM( :qText="qText" :item="item.question" :test_id="item.test_id" :level_id="item.level_id")
+          QUESTION_ITEM( :qText="qText"  :_id="item._id" :item="item.question" :test_id="item.test_id" :level_id="item.level_id")
           div(v-if="item.type!=='handwritingAnswer'").answer__content
             .answers__title Просмотр ответов
             .answers__data
@@ -34,6 +34,7 @@
                       :question_id="item.question.question_id" :answer="answer" 
                       :test_id="item.test_id" :level_id="item.level_id"
                       :answerImgUrl="currentAnswerImgUrl"
+                      :_id="item._id"
                       v-on:setAnswerImgURL="setCurrentAnswerIMG"
                       v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
                       )
@@ -42,10 +43,11 @@
                   :test_id="item.test_id" :level_id="item.level_id"
                   :currentAnswerImgUrl="currentAnswerImgUrl"
                   :answerImgUrl="currentAnswerImgUrl"
+                  :_id="item._id"
                   v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
                   )
           div(v-else)
-            KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type")
+            KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type" :_id="item._id")
             //- div.answers__title Ответы
             //-   ul(v-for="keyword in item.keywordsArray").answers__list
             //-     li.answers__item.answer()
@@ -67,10 +69,10 @@ export default {
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
     KEYWORDS_ANSWER,
-    CURRENT_QUESTION
+    CURRENT_QUESTION,
   },
   props: {
-    questions: Array
+    questions: Array,
   },
   data() {
     return {
@@ -84,7 +86,7 @@ export default {
       isTestOpen: false,
       currentQuestionID: 1,
       currentAnswerImgUrl: "",
-      breadcrumbs: []
+      breadcrumbs: [],
       // answerImgUrl: ""
     };
   },
@@ -92,13 +94,15 @@ export default {
     ...mapActions("helped", [
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus",
-      "changeShowQuestionsStatus"
+      "changeShowQuestionsStatus",
     ]),
     setCurrentQuestion() {
       this.item = this.questions[this.activeQuestion];
     },
     changeCurrentQuestion(e, currentQuestion, id) {
       console.log(e.target);
+      this.activeQuestion = id;
+      console.log(this.activeQuestion);
       // console.log(currentQuestion);
       // console.log(typeof currentQuestion);
       // this.breadcrumbs[0].classList.add("breadcrumb--active");
@@ -157,12 +161,12 @@ export default {
     closeSection() {
       this.changeShowQuestionsStatus(false);
       this.changeCurrentTestStatus(true);
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      showQuestions: state => state.showQuestions
-    })
+      showQuestions: (state) => state.showQuestions,
+    }),
   },
   created() {
     this.setCurrentQuestion();
@@ -174,7 +178,13 @@ export default {
     for (var i = 1; i < this.breadcrumbs.length; i++) {
       this.breadcrumbs[i].classList.remove("breadcrumb--active");
     }
-  }
+  },
+  watch: {
+    questions: function(questions) {
+      console.log(this.activeQuestion);
+      this.setCurrentQuestion();
+    },
+  },
 };
 </script>
 

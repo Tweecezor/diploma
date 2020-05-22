@@ -9,7 +9,7 @@
       .group__info.group__info--group
         .group__label-wrap.group__label-wrap--name
           label().group__label.label Введите название группы
-          input(type="text" v-model="groupName" name="name" id="name").input.group__input
+          input(type="text" v-model="groupName" name="name" id="name" placeholder="Название группы").input.group__input
 
         .group__label-wrap.group__label-wrap--status
           label().group__label.label Введите почту старосты
@@ -21,15 +21,15 @@
 
         .group__label-wrap.group__label-wrap--student.group__label-wrap--surname
           label().group__label.label Фамилия
-          input(type="text" v-model="student_surname" name="student" id="student").input.group__input
+          input(type="text" v-model="student_surname" name="student" id="student" placeholder="Иванов").input.group__input
 
         .group__label-wrap.group__label-wrap--student
           label().group__label.label Имя
-          input(type="text" v-model="student_name" name="student" id="student").input.group__input
+          input(type="text" v-model="student_name" name="student" id="student" placeholder="Иван").input.group__input
         
         .group__label-wrap.group__label-wrap--student.group__label-wrap--thirdname
           label().group__label.label Отчество
-          input(type="text" v-model="student_thirdname" name="student" id="student").input.group__input
+          input(type="text" v-model="student_thirdname" name="student" id="student" placeholder="Иванович").input.group__input
         .group__label-wrap.group__label-addGroup
           button(type="submit" name="submit" value="Сохранить" @click="addStudent" ).btn.group__submit Добавить студента
 
@@ -55,7 +55,7 @@ export default {
       showStudent: false,
       studentsArray: [],
       headmanEmail: "test@mail.ru",
-      group_id: Date.now()
+      group_id: Date.now(),
     };
   },
   mounted() {
@@ -84,16 +84,18 @@ export default {
         name: this.student_name,
         surname: this.student_surname,
         thirdname: this.student_thirdname,
-        fullName: `${this.student_surname} ${this.student_name} ${this.student_thirdname}`,
+        fullName: `${this.student_surname} ${this.student_name} ${
+          this.student_thirdname
+        }`,
         group_id: this.group_id,
-        student_id: Date.now()
+        student_id: Date.now(),
       };
       console.log(studentsData);
       if (this.student_name && this.student_surname && this.student_thirdname) {
         this.studentsArray.push(studentsData);
         this.showTooltip({
           type: "success",
-          text: "Студент успешно добавлен"
+          text: "Студент успешно добавлен",
         });
         this.student_name = "";
         this.student_surname = "";
@@ -101,7 +103,7 @@ export default {
       } else {
         this.showTooltip({
           type: "error",
-          text: "Введите ФИО нового студента"
+          text: "Введите ФИО нового студента",
         });
       }
     },
@@ -110,24 +112,24 @@ export default {
         group_id: this.group_id,
         groupName: this.groupName,
         headmanEmail: this.headmanEmail,
-        studentsInGroup: this.studentsArray
+        studentsInGroup: this.studentsArray,
       };
       console.log(groupWithStudents);
       this.addNewGroup(groupWithStudents);
       this.changeShowGroupStatus(false);
       this.showTooltip({
         type: "success",
-        text: "Группа успешно создана"
+        text: "Группа успешно создана",
       });
     },
     ...mapActions("helped", ["changeShowGroupStatus"]),
     closeEdit() {
       this.changeShowGroupStatus(false);
-    }
+    },
   },
   computed: {
-    ...mapGetters("groups", ["groupId"])
-  }
+    ...mapGetters("groups", ["groupId"]),
+  },
 };
 </script>
 
@@ -245,7 +247,7 @@ export default {
   /* padding-right: 15%; */
   @include tablets {
     padding: 0;
-    width: 71%;
+    /* width: 71%; */
   }
 
   @include phones {
@@ -258,13 +260,13 @@ export default {
     width: 47%;
     margin-right: 6%;
     @include tablets {
-      width: 75%;
+      /* width: 75%; */
     }
   }
   &--status {
     width: 47%;
     @include tablets {
-      width: 75%;
+      /* width: 75%; */
     }
   }
   &--review {

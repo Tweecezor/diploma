@@ -5,8 +5,9 @@
       //- div.settings
       //- .group_item(v-for="group in groups")
       //- pre {{filteredTestByGroup}}
-      //- pre {{currentGroup}}
       //- pre {{results}}
+      //- pre {{groups}}
+      //- pre {{tests}}
       .group_breadcrumbs
         ul.group_breadcrumbs__list
           li.group_breadcrumbs_item.breadcrumb( ref="breadcrumb_group" v-for="(item,id) in groups" @click="changeCurrentGroup(item,id)")
@@ -56,7 +57,7 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   components: {
-    GROUPS
+    GROUPS,
   },
   data() {
     return {
@@ -66,12 +67,18 @@ export default {
       filteredTestByGroup: [],
       currentTestName: "",
       breadcrumbGroup: "",
-      breadcrumbTest: ""
+      breadcrumbTest: "",
+      // results: "",
+      // groups: "",
+      // tests: "",
     };
   },
   methods: {
+    ...mapActions("results", ["fetchResults"]),
+    ...mapActions("groups", ["fetchGroups"]),
+    ...mapActions("tests", ["fetchTests"]),
     changeCurrentGroup(group, id) {
-      console.log(group);
+      // console.log(group);
       this.currentGroup = group.groupName;
       this.filterResultByGroup();
       this.filterTestByGroup();
@@ -87,15 +94,16 @@ export default {
       this.currentNav = item;
     },
     filterTestByGroup() {
-      this.filteredTestByGroup = this.tests.filter(item => {
-        console.log(item);
+      this.filteredTestByGroup = this.tests.filter((item) => {
+        // console.log(item);
         return item.group === this.currentGroup ? item : "";
       });
     },
     filterResultByGroup() {
-      this.filteredResultByGroup = this.results.filter(item => {
+      this.filteredResultByGroup = this.results.filter((item) => {
         return item.group === this.currentGroup ? item : "";
       });
+      // console.log(this.filteredResultByGroup);
     },
     // filterResultByTestName() {
     //   this.filteredResultByGroup = this.results.filter((item) => {
@@ -103,9 +111,9 @@ export default {
     //   });
     // },
     showCurrentTestResult(testName, id) {
-      console.log(testName);
-      this.filteredResultByGroup = this.results.filter(item => {
-        console.log(item);
+      // console.log(testName);
+      this.filteredResultByGroup = this.results.filter((item) => {
+        // console.log(item);
         return item.test_name === testName ? item : "";
       });
       this.setActiveBreadcrumbTest(id);
@@ -134,15 +142,21 @@ export default {
           );
         }
       }
-    }
+    },
+    sortBreadcrumbGroupList() {
+      // this.groups = this.group.
+    },
   },
   mounted() {
+    // console.log(this.results);
     this.currentGroup = this.results[0].group;
-    this.filterResultByGroup();
-    this.filterTestByGroup();
+    // console.log(this.currentGroup);
+    this.filteredResultByGroup = this.results;
 
+    // this.filterResultByGroup();
+    // this.filterTestByGroup();
     this.breadcrumbGroup = this.$refs.breadcrumb_group;
-    this.breadcrumbGroup[0].firstChild.classList.add("breadcrumb--active");
+    // this.breadcrumbGroup[0].firstChild.classList.add("breadcrumb--active");
     for (var i = 1; i < this.breadcrumbGroup.length; i++) {
       this.breadcrumbGroup[i].firstChild.classList.remove("breadcrumb--active");
     }
@@ -156,15 +170,33 @@ export default {
   },
   computed: {
     ...mapState("results", {
-      results: state => state.results
+      results: (state) => state.results,
     }),
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     ...mapState("tests", {
-      tests: state => state.tests
-    })
-  }
+      tests: (state) => state.tests,
+    }),
+  },
+  async created() {
+    await this.fetchResults();
+    await this.fetchGroups();
+    await this.fetchTests();
+    this.filteredResultByGroup = this.results;
+    // const REZ = await this.$axios("http://localhost:3002/api/results");
+    // this.results = REZ.data;
+    // console.log(this.results);
+    // const GROUPS = await this.$axios("http://localhost:3002/api/groups");
+    // const TESTS = await this.$axios("http://localhost:3002/api/tests");
+    // console.log(results);
+    // this.results = RESULTS.data;
+    // this.groups = GROUPS.data;
+    // // console.log(this.results[0].group);
+    // this.tests = TESTS.data;
+    // this.results =
+    // this.currentGroup = this.results[0].group;
+  },
 };
 </script>
 

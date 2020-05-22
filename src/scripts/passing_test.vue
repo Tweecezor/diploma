@@ -59,7 +59,7 @@ export default {
     MULTY_ANSWER,
     ONE_ANSWER,
     HANDWRITING_ANSWER,
-    TEST_RESULT
+    TEST_RESULT,
   },
   props: {},
   data() {
@@ -73,7 +73,7 @@ export default {
       breadcrumbs: [],
       countOfCorrect: 0,
       // countOfQuestions: this.questions.length,
-      finalMark: ""
+      finalMark: "",
     };
   },
   methods: {
@@ -91,11 +91,12 @@ export default {
       this.calc(this.countOfCorrect);
       let studentResult = {
         ...this.currentStudentData,
-        mark: this.finalMark
+        mark: this.finalMark,
       };
       console.log(studentResult);
       this.showResult = true;
-      this.addNewResult(studentResult);
+      // this.addNewResult(studentResult);
+      this.$axios.post("http://localhost:3002/api/results", studentResult);
       // this.setCompletedTestQuestions(this.copyQuestions);
       // this.$router.push("/completedTest");
     },
@@ -177,7 +178,7 @@ export default {
     },
     countCorrectAnswers() {
       let countOfCorrect = 0;
-      this.copyQuestions.forEach(item => {
+      this.copyQuestions.forEach((item) => {
         console.log(item);
         item.isAnswerCorrect ? countOfCorrect++ : "";
       });
@@ -186,7 +187,7 @@ export default {
     },
     saveUsersHandwriteAnswer(answerText, question_id, isAnswerCorrect) {
       console.log("emit event after select Handwrite");
-      let updatedQuestions = this.copyQuestions.map(item => {
+      let updatedQuestions = this.copyQuestions.map((item) => {
         console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
@@ -209,11 +210,11 @@ export default {
     },
     setAnswerWithUsersSelect_one(answer, question_id, isAnswerCorrect) {
       console.log("emit event after select OneAsnwer");
-      let updatedQuestions = this.questions.map(item => {
+      let updatedQuestions = this.questions.map((item) => {
         // console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map(item => {
+          item.answers.map((item) => {
             if (item.answer_id == answer.answer_id) {
               item.selectedByStudent = true;
             } else {
@@ -228,10 +229,10 @@ export default {
       this.copyQuestions = updatedQuestions;
     },
     setAnswerWithUsersSelect_multy(answer, question_id, isAnswerCorrect) {
-      let updatedQuestions = this.questions.map(item => {
+      let updatedQuestions = this.questions.map((item) => {
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map(prevAnswer => {
+          item.answers.map((prevAnswer) => {
             prevAnswer.answer_id == answer.answer_id ? answer : prevAnswer;
           });
         }
@@ -241,10 +242,10 @@ export default {
     },
 
     createQuestionsArrayWithUsersAnswers(questions) {
-      let newQuestionsArray = this.questions.forEach(item => {
+      let newQuestionsArray = this.questions.forEach((item) => {
         // console.log(item);
         if (item.type !== "handwritingAnswer") {
-          item.answers.forEach(answer => {
+          item.answers.forEach((answer) => {
             answer.selectedByStudent = false;
             return answer;
           });
@@ -266,15 +267,15 @@ export default {
     },
     setCurrentQuestion() {
       this.currentQuestion = this.copyQuestions[this.activeQuestion];
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      questions: state => state.questionsForCurrentPassingTest
+      questions: (state) => state.questionsForCurrentPassingTest,
     }),
     ...mapState("helped", {
-      currentStudentData: state => state.currentTestStudentData
-    })
+      currentStudentData: (state) => state.currentTestStudentData,
+    }),
     // ...mapState("results", {
     //   results: (state) => state.results,
     // }),
@@ -294,7 +295,7 @@ export default {
       console.log("hei heo");
       this.$router.push("./");
     }
-  }
+  },
 };
 </script>
 

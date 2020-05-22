@@ -5,6 +5,7 @@
     //- pre {{test_id}}
     //- pre {{level_id}}
     //- pre {{qText}}
+    //- pre {{isActiveModeActive}}  
     //- input(type="text" v-model="qText")
     //- input(type="text" v-model="item.text")
     .question__title-wrap
@@ -16,8 +17,8 @@
         .questions__data_content
           .question__data_text-wrap
             //- input(type="text" v-model="item.text") 
-            input(type="text" v-model="currentQuestion.text" ).question__input.question__text
-          .question__actions(v-if="!editMode")
+            input(type="text" v-model="currentQuestion.text" :disabled="!isActiveModeActive").question__input.question__text
+          .question__actions(v-if="!editMode" :class="{questions__actions__disabled:isActiveModeActive}")
             <svg @click="setEditMode" class="question__actions_correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
               <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
             </svg>
@@ -58,20 +59,21 @@ import { mapActions, mapState } from "vuex";
 import ANSWER_ITEM from "./answer-item";
 export default {
   components: {
-    ANSWER_ITEM
+    ANSWER_ITEM,
   },
   props: {
     item: Object,
     test_id: Number,
     level_id: Number,
-    qText: String
+    qText: String,
+    _id: String,
   },
   data() {
     return {
       showQImg: false,
       // showAImg: false,
       editMode: false,
-      currentQuestion: { ...this.item }
+      currentQuestion: { ...this.item },
 
       // isTestOpen:false
     };
@@ -81,13 +83,15 @@ export default {
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus",
-      "setEditStatus"
+      "setEditStatus",
     ]),
-    ...mapActions("questions", ["updateQuestion"]),
+    ...mapActions("questions", ["updateQuestion", "deleteCurrentQuestion"]),
     ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
     setEditMode() {
-      this.editMode = true;
-      this.setEditStatus(true);
+      if (!this.isActiveModeActive) {
+        this.editMode = true;
+        this.setEditStatus(true);
+      }
     },
     showQuestionImage() {
       // console.log(this.showingImg);
@@ -99,19 +103,33 @@ export default {
     // closeSection() {
     //   this.changeShowQuestionsStatus(false);
     // },
-    deleteQuestion() {},
+    deleteQuestion() {
+      if (!this.isActiveModeActive) {
+        let deletedQuestion = {
+          _id: this._id,
+          level_id: this.level_id,
+          test_id: this.test_id,
+          question_id: this.currentQuestion.question_id,
+        };
+        console.log(deletedQuestion);
+        this.deleteCurrentQuestion(deletedQuestion);
+      }
+    },
     updateCurrentQuestion() {
       let updatedQuestion = {
         level_id: this.level_id,
         test_id: this.test_id,
         newQuestionTitle: this.currentQuestion.text,
-        question_id: this.currentQuestion.question_id
+        question_id: this.currentQuestion.question_id,
+        img: this.currentQuestion.img,
+        _id: this._id,
       };
+      console.log(updatedQuestion);
       this.updateQuestion(updatedQuestion);
       this.editMode = !this.editMode;
       this.showTooltip({
         type: "success",
-        text: "Текст вопроса успешно изменен"
+        text: "Текст вопроса успешно изменен",
       });
       this.setEditStatus(false);
     },
@@ -120,22 +138,25 @@ export default {
       this.editMode = !this.editMode;
       this.showTooltip({
         type: "success",
-        text: "Изменения отменены"
+        text: "Изменения отменены",
       });
       this.setEditStatus(false);
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      showQuestions: state => state.showQuestions
-    })
+      showQuestions: (state) => state.showQuestions,
+    }),
+    ...mapState("helped", {
+      isActiveModeActive: (state) => state.isEditActive,
+    }),
   },
   watch: {
     item: function(item) {
       console.log(item);
       this.currentQuestion = { ...this.item };
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -342,5 +363,10 @@ export default {
     top: 15%;
     left: 63%;
   } */
+}
+.questions__actions__disabled {
+  svg {
+    opacity: 0.5;
+  }
 }
 </style>

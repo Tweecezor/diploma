@@ -15,12 +15,13 @@ export default {
     level_id: Number,
     question_id: Number,
     answerLength: Number,
-    currentAnswerImgUrl: String
+    currentAnswerImgUrl: String,
+    _id: String,
   },
   data() {
     return {
       newAnswer: "",
-      newAnswerImgURL: ""
+      newAnswerImgURL: "",
     };
   },
   methods: {
@@ -28,7 +29,7 @@ export default {
     ...mapActions("questions", [
       "changeAnswerStatus",
       "updateAnswer",
-      "addNewAnswer"
+      "addNewAnswer",
     ]),
     newAnswerAdd() {
       let newAnswer = {
@@ -36,21 +37,23 @@ export default {
           text: this.newAnswer,
           correct: false,
           imgURL: this.currentAnswerImgUrl,
-          answer_id: this.answerLength + 1
+          // answer_id: this.answerLength + 1,
+          answer_id: Date.now(),
         },
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id
+        question_id: this.question_id,
+        _id: this._id,
       };
       console.log(newAnswer);
       this.newAnswer = "";
       this.addNewAnswer(newAnswer);
       this.showTooltip({
         type: "success",
-        text: "Ответ успешно добавлен"
+        text: "Ответ успешно добавлен",
       });
       this.$emit("emitResetAnswerImgUrl");
-    }
+    },
     // loadImg(e) {
     //   // console.log(isNewImg);
     //   // this.newImg = isNewImg;
@@ -71,7 +74,7 @@ export default {
     // deleteImg() {
     //   this.currentAnswer.imgURL = "";
     // },
-  }
+  },
 };
 </script>
 <style lang="postcss" scoped>

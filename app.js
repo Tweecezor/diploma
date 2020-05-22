@@ -5,12 +5,13 @@ const path = require("path");
 const { mongoURL } = require("./server/config");
 const routesAPI = require("./server/routes");
 const bodyParser = require("body-parser");
-
+const cors = require("cors");
 const app = express();
 app.use(express.static(path.join(__dirname, "dist")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(cors());
 app.use("/api", routesAPI);
 // app.get("*", (req, res) => {
 //   res.send(path.resolve(path.join("dist", "index.html")));
@@ -27,7 +28,7 @@ async function start() {
       console.log("server has been started on port " + PORT);
     });
   } catch (e) {
-    console.log(e);
+    console.log("ERROOOOOORRRRR");
   }
 }
 start();

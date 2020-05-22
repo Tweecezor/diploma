@@ -4,24 +4,27 @@ export default {
     results: [],
   },
   actions: {
+    async fetchResults(store) {
+      const response = await this.$axios.get(
+        "http://localhost:3002/api/results"
+      );
+      const results = response.data;
+      store.commit("SET_RESULTS", results);
+    },
     addNewResult(store, result) {
       store.commit("ADD_NEW_RESULT", result);
     },
   },
   mutations: {
-    // CHANGE_RESULT(state,newResult){
-
-    // },
+    SET_RESULTS(state, results) {
+      state.results = results;
+    },
     ADD_NEW_RESULT(state, result) {
       console.log(result);
 
       if (state.results.length) {
         let isNewResult = true;
         state.results.forEach((item) => {
-          console.log(item);
-          // item.test_id === result.test_id && item.fullName === result.fullName
-          //   ? CHANGE_RESULT(state, result)
-          //   : isNewResult = true
           if (
             item.test_id === result.test_id &&
             item.fullName === result.fullName
@@ -36,14 +39,6 @@ export default {
       } else {
         state.results.push(result);
       }
-
-      // if (state.results.length) {
-      //   state.results = state.results.map((item) => {
-      //     return item.fullName === result.fullName ? result : item;
-      //   });
-      // } else {
-      //   state.results.push(result);
-      // }
     },
   },
   getters: {},

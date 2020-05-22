@@ -2,9 +2,9 @@
   .container-
     .wrap
       .admin__content(v-if="!opened")
-        //- pre {{results}}
+        //- pre {{breadcrumbGroup}}
         //- pre {{questions}}
-        //- pre {{groups}}
+        //- pre {{questions}}
         //- pre {{currentTestsList}}
         //- pre {{studentsInCurrentGroup}}
         //- pre {{filteredQuestions}}
@@ -57,7 +57,7 @@ import TEST_PREVIEW from "./tests_preview_public";
 // import PASSING_TEST from "./passing_test";
 export default {
   components: {
-    TEST_PREVIEW
+    TEST_PREVIEW,
     // PASSING_TEST
   },
   data() {
@@ -66,16 +66,21 @@ export default {
       studentsInCurrentGroup: [],
       currentTest: "",
       opened: false,
-      filteredQuestions: ""
+      filteredQuestions: "",
+      tests: "",
+      groups: "",
+      questions: "",
+      breadcrumbGroup: "hello",
     };
   },
   methods: {
+    ...mapActions("tests", ["fetchTests"]),
     openTest(item) {
       console.log(item);
       this.currentTest = item;
       console.log();
       let studentsInCurrentGroup;
-      this.groups.filter(group =>
+      this.groups.filter((group) =>
         group.groupName === item.group
           ? (studentsInCurrentGroup = group.studentsInGroup)
           : ""
@@ -87,7 +92,7 @@ export default {
     },
     filterQuestionsByTest(currentTest) {
       console.log(currentTest);
-      let filteredQuestionsByTest = this.questions.filter(item =>
+      let filteredQuestionsByTest = this.questions.filter((item) =>
         item.test_id === currentTest.id ? item : ""
       );
       console.log(filteredQuestionsByTest);
@@ -95,7 +100,7 @@ export default {
     },
     filterTestByGroup(group, id) {
       console.log(group);
-      let filteredTests = this.tests.filter(item =>
+      let filteredTests = this.tests.filter((item) =>
         item.group === group.groupName ? item : ""
       );
       console.log(filteredTests);
@@ -103,6 +108,7 @@ export default {
       this.setActiveBreadcrumbGroup(id);
     },
     setActiveBreadcrumbGroup(id) {
+      this.breadcrumbGroup = this.$refs.breadcrumb_group;
       for (var i = 0; i < this.breadcrumbGroup.length; i++) {
         if (i === id) {
           this.breadcrumbGroup[i].firstChild.classList.add(
@@ -114,36 +120,60 @@ export default {
           );
         }
       }
-    }
+    },
   },
   computed: {
-    ...mapState("groups", {
-      groups: state => state.groups
-    }),
-    ...mapState("tests", {
-      tests: state => state.tests
+    // ...mapState("groups", {
+    //   groups: (state) => state.groups,
+    // }),
+    // ...mapState("tests", {
+    //   tests: (state) => state.tests,
+    // }),
+    ...mapState("helped", {
+      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: state => state.isCurrentLevelOpen
+      isTestOpen: (state) => state.isTestOpen,
     }),
     ...mapState("helped", {
-      isTestOpen: state => state.isTestOpen
+      showQuestions: (state) => state.showQuestions,
     }),
-    ...mapState("helped", {
-      showQuestions: state => state.showQuestions
-    }),
-    ...mapState("questions", {
-      questions: state => state.questions
-    }),
+    // ...mapState("questions", {
+    //   questions: (state) => state.questions,
+    // }),
     ...mapState("results", {
-      results: state => state.results
-    })
+      results: (state) => state.results,
+    }),
   },
-  mounted() {
-    this.currentTestsList = this.tests;
-    this.breadcrumbGroup = this.$refs.breadcrumb_group;
+  async mounted() {
+    // let response = await this.$axios.get("http://localhost:3002/api/tests");
+    // const GROUPS = await this.$axios.get("http://localhost:3002/api/groups");
+    // this.groups = GROUPS.data;
+    // this.currentTestsList = response.data;
+    // this.currentTestsList = this.tests;
+    // this.breadcrumbGroup = this.$refs.breadcrumb_group;
+    // console.log(this.$refs);
+    // console.log(this.$refs["breadcrumb_group"]);
+    // let ref = this.$refs;
+    // console.log(this.breadcrumbGroup);
+    // this.fetchTests();
+    // this.breadcrumbGroup = this.$refs.breadcrumb_group;
+    // console.log(this.breadcrumbGroup);
+  },
+  async created() {
+    // console.log(this.$refs);
+
     console.log(this.breadcrumbGroup);
-  }
+    const TESTS = await this.$axios.get("http://localhost:3002/api/tests");
+    const GROUPS = await this.$axios.get("http://localhost:3002/api/groups");
+    const QUESTIONS = await this.$axios.get(
+      "http://localhost:3002/api/questions"
+    );
+    this.questions = QUESTIONS.data;
+    this.tests = TESTS.data;
+    this.currentTestsList = TESTS.data;
+    this.groups = GROUPS.data;
+  },
 };
 </script>
 

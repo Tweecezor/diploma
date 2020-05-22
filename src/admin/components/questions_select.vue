@@ -32,12 +32,11 @@
   
 </template>
 
-
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
 export default {
   props: {
-    question: Object
+    question: Object,
   },
   data() {
     return {
@@ -46,7 +45,7 @@ export default {
       selectedGroupName: "",
       test_id: "",
       filteredQuestions: "",
-      levels: ""
+      levels: "",
     };
   },
   methods: {
@@ -83,13 +82,15 @@ export default {
       // this.levels = +this.$refs.selectedTest[0].dataset.levels;
       this.test_id = e.target.value;
 
-      let level = this.filteredTests.filter(item => item.id === +this.test_id);
+      let level = this.filteredTests.filter(
+        (item) => item.id === +this.test_id
+      );
       // console.log(level);
       this.levels = +level[0].level;
       console.log(this.levels);
     },
     filterTestByGroup(groupName) {
-      this.filteredTests = this.tests.filter(item => {
+      this.filteredTests = this.tests.filter((item) => {
         // console.log(item);
         // console.log(groupName);
         return item.group === groupName;
@@ -103,7 +104,7 @@ export default {
     },
     addQuestionTo(questionOld) {
       // console.log(this.test_id);
-      console.log(questionOld);
+      // console.log(questionOld);
       let filtered = this.filterQuestion(
         this.questions,
         +this.level,
@@ -114,22 +115,22 @@ export default {
         question: {
           text: questionOld.question.text,
           img: questionOld.question.img,
-          question_id: Date.now()
+          question_id: Date.now(),
           // question_id: filtered.length + 1
         },
         level_id: +this.level,
-        test_id: +this.test_id
+        test_id: +this.test_id,
       };
       if (+this.level && +this.test_id) {
         this.addNew(newQuestion);
         this.showTooltip({
           type: "success",
-          text: "Вопрос успешно загружен"
+          text: "Вопрос успешно загружен",
         });
       } else {
         this.showTooltip({
           type: "error",
-          text: "ВЫберите группу и уровень теста"
+          text: "ВЫберите группу и уровень теста",
         });
       }
       console.log(newQuestion);
@@ -143,20 +144,20 @@ export default {
         }
       });
       return filteredQuestions;
-    }
+    },
   },
   computed: {
     ...mapState("questions", {
-      questions: state => state.questions
+      questions: (state) => state.questions,
     }),
     ...mapState("tests", {
-      tests: state => state.tests
+      tests: (state) => state.tests,
     }),
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
-    ...mapGetters("questions", ["uniqueQuestions"])
-  }
+    ...mapGetters("questions", ["uniqueQuestions"]),
+  },
 };
 </script>
 <style lang="postcss" scoped>

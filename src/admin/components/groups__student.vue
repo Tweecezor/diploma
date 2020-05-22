@@ -4,6 +4,7 @@ div
     input(type="text" :disabled="!editMode" v-model="currentStudent.surname").student__input
     input(type="text" :disabled="!editMode" v-model="currentStudent.name").student__input.student__input--surname
     input(type="text" :disabled="!editMode" v-model="currentStudent.thirdname").student__input.student__input--thirdname
+   
     .student__buttons(v-if="!editMode" :class="{student__buttons__disabled:isActiveModeActive}")
       <svg @click="editStudent" class="student__buttons--edit" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
           <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
@@ -24,13 +25,13 @@ div
 import { mapActions, mapState } from "vuex";
 export default {
   props: {
-    student: Object
+    student: Object,
   },
   data() {
     return {
       currentStudent: { ...this.student },
       editMode: false,
-      new: ""
+      new: "",
     };
   },
   methods: {
@@ -49,18 +50,27 @@ export default {
         this.deleteStudent(this.currentStudent);
         this.showTooltip({
           type: "success",
-          text: "Студент успешно удален"
+          text: "Студент успешно удален",
         });
       }
     },
     saveStudent() {
       if (this.isActiveModeActive) {
         this.editMode = !this.editMode;
+
+        let editedStudent = {
+          ...this.currentStudent,
+          fullName: `${this.currentStudent.surname} ${
+            this.currentStudent.name
+          } ${this.currentStudent.thirdname}`,
+        };
         console.log(this.currentStudent);
-        this.editStudentInGroup(this.currentStudent);
+        console.log(editedStudent);
+
+        this.editStudentInGroup(editedStudent);
         this.showTooltip({
           type: "success",
-          text: "Изменения успешно сохранены"
+          text: "Изменения успешно сохранены",
         });
         this.setEditStatus(false);
       }
@@ -71,28 +81,31 @@ export default {
         this.editMode = !this.editMode;
         this.showTooltip({
           type: "success",
-          text: "Изменения успешно отменены"
+          text: "Изменения успешно отменены",
         });
         this.setEditStatus(false);
       }
-    }
+    },
   },
   watch: {
     student: function(student) {
       this.currentStudent = { ...this.student };
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      isActiveModeActive: state => state.isEditActive
-    })
-  }
+      isActiveModeActive: (state) => state.isEditActive,
+    }),
+  },
   // mounted() {
   //   this.setEditStatus(false);
   // }
 };
 </script>
 <style lang="postcss" scoped>
+/* .student__input_hidden {
+  display: none;
+} */
 .green {
   width: 15px;
   height: 15px;

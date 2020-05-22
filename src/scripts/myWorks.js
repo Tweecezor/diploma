@@ -8,6 +8,7 @@ const axios = require("axios");
 axios.defaults.baseURL = "https://webdev-api.loftschool.com";
 import _ from "lodash";
 Object.defineProperty(Vue.prototype, "$_", { value: _ });
+Object.defineProperty(Vue.prototype, "$axios", { value: axios });
 
 Vue.use(VueRouter);
 

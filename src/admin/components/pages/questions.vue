@@ -18,7 +18,7 @@
             .questions__belongs_close(@click="showQuestion = false") X
         //- CURRENT_QUESTION(:item="item")
         .questions_current__item.question_current()
-          QUESTION_ITEM( :qText="qText" :item="item.question" :test_id="item.test_id" :level_id="item.level_id")
+          QUESTION_ITEM( :qText="qText" :_id="item._id" :item="item.question" :test_id="item.test_id" :level_id="item.level_id")
           div(v-if="item.type!=='handwritingAnswer'").answer__content
             .answers__title Просмотр ответов
             .answers__data
@@ -41,6 +41,7 @@
                       :question_id="item.question.question_id" :answer="answer" 
                       :test_id="item.test_id" :level_id="item.level_id"
                       :answerImgUrl="currentAnswerImgUrl"
+                      :_id="item._id"
                       v-on:setAnswerImgURL="setCurrentAnswerIMG"
                       v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
                       )
@@ -49,10 +50,11 @@
                   :test_id="item.test_id" :level_id="item.level_id"
                   :currentAnswerImgUrl="currentAnswerImgUrl"
                   :answerImgUrl="currentAnswerImgUrl"
+                  :_id="item._id"
                   v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
                   )
           div(v-else)
-            KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type")
+            KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type" :_id="item._id")
       .wrapper.questions
         ul.questions__list
           li.questions__item.question(v-for="question in uniqueQuestions")
@@ -86,7 +88,7 @@ export default {
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
     KEYWORDS_ANSWER,
-    CURRENT_QUESTION
+    CURRENT_QUESTION,
   },
   props: {},
   data() {
@@ -111,10 +113,12 @@ export default {
       isTestOpen: false,
       currentQuestionID: 1,
       currentAnswerImgUrl: "",
-      breadcrumbs: []
+      breadcrumbs: [],
     };
   },
   methods: {
+    ...mapActions("questions", ["fetchQuestions"]),
+
     showCurrentQuestion(question) {
       console.log(question);
       this.showQuestion = true;
@@ -123,7 +127,7 @@ export default {
       console.log(currentTestId);
       let currentGroupName;
       let currentTestName;
-      this.tests.filter(item => {
+      this.tests.filter((item) => {
         item.id === currentTestId
           ? ((currentGroupName = item.group), (currentTestName = item.name))
           : "";
@@ -163,7 +167,7 @@ export default {
       this.test_id = e.target.value;
     },
     filterTestByGroup(groupName) {
-      this.filteredTests = this.tests.filter(item => {
+      this.filteredTests = this.tests.filter((item) => {
         console.log(item);
         console.log(groupName);
         return item.group === groupName;
@@ -199,10 +203,10 @@ export default {
         question: {
           text: questionOld.question.text,
           img: questionOld.question.img,
-          question_id: filtered.length + 1
+          question_id: filtered.length + 1,
         },
         level_id: +this.level,
-        test_id: +this.test_id
+        test_id: +this.test_id,
       };
 
       console.log(newQuestion);
@@ -287,21 +291,24 @@ export default {
     },
     closeSection() {
       this.changeShowQuestionsStatus(false);
-    }
+    },
   },
   computed: {
     ...mapState("questions", {
-      questions: state => state.questions
+      questions: (state) => state.questions,
     }),
     // ...mapGetters("tests", ["getTests"]),
     ...mapState("tests", {
-      tests: state => state.tests
+      tests: (state) => state.tests,
     }),
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
-    ...mapGetters("questions", ["uniqueQuestions"])
-  }
+    ...mapGetters("questions", ["uniqueQuestions"]),
+  },
+  created() {
+    this.fetchQuestions();
+  },
 };
 </script>
 <style lang="postcss" scoped>
@@ -487,76 +494,16 @@ export default {
 }
 </style>
 
-// questions: {
-      //   0: {
-      //     type: "handwritingAnswer",
-      //     question: {
-      //       text: "fweq",
-      //       img: "",
-      //       question_id: 1
-      //     },
-      //     keywordsArray: ["efwq", "efwqgr", "wefqgr"],
-      //     level_id: 1,
-      //     test_id: 1
-      //   },
-      //   1: {
-      //     type: "oneAnswer",
-      //     question: {
-      //       text: "fewqgr",
-      //       img: "",
-      //       question_id: 2
-      //     },
-      //     answers: [
-      //       {
-      //         text: "fewqgr",
-      //         correct: false,
-      //         imgURL: "",
-      //         answer_id: 1
-      //       },
-      //       {
-      //         text: "qfwegr",
-      //         correct: true,
-      //         imgURL: "",
-      //         answer_id: 2
-      //       },
-      //       {
-      //         text: "qwrge",
-      //         correct: false,
-      //         imgURL: "",
-      //         answer_id: 3
-      //       }
-      //     ],
-      //     level_id: 1,
-      //     test_id: 1
-      //   },
-      //   2: {
-      //     type: "multipleAnswer",
-      //     question: {
-      //       text: "sadvfw",
-      //       img: "",
-      //       question_id: 3
-      //     },
-      //     answers: [
-      //       {
-      //         text: "asdvefw",
-      //         correct: false,
-      //         imgURL: "",
-      //         answer_id: 1
-      //       },
-      //       {
-      //         text: "we43",
-      //         correct: true,
-      //         imgURL: "",
-      //         answer_id: 2
-      //       },
-      //       {
-      //         text: "asdfwer",
-      //         correct: true,
-      //         imgURL: "",
-      //         answer_id: 3
-      //       }
-      //     ],
-      //     level_id: 1,
-      //     test_id: 1
-      //   }
-      // }
+// questions: { // 0: { // type: "handwritingAnswer", // question: { // text:
+"fweq", // img: "", // question_id: 1 // }, // keywordsArray: ["efwq", "efwqgr",
+"wefqgr"], // level_id: 1, // test_id: 1 // }, // 1: { // type: "oneAnswer", //
+question: { // text: "fewqgr", // img: "", // question_id: 2 // }, // answers: [
+// { // text: "fewqgr", // correct: false, // imgURL: "", // answer_id: 1 // },
+// { // text: "qfwegr", // correct: true, // imgURL: "", // answer_id: 2 // },
+// { // text: "qwrge", // correct: false, // imgURL: "", // answer_id: 3 // } //
+], // level_id: 1, // test_id: 1 // }, // 2: { // type: "multipleAnswer", //
+question: { // text: "sadvfw", // img: "", // question_id: 3 // }, // answers: [
+// { // text: "asdvefw", // correct: false, // imgURL: "", // answer_id: 1 // },
+// { // text: "we43", // correct: true, // imgURL: "", // answer_id: 2 // }, //
+{ // text: "asdfwer", // correct: true, // imgURL: "", // answer_id: 3 // } //
+], // level_id: 1, // test_id: 1 // } // }

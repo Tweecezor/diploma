@@ -1,6 +1,7 @@
 <template lang="pug">
   .container
     .groups 
+      //- pre {{info}}
       //- pre {{groups}}
       ADD_NEW_GROUP(v-if="showAddGroup")
       ul.groups__list
@@ -35,6 +36,7 @@ export default {
   },
   methods: {
     ...mapActions("helped", ["changeShowGroupStatus"]),
+    ...mapActions("groups", ["fetchGroups"]),
     showAddNew() {
       this.changeShowGroupStatus(true);
     },
@@ -49,6 +51,7 @@ export default {
   },
   async mounted() {
     this.changeShowGroupStatus(false);
+    this.fetchGroups();
     // await axios({
     //   url: "http://localhost:3000/test",
     //   method: "get",
@@ -59,9 +62,9 @@ export default {
     //     gender: this.gender,
     //   },
     // });
-    this.$axios
-      .get("https://api.coindesk.com/v1/bpi/currentprice.json")
-      .then((response) => (this.info = response.data.bpi));
+    // this.$axios
+    //   .get("http://localhost:3002/api/groups")
+    //   .then((response) => (this.info = response.data));
   },
   // watch: {
   //   groups: function() {

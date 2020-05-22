@@ -1,6 +1,6 @@
 <template lang="pug">
   .answers__wrapper
-    //- pre {{isActiveModeActive}}
+    //- pre {{answer}}
     .answers__data(v-if="typeOfQuestion==='oneAnswer' || typeOfQuestion==='multipleAnswer'")
       .answers__data_label-wrap
         label.answers__data_label Текст ответа
@@ -8,9 +8,9 @@
         .answers__data_text-wrap
           input(type="text" v-model="currentAnswer.text" :disabled="!editMode").answers__data_text
         .answers__data_correct-wrap(v-if="typeOfQuestion === 'oneAnswer'")
-          input( type="radio" :name="question_id" v-bind:value="currentAnswer.text" :disabled="!editMode" :checked="answer.correct"  @change="setCorrectAnswer").answers__data_status
+          input( type="radio" :name="question_id" v-bind:value="currentAnswer.answer_id" :disabled="!editMode" :checked="answer.correct"  @change="setCorrectAnswer").answers__data_status
         .answers__data_correct-wrap(v-if="typeOfQuestion === 'multipleAnswer'")
-          input( type="checkbox" :name="question_id" v-bind:value="currentAnswer.text" :disabled="!editMode" :checked="answer.correct"  @change="setCorrectAnswer").answers__data_status
+          input( type="checkbox" :name="question_id" v-bind:value="currentAnswer.answer_id" :disabled="!editMode" :checked="answer.correct"  @change="setCorrectAnswer").answers__data_status
         .answers__actions(v-if="!editMode && !editPhotoMode" :class="{answers__actions__disabled:isActiveModeActive}")
             //- .answers__actions_correct(@click="editMode = true") 
             <svg @click="setEditMode"  class="answers__actions_correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
@@ -54,7 +54,8 @@ export default {
     question_id: Number,
     answerLength: Number,
     typeOfQuestion: String,
-    answerImgUrl: String
+    answerImgUrl: String,
+    _id: String,
   },
   data() {
     return {
@@ -67,10 +68,10 @@ export default {
       showAImg: false,
       prevCorrectAnswer: {
         correct: this.answer.correct,
-        text: this.answer.text
+        text: this.answer.text,
       },
       newImg: false,
-      prevAnswerImgUrl: ""
+      prevAnswerImgUrl: "",
     };
   },
   methods: {
@@ -79,18 +80,20 @@ export default {
       "changeAnswerStatus",
       "updateAnswer",
       "addNewAnswer",
-      "deleteAnswer"
+      "deleteAnswer",
     ]),
     ...mapActions("helped", ["setEditStatus"]),
     setEditMode() {
       if (!this.isActiveModeActive) {
         this.editMode = true;
+        this.setEditStatus(true);
       }
     },
     cancelImgUpdate() {
       console.log("cancel");
       this.editPhotoMode = false;
       this.$emit("emitResetAnswerImgUrl");
+      this.setEditStatus(false);
     },
     saveNewImg() {
       console.log("save");
@@ -102,10 +105,12 @@ export default {
         level_id: this.level_id,
         test_id: this.test_id,
         question_id: this.question_id,
-        imgURL: this.answerImgUrl
+        imgURL: this.answerImgUrl,
+        _id: this._id,
       });
       // console.log(this.answerImgUrl);
       this.$emit("emitResetAnswerImgUrl");
+      this.setEditStatus(false);
       // console.log(this.answer.imgURL);
     },
     setAnswerImgUrl(answer) {
@@ -114,6 +119,7 @@ export default {
         console.log(this.answer.imgURL);
         this.prevAnswerImgUrl = this.answer.imgURL;
         this.$emit("setAnswerImgURL", answer.imgURL);
+        this.setEditStatus(true);
       }
     },
     newAnswerAdd() {
@@ -122,12 +128,12 @@ export default {
           text: this.newAnswer,
           correct: false,
           imgURL: this.newAnswerImgURL,
-          answer_id: Date.now()
+          answer_id: Date.now(),
           // answer_id: this.answerLength + 1
         },
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id
+        question_id: this.question_id,
       };
       console.log(newAnswer);
       this.addNewAnswer(newAnswer);
@@ -159,11 +165,12 @@ export default {
           answer_id: this.currentAnswer.answer_id,
           level_id: this.level_id,
           test_id: this.test_id,
-          question_id: this.question_id
+          question_id: this.question_id,
+          _id: this._id,
         });
         this.showTooltip({
           type: "success",
-          text: "Ответ успешно удален"
+          text: "Ответ успешно удален",
         });
       }
     },
@@ -175,15 +182,17 @@ export default {
         level_id: this.level_id,
         test_id: this.test_id,
         question_id: this.question_id,
-        imgURL: this.currentAnswer.imgURL
+        imgURL: this.currentAnswer.imgURL,
+        _id: this._id,
       });
       this.editMode = !this.editMode;
       this.newImg = false;
       this.showAImg = false;
       this.showTooltip({
         type: "success",
-        text: "Ответ успешно изменен"
+        text: "Ответ успешно изменен",
       });
+      this.setEditStatus(false);
     },
     cancelUpdate() {
       this.changeAnswerStatus({
@@ -191,46 +200,48 @@ export default {
         correct: this.prevCorrectAnswer.correct,
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id
+        question_id: this.question_id,
       });
       this.currentAnswer = { ...this.answer };
       this.editMode = !this.editMode;
       this.showTooltip({
         type: "success",
-        text: "Изменения отменены"
+        text: "Изменения отменены",
       });
+      this.setEditStatus(false);
     },
     showAnswerImage() {
       this.showAImg = !this.showAImg;
     },
     setCorrectAnswer(e) {
       // console.log(cancel);
-      console.log(e.target.checked);
-      console.log(e.target.value);
+      // console.log(e.target.checked);
+      // console.log(e.target.value);
       this.changeAnswerStatus({
-        text: e.target.value,
+        answer_id: +e.target.value,
         correct: e.target.checked,
         test_id: this.test_id,
         level_id: this.level_id,
         question_id: this.question_id,
-        type: this.typeOfQuestion
+        type: this.typeOfQuestion,
+        _id: this._id,
       });
-    }
+    },
   },
   watch: {
     answer: function(answer) {
-      console.log(answer);
+      // console.log(answer);
       this.currentAnswer = { ...this.answer };
-    }
+    },
   },
   mounted() {
     this.setEditStatus(false);
   },
   computed: {
     ...mapState("helped", {
-      isActiveModeActive: state => state.isEditActive
-    })
-  }
+      isActiveModeActive: (state) => state.isEditActive,
+    }),
+  },
 };
 </script>
 <style lang="postcss" scoped>
