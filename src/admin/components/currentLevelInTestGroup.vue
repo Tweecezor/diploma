@@ -1,6 +1,7 @@
 <template lang="pug">
   div.current_level-wrapper
-    //- pre {{currentLevel}}
+    //- pre {{questionPhotoFile.name}}
+    //- pre {{answerPhotoFile.name}}
     .current_level__topic-wrap
       h1.current_level__topic Добавление вопроса
     .current_level__content
@@ -41,6 +42,7 @@
         .current_level-data(v-if="typeOfQuestion !== 'handwritingAnswer'")
           ONE_ANSWER(
             :prevAnswerPhotoURl="prevAnswerPhotoURl" :answerPhotoURl="answerPhotoURl" :questionPhotoURl="questionPhotoURl" :currentQuestion="currentQuestion" :currentLevel="currentLevel" 
+           
             v-if="typeOfQuestion === 'oneAnswer'"
             v-on:resetAnswerUrl="dropAnswerURL"
             v-on:showCurrentAnswerIMG="setAnswerURL"
@@ -88,7 +90,12 @@ export default {
       questionPhotoURl: "",
       answerPhotoURl: "",
       prevAnswerPhotoURl: "",
-      currentAnswer: ""
+      currentAnswer: "",
+      // answerPhoto: File,
+      questionID: Date.now()
+      // questionPhotoFile: "",
+      // answerPhotoFiles: [],
+      // answersPhoto
     };
   },
   methods: {
@@ -96,6 +103,7 @@ export default {
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus"
     ]),
+    ...mapActions("tooltips", ["showTooltip"]),
     resetData() {
       this.currentQuestion = "";
       this.questionPhotoURl = "";
@@ -114,45 +122,81 @@ export default {
     },
     loadPhoto(e) {
       const file = e.target.files[0];
-      console.log(file);
-      const reader = new FileReader();
-      try {
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.questionPhotoURl = reader.result;
-        };
-      } catch (error) {
-        alert(error.message);
-        console.log(error.message.errors.photo);
+
+      // console.log(file);
+      // this.questionPhotoFile = file;
+      if (file.size < 300 * 1024) {
+        const reader = new FileReader();
+        try {
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            this.questionPhotoURl = reader.result;
+          };
+          this.showTooltip({
+            type: "success",
+            text: "Изображение успешно добавлено"
+          });
+        } catch (error) {
+          // alert(error.message);
+          // console.log(error.message.errors.photo);
+          this.showTooltip({
+            type: "error",
+            text: "Ошибка при добавлении изображения"
+          });
+        }
+      } else {
+        this.showTooltip({
+          type: "error",
+          text: "Файл превышает 300кб"
+        });
       }
     },
     loadAnwerPhoto(e) {
       const file = e.target.files[0];
-      console.log(file);
+      // console.log(file);
+      // this.answerPhoto = file;
+      // this.answerPhotoFiles.push(file);
       const reader = new FileReader();
       try {
         reader.readAsDataURL(file);
+        // console.log(reader);
         reader.onload = () => {
           this.answerPhotoURl = reader.result;
         };
+        this.showTooltip({
+          type: "success",
+          text: "Изображение успешно добавлено"
+        });
       } catch (error) {
-        alert(error.message);
-        console.log(error.message.errors.photo);
+        // alert(error.message);
+        // console.log(error.message.errors.photo);
+        this.showTooltip({
+          type: "error",
+          text: "Ошибка при добавлении изображения"
+        });
       }
     },
     changeAnswerPhoto(e) {
       this.prevAnswerPhotoURl = this.answerPhotoURl;
       const file = e.target.files[0];
-      console.log(file);
+      // console.log(file);
       const reader = new FileReader();
       try {
         reader.readAsDataURL(file);
         reader.onload = () => {
           this.answerPhotoURl = reader.result;
         };
+        this.showTooltip({
+          type: "success",
+          text: "Изображение успешно добавлено"
+        });
       } catch (error) {
-        alert(error.message);
-        console.log(error.message.errors.photo);
+        // alert(error.message);
+        // console.log(error.message.errors.photo);
+        this.showTooltip({
+          type: "error",
+          text: "Ошибка при добавлении изображения"
+        });
       }
     },
 

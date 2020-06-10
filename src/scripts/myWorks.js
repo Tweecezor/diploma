@@ -5,7 +5,7 @@ import VueRouter from "vue-router";
 import store from "../admin/store/index";
 // import router from "./router";
 const axios = require("axios");
-axios.defaults.baseURL = "https://webdev-api.loftschool.com";
+// axios.defaults.baseURL = "http://localhost:3002/";
 import _ from "lodash";
 Object.defineProperty(Vue.prototype, "$_", { value: _ });
 Object.defineProperty(Vue.prototype, "$axios", { value: axios });

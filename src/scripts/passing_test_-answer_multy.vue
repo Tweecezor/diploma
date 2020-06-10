@@ -1,31 +1,22 @@
 <template lang="pug">
   ul.passing_test__answers-list 
-    //- pre {{answers}}
-    //- pre {{countOfCorrect}}
-    //- pre {{selectedCorrectByUser}}
-    //- pre {{isAnswerCorrect}}
-    //- pre {{answers}}
-    //- pre {{answersCopy}}
     li.passing_test__answers-item.answer(
       v-for="(answer,id) in answers" 
       :class="{answer__active:answer.selectedByStudent}"
       ref="answersList"
     )
       .answer__text-wrap(@click="selectAnswer($event,answer,id)")
-        //- pre {{answer.selectedByStudent}}
         //- pre {{answer.correct}}
-        //- pre {{answer.selectedByStudent}}
-        //- pre {{answer}}
-        .answer__text_content-wrap
-          p.answer__text(:class="{answerTextWithImg:answer.imgURL}") {{answer.text}}
+        .answer__text_content-wrap(:class="{answerTextWithImg:answer.imgURL}")
+          p.answer__text {{answer.text}}
           .answer__checkbox-wrap
             .answer__checkbox( ref="checkbox_list" )
               <svg v-if="answer.selectedByStudent || answersCopy[id].selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
                 <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
               </svg>
-              <svg v-if="answersCopy[id].selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
-                <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
-              </svg>
+              //- <svg v-if="answersCopy[id].selectedByStudent" version="1.1"  class="answer__checkbox_correct" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+              //-   <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+              //- </svg>
         .question__img-wrap(v-if="answer.imgURL")
           label.question__img(:style="{'background-image':`url(${answer.imgURL})`}")
       
@@ -82,8 +73,9 @@ export default {
     },
 
     selectAnswer(e, answer, id) {
-      console.log(this.answersCopy);
+      // console.log(this.answersCopy);
       console.log(e.target.className);
+      console.log(e.target.tagName);
       var isAnswerCorrect;
       if (e.target.className === "answer__text-wrap") {
         return;
@@ -113,33 +105,96 @@ export default {
             answer.correct,
             answer.selectedByStudent
           );
-          console.log(isAnswerCorrect);
+          // console.log(isAnswerCorrect);
+          console.log("asfhejgs");
           this.answersCopy[id].selectedByStudent = !this.answersCopy[id]
             .selectedByStudent;
           answer.selectedByStudent = !answer.selectedByStudent;
           this.$emit("changeAnswer", answer, this.question_id, isAnswerCorrect);
-          e.target.parentNode.parentNode.parentNode.classList.toggle(
+
+          e.target.parentElement.parentElement.parentElement.parentElement.classList.toggle(
             "answer__active"
           );
+          console.log(
+            e.target.parentElement.parentElement.parentElement.parentElement
+          );
+
+          // e.target.parentNode.parentNode.parentNode.classList.toggle(
+          //   "answer__active"
+          // );
           e.target.classList.toggle("answer__checkbox_active");
 
           break;
 
+        case "polygon":
+          isAnswerCorrect = this.validationAnswer(
+            answer.correct,
+            answer.selectedByStudent
+          );
+          // console.log(isAnswerCorrect);
+          console.log("polygon");
+          this.answersCopy[id].selectedByStudent = !this.answersCopy[id]
+            .selectedByStudent;
+          answer.selectedByStudent = !answer.selectedByStudent;
+          this.$emit("changeAnswer", answer, this.question_id, isAnswerCorrect);
+
+          e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.toggle(
+            "answer__active"
+          );
+          // console.log(
+          //   e.target.parentElement.parentElement.parentElement.parentElement
+          //     .parentElement.parentElement
+          // );
+
+          e.target.classList.toggle("answer__checkbox_active");
+
+          break;
+        case "svg":
+          isAnswerCorrect = this.validationAnswer(
+            answer.correct,
+            answer.selectedByStudent
+          );
+          // console.log(isAnswerCorrect);
+          console.log("svg");
+          this.answersCopy[id].selectedByStudent = !this.answersCopy[id]
+            .selectedByStudent;
+          answer.selectedByStudent = !answer.selectedByStudent;
+          this.$emit("changeAnswer", answer, this.question_id, isAnswerCorrect);
+
+          e.target.parentElement.parentElement.parentElement.parentElement.parentElement.classList.toggle(
+            "answer__active"
+          );
+          // console.log(
+          //   e.target.parentElement.parentElement.parentElement.parentElement
+          //     .parentElement.parentElement
+          // );
+
+          e.target.classList.toggle("answer__checkbox_active");
+
+          break;
         case "P":
           isAnswerCorrect = this.validationAnswer(
             answer.correct,
             answer.selectedByStudent
           );
-          console.log(isAnswerCorrect);
-          console.log(this.answersCopy[id].selectedByStudent);
+          // console.log("alalal");
+          // console.log(isAnswerCorrect);
+          // console.log(this.answersCopy[id].selectedByStudent);
           this.answersCopy[id].selectedByStudent = !this.answersCopy[id]
             .selectedByStudent;
-          console.log(this.answersCopy[id].selectedByStudent);
+          // console.log(this.answersCopy[id].selectedByStudent);
           answer.selectedByStudent = !answer.selectedByStudent;
           this.$emit("changeAnswer", answer, this.question_id, isAnswerCorrect);
-          e.target.parentElement.parentElement.classList.toggle(
+
+          // console.log(e.target.parentElement.parentElement.parentElement);
+
+          e.target.parentElement.parentElement.parentElement.classList.toggle(
             "answer__active"
           );
+          // e.target.parentElement.parentElement.classList.toggle(
+          //   "answer__active"
+          // );
+
           e.target.nextSibling.firstChild.classList.toggle(
             "answer__checkbox_active"
           );
@@ -151,6 +206,7 @@ export default {
       console.log(this.answersCopy);
     },
     setActiveAnswer(answersList, answers, checkbox_list) {
+      console.log(checkbox_list);
       for (var i = 0; i < answersList.length; i++) {
         if (answers[i].selectedByStudent) {
           answersList[i].classList.add("answer__active");
@@ -188,6 +244,11 @@ export default {
       this.isAnswerCorrect = false;
       this.validationAfterUpdate();
       this.answersCopy = _.cloneDeep(this.answers);
+      // this.setActiveAnswer(
+      //   this.$refs.answersList,
+      //   this.answers,
+      //   this.$refs.checkbox_list
+      // );
     }
   }
 };
@@ -255,11 +316,10 @@ export default {
     left: 16%;
   } */
 }
-.question__img-wrap {
+/* .question__img-wrap {
   width: 500px;
   width: 45%;
   height: 250px;
-  /* border: 1px dashed #ccc; */
   padding: 7px;
   @include tablets {
     width: 100%;
@@ -274,12 +334,12 @@ export default {
   border: 1px dashed #000;
 }
 .answerTextWithImg {
-  /* color: red; */
+ 
   width: 100%;
   @include tablets {
     width: 90%;
   }
-}
+} */
 .answer__checkbox_correct {
   fill: #434573;
   width: 15px;
@@ -294,10 +354,46 @@ export default {
 }
 .answer__text_content-wrap {
   display: flex;
-  width: 50%;
+  /* width: 50%; */
   width: 95%;
   @include tablets {
     width: 100%;
+  }
+}
+
+.question__img-wrap {
+  width: 500px;
+  width: 45%;
+  height: 250px;
+  /* border: 1px dashed #ccc; */
+  padding: 7px;
+  /* margin-right: 5%; */
+  @include tablets {
+    width: 100%;
+  }
+}
+.question__img {
+  display: block;
+  widht: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  border: 1px dashed #000;
+}
+
+.answer__text_content-wrap {
+  display: flex;
+  /* width: 50%; */
+  width: 95%;
+  @include tablets {
+    width: 100%;
+  }
+}
+.answerTextWithImg {
+  /* color: red; */
+  width: 50%;
+  @include tablets {
+    width: 95%;
   }
 }
 </style>

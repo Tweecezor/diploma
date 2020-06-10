@@ -14,8 +14,6 @@
         .group__label-wrap.group__label-wrap--status
           label().group__label.label Введите почту старосты
           input(type="email" name="email" id="email" v-model="headmanEmail").input.group__input
-        //- .group__label-wrap.group__label-addGroup
-        //-   button(type="button" name="submit" value="Сохранить" @click="addGroup" v-if="isNewGroup" ).btn.group__submit Создать группу
       .group__info.group__info--student()
         h2.group__title.tittle.group__title--student Студент
 
@@ -55,7 +53,7 @@ export default {
       showStudent: false,
       studentsArray: [],
       headmanEmail: "test@mail.ru",
-      group_id: Date.now(),
+      group_id: Date.now()
     };
   },
   mounted() {
@@ -84,18 +82,15 @@ export default {
         name: this.student_name,
         surname: this.student_surname,
         thirdname: this.student_thirdname,
-        fullName: `${this.student_surname} ${this.student_name} ${
-          this.student_thirdname
-        }`,
+        fullName: `${this.student_surname} ${this.student_name} ${this.student_thirdname}`,
         group_id: this.group_id,
-        student_id: Date.now(),
+        student_id: Date.now()
       };
-      console.log(studentsData);
       if (this.student_name && this.student_surname && this.student_thirdname) {
         this.studentsArray.push(studentsData);
         this.showTooltip({
           type: "success",
-          text: "Студент успешно добавлен",
+          text: "Студент успешно добавлен в группе"
         });
         this.student_name = "";
         this.student_surname = "";
@@ -103,33 +98,41 @@ export default {
       } else {
         this.showTooltip({
           type: "error",
-          text: "Введите ФИО нового студента",
+          text: "Введите ФИО нового студента"
         });
       }
     },
-    submitNewGroup() {
+    async submitNewGroup() {
       let groupWithStudents = {
         group_id: this.group_id,
         groupName: this.groupName,
         headmanEmail: this.headmanEmail,
-        studentsInGroup: this.studentsArray,
+        studentsInGroup: this.studentsArray
       };
-      console.log(groupWithStudents);
-      this.addNewGroup(groupWithStudents);
-      this.changeShowGroupStatus(false);
-      this.showTooltip({
-        type: "success",
-        text: "Группа успешно создана",
-      });
+      // console.log(groupWithStudents);
+      try {
+        await this.addNewGroup(groupWithStudents);
+        this.changeShowGroupStatus(false);
+        this.showTooltip({
+          type: "success",
+          text: "Группа успешно создана"
+        });
+      } catch (error) {
+        this.changeShowGroupStatus(false);
+        this.showTooltip({
+          type: "error",
+          text: error
+        });
+      }
     },
     ...mapActions("helped", ["changeShowGroupStatus"]),
     closeEdit() {
       this.changeShowGroupStatus(false);
-    },
+    }
   },
   computed: {
-    ...mapGetters("groups", ["groupId"]),
-  },
+    ...mapGetters("groups", ["groupId"])
+  }
 };
 </script>
 

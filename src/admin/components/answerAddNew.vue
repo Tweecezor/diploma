@@ -16,12 +16,12 @@ export default {
     question_id: Number,
     answerLength: Number,
     currentAnswerImgUrl: String,
-    _id: String,
+    _id: String
   },
   data() {
     return {
       newAnswer: "",
-      newAnswerImgURL: "",
+      newAnswerImgURL: ""
     };
   },
   methods: {
@@ -29,31 +29,37 @@ export default {
     ...mapActions("questions", [
       "changeAnswerStatus",
       "updateAnswer",
-      "addNewAnswer",
+      "addNewAnswer"
     ]),
-    newAnswerAdd() {
+    async newAnswerAdd() {
       let newAnswer = {
         answer: {
           text: this.newAnswer,
           correct: false,
           imgURL: this.currentAnswerImgUrl,
           // answer_id: this.answerLength + 1,
-          answer_id: Date.now(),
+          answer_id: Date.now()
         },
         test_id: this.test_id,
         level_id: this.level_id,
         question_id: this.question_id,
-        _id: this._id,
+        _id: this._id
       };
-      console.log(newAnswer);
-      this.newAnswer = "";
-      this.addNewAnswer(newAnswer);
-      this.showTooltip({
-        type: "success",
-        text: "Ответ успешно добавлен",
-      });
-      this.$emit("emitResetAnswerImgUrl");
-    },
+      try {
+        await this.addNewAnswer(newAnswer);
+        this.showTooltip({
+          type: "success",
+          text: "Ответ успешно добавлен"
+        });
+        this.newAnswer = "";
+        this.$emit("emitResetAnswerImgUrl");
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error
+        });
+      }
+    }
     // loadImg(e) {
     //   // console.log(isNewImg);
     //   // this.newImg = isNewImg;
@@ -74,7 +80,7 @@ export default {
     // deleteImg() {
     //   this.currentAnswer.imgURL = "";
     // },
-  },
+  }
 };
 </script>
 <style lang="postcss" scoped>

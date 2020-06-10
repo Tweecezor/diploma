@@ -76,10 +76,20 @@ export default {
         this.setEditStatus(false);
       }
     },
-    deleteCurrentGroup(groupID) {
+    async deleteCurrentGroup(groupID) {
       if (!this.isActiveModeActive) {
-        console.log(groupID);
-        this.deleteGroup(groupID);
+        try {
+          await this.deleteGroup(groupID);
+          this.showTooltip({
+            type: "success",
+            text: "Группа успешно удалена"
+          });
+        } catch (error) {
+          this.showTooltip({
+            type: "error",
+            text: error
+          });
+        }
       }
     },
     correctGroup() {
@@ -91,21 +101,29 @@ export default {
         // console.log(document.querySelector("#groupName"));
       }
     },
-    saveGroup() {
+    async saveGroup() {
       if (this.isActiveModeActive) {
-        this.editedGroup = {
-          ...this.currentGroup,
-          groupName: this.currentGroup.groupName,
-          headmanEmail: this.currentGroup.headmanEmail
-        };
-        console.log(this.editedGroup);
-        this.editMode = !this.editMode;
-        this.editGroup(this.editedGroup);
-        this.showTooltip({
-          type: "success",
-          text: "Изменения успешно сохранены"
-        });
-        this.setEditStatus(false);
+        try {
+          this.editedGroup = {
+            ...this.currentGroup,
+            groupName: this.currentGroup.groupName,
+            headmanEmail: this.currentGroup.headmanEmail
+          };
+          // console.log(this.editedGroup);
+          this.editMode = !this.editMode;
+          await this.editGroup(this.editedGroup);
+          this.showTooltip({
+            type: "success",
+            text: "Изменения успешно сохранены"
+          });
+          this.setEditStatus(false);
+        } catch (error) {
+          this.setEditStatus(false);
+          this.showTooltip({
+            type: "error",
+            text: error
+          });
+        }
       }
     },
     addStudent() {
@@ -162,6 +180,12 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+input[type="text"] {
+  /* width: 100%; */
+  &:hover {
+    border-bottom: 1px solid #edb947;
+  }
+}
 .group__desc_label {
   margin-right: 10px;
   cursor: pointer;
@@ -194,6 +218,9 @@ export default {
   &:hover {
     background: linear-gradient(to left, #db9600, #edb947);
   }
+}
+.group__name {
+  width: 100%;
 }
 
 .group__name,
@@ -357,6 +384,24 @@ export default {
 .group__desc__disabled {
   svg {
     opacity: 0.5;
+  }
+}
+input[type="text"]:disabled {
+  border-bottom: 1px solid black;
+  &:hover {
+    border-bottom: 1px solid black;
+  }
+}
+
+.group__preview-info {
+  width: 100%;
+}
+.group__status-wrap {
+  input[type="text"]:disabled {
+    border-bottom: 1px solid transparent;
+    &:hover {
+      border-bottom: 1px solid transparent;
+    }
   }
 }
 </style>

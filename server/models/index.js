@@ -31,11 +31,13 @@ const questionsScheme = new Schema({
       correct: Boolean,
       imgURL: String,
       answer_id: Number,
+      imagePath: String,
     },
   ],
   keywordsArray: [String],
   level_id: Number,
   test_id: Number,
+  questionID: Number,
 });
 
 const resultsScheme = new Schema({
@@ -45,6 +47,8 @@ const resultsScheme = new Schema({
   test_id: Number,
   test_name: String,
   mark: Number,
+  group_id: Number,
+  student_id: Number,
 });
 
 const testsScheme = new Schema({
@@ -52,6 +56,18 @@ const testsScheme = new Schema({
   level: String,
   name: String,
   group: String,
+  group_id: Number,
+  time: Number,
+  access: Boolean,
+});
+const userScheme = new Schema({
+  login: String,
+  password: String,
+  photoUser: String,
+});
+const passingTestUsersScheme = new Schema({
+  fullName: String,
+  student_id: Number,
   group_id: Number,
 });
 
@@ -61,8 +77,15 @@ const GROUPS = mongoose.model("groups", groupsScheme);
 const QUESTIONS = mongoose.model("questions", questionsScheme);
 const RESULTS = mongoose.model("results", resultsScheme);
 const TESTS = mongoose.model("tests", testsScheme);
+const USER = mongoose.model("user", userScheme);
+const PASSING_TEST_USERS = mongoose.model(
+  "passingTestUsers",
+  passingTestUsersScheme
+);
 
 module.exports.GROUPS = GROUPS;
 module.exports.QUESTIONS = QUESTIONS;
 module.exports.RESULTS = RESULTS;
 module.exports.TESTS = TESTS;
+module.exports.USER = USER;
+module.exports.PASSING_TEST_USERS = PASSING_TEST_USERS;

@@ -57,7 +57,7 @@ import TEST_PREVIEW from "./tests_preview_public";
 // import PASSING_TEST from "./passing_test";
 export default {
   components: {
-    TEST_PREVIEW,
+    TEST_PREVIEW
     // PASSING_TEST
   },
   data() {
@@ -70,7 +70,7 @@ export default {
       tests: "",
       groups: "",
       questions: "",
-      breadcrumbGroup: "hello",
+      breadcrumbGroup: "hello"
     };
   },
   methods: {
@@ -80,7 +80,7 @@ export default {
       this.currentTest = item;
       console.log();
       let studentsInCurrentGroup;
-      this.groups.filter((group) =>
+      this.groups.filter(group =>
         group.groupName === item.group
           ? (studentsInCurrentGroup = group.studentsInGroup)
           : ""
@@ -92,7 +92,7 @@ export default {
     },
     filterQuestionsByTest(currentTest) {
       console.log(currentTest);
-      let filteredQuestionsByTest = this.questions.filter((item) =>
+      let filteredQuestionsByTest = this.questions.filter(item =>
         item.test_id === currentTest.id ? item : ""
       );
       console.log(filteredQuestionsByTest);
@@ -100,7 +100,7 @@ export default {
     },
     filterTestByGroup(group, id) {
       console.log(group);
-      let filteredTests = this.tests.filter((item) =>
+      let filteredTests = this.tests.filter(item =>
         item.group === group.groupName ? item : ""
       );
       console.log(filteredTests);
@@ -120,7 +120,7 @@ export default {
           );
         }
       }
-    },
+    }
   },
   computed: {
     // ...mapState("groups", {
@@ -130,20 +130,20 @@ export default {
     //   tests: (state) => state.tests,
     // }),
     ...mapState("helped", {
-      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
+      isCurrentLevelOpen: state => state.isCurrentLevelOpen
     }),
     ...mapState("helped", {
-      isTestOpen: (state) => state.isTestOpen,
+      isTestOpen: state => state.isTestOpen
     }),
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
+      showQuestions: state => state.showQuestions
     }),
     // ...mapState("questions", {
     //   questions: (state) => state.questions,
     // }),
     ...mapState("results", {
-      results: (state) => state.results,
-    }),
+      results: state => state.results
+    })
   },
   async mounted() {
     // let response = await this.$axios.get("http://localhost:3002/api/tests");
@@ -164,7 +164,9 @@ export default {
     // console.log(this.$refs);
 
     console.log(this.breadcrumbGroup);
-    const TESTS = await this.$axios.get("http://localhost:3002/api/tests");
+    const TESTS = await this.$axios.get(
+      "http://localhost:3002/api/tests/public"
+    );
     const GROUPS = await this.$axios.get("http://localhost:3002/api/groups");
     const QUESTIONS = await this.$axios.get(
       "http://localhost:3002/api/questions"
@@ -173,7 +175,7 @@ export default {
     this.tests = TESTS.data;
     this.currentTestsList = TESTS.data;
     this.groups = GROUPS.data;
-  },
+  }
 };
 </script>
 

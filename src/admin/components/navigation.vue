@@ -3,7 +3,7 @@
     .container
       ul.nav__list
         li.nav__item(
-          v-for="item in ['Тесты','Группы','Результаты','Вопросы','Прохождение']"
+          v-for="item in ['Тесты','Группы','Результаты','Вопросы','Настройки']"
         )
           a(@click.prevent="clickLink(item)").nav__link {{item}}
           //- router-link(to="/works") {{item}}
@@ -29,6 +29,8 @@ export default {
           return this.$router.push("/groups");
         case "Вопросы":
           return this.$router.push("/questions");
+        case "Настройки":
+          return this.$router.push("/settings");
         case "Прохождение":
           return this.$router.push("/publicTests");
       }
@@ -48,6 +50,7 @@ export default {
 }
 .nav__list {
   display: flex;
+  flex-wrap: wrap;
 }
 .nav__item {
   /* border-bottom: 2px solid white; */

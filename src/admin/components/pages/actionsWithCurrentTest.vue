@@ -1,6 +1,6 @@
 <template lang="pug">
   .container
-    //- pre {{questions.length}}
+    //- pre {{filteredQuestions.length}}
     .actionsCurrentTest-wraper  
       .backToTest(  v-if="isTestOpen"  @click="backToTest") back
       CURRENT_LEVEL_IN_TEST_GROUP(:currentLevel="this.currentLevelInTestGroup" v-if="isCurrentLevelOpen")
@@ -21,7 +21,7 @@ export default {
   components: {
     CURRENT_TEST_GROUP,
     CURRENT_LEVEL_IN_TEST_GROUP,
-    ALL_QUESTIONS_IN_GROUP,
+    ALL_QUESTIONS_IN_GROUP
   },
   data() {
     return {
@@ -34,8 +34,8 @@ export default {
       obj: {
         level: "3",
         name: "Тут название теста",
-        group: "",
-      },
+        group: ""
+      }
     };
   },
   methods: {
@@ -45,7 +45,7 @@ export default {
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus",
       "setCurrentLevelInTestGroup",
-      "setCurrentTestGroup",
+      "setCurrentTestGroup"
     ]),
     ...mapActions("questions", ["fetchQuestions"]),
     backToTest() {
@@ -87,37 +87,37 @@ export default {
       console.log(obj);
       // this.setCurrentLevelInTestGroup(obj);
       this.currentLevelInTestGroup = {
-        ...obj,
+        ...obj
       };
       console.log("my event !!");
       // this.isTestOpen = !this.isTestOpen;
       this.changeCurrentTestStatus(!this.isTestOpen);
       this.changeCurrentLevelStatus(!this.isCurrentLevelOpen);
       // this.isCurrentLevelOpen = !this.isCurrentLevelOpen;
-    },
+    }
   },
   computed: {
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
     ...mapState("tests", {
-      tests: (state) => state.tests,
+      tests: state => state.tests
     }),
     ...mapState("helped", {
-      currentTestGroup: (state) => state.currentTestGroup,
+      currentTestGroup: state => state.currentTestGroup
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
+      isCurrentLevelOpen: state => state.isCurrentLevelOpen
     }),
     ...mapState("helped", {
-      isTestOpen: (state) => state.isTestOpen,
+      isTestOpen: state => state.isTestOpen
     }),
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
+      showQuestions: state => state.showQuestions
     }),
     ...mapState("questions", {
-      questions: (state) => state.questions,
-    }),
+      questions: state => state.questions
+    })
   },
   async created() {
     this.fetchQuestions();
@@ -131,8 +131,8 @@ export default {
         this.group_id
       );
       // console.log(this.filteredQuestions);
-    },
-  },
+    }
+  }
 };
 </script>
 

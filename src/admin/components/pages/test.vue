@@ -2,6 +2,7 @@
   .container
     //- pre {{groups}}
     //- pre {{tests}}
+    //- pre {{obj.group}}
     //- pre {{questions}}
     .wrapper-test
       .addedWrapper(v-if="showAllTests")
@@ -32,7 +33,7 @@
                   label.test__group-label.test__label Выберите группу
                 .test__group-wrap
                   select(name="groups" required v-model="obj.group").test__group-select
-                    option(v-for="group in groups" :value="group.groupName").test__group-option {{group.groupName}}
+                    option(v-for="group in groups" :groupID="group.group_id" :value="group.groupName").test__group-option {{group.groupName}}
               button(@click="addNewTest").btn Создать
 
 
@@ -76,7 +77,7 @@ export default {
     CURRENT_LEVEL_IN_TEST_GROUP,
     ALL_QUESTIONS_IN_GROUP,
     //
-    ACTIONS_WITH_CURRENT_TEST,
+    ACTIONS_WITH_CURRENT_TEST
   },
   data() {
     return {
@@ -88,8 +89,8 @@ export default {
       obj: {
         level: "3",
         name: "",
-        group: "",
-      },
+        group: ""
+      }
     };
   },
   methods: {
@@ -116,13 +117,6 @@ export default {
         console.log(this.filteredQuestions);
       }
     },
-    // changeQuestionsId(questions) {
-    //   for (var i = 0; i < questions.length; i++) {
-    //     console.log(questions[i].question.question_id);
-    //     questions[i].question.question_id = i + 1;
-    //   }
-    //   console.log(questions);
-    // },
     filterQuestion(questions, levelId, groupId) {
       let filteredQuestions = questions.filter(function(question) {
         console.log(question);
@@ -148,20 +142,30 @@ export default {
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus",
       "setCurrentLevelInTestGroup",
-      "setCurrentTestGroup",
+      "setCurrentTestGroup"
     ]),
+    setCurrentGroupId(groupName) {
+      let groupId;
+      this.groups.forEach(group => {
+        group.groupName === groupName ? (groupId = group.group_id) : "";
+      });
+      return groupId;
+    },
     addNewTest() {
+      let group_id = this.setCurrentGroupId(this.obj.group);
       const newTetsGroup = {
         // id: this.tests.length + 1,
         id: Date.now(),
-        group_id: "",
-        ...this.obj,
+        access: false,
+        time: 0,
+        group_id,
+        ...this.obj
       };
       this.addNew(newTetsGroup);
       this.showAddNew = false;
       this.showTooltip({
         type: "success",
-        text: "Тест успешно создан",
+        text: "Тест успешно создан"
       });
     },
     CLICK() {
@@ -179,14 +183,14 @@ export default {
     addQuestion(obj) {
       console.log(obj);
       this.currentLevelInTestGroup = {
-        ...obj,
+        ...obj
       };
       console.log("my event !!");
       // this.isTestOpen = !this.isTestOpen;
       this.changeCurrentTestStatus(!this.isTestOpen);
       this.changeCurrentLevelStatus(!this.isCurrentLevelOpen);
       // this.isCurrentLevelOpen = !this.isCurrentLevelOpen;
-    },
+    }
   },
   mounted() {
     this.changeCurrentLevelStatus(false);
@@ -202,24 +206,24 @@ export default {
   },
   computed: {
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
     ...mapState("tests", {
-      tests: (state) => state.tests,
+      tests: state => state.tests
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
+      isCurrentLevelOpen: state => state.isCurrentLevelOpen
     }),
     ...mapState("helped", {
-      isTestOpen: (state) => state.isTestOpen,
+      isTestOpen: state => state.isTestOpen
     }),
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
+      showQuestions: state => state.showQuestions
     }),
     ...mapState("questions", {
-      questions: (state) => state.questions,
-    }),
-  },
+      questions: state => state.questions
+    })
+  }
 };
 </script>
 

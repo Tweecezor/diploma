@@ -1,6 +1,6 @@
 <template lang="pug">
   section.questions
-    //- pre {{questions.length}}
+    //- pre {{activeQuestion}}
     ul.breadcrumbs_list
       li.breadcrumbs_item.breadcrumb( ref="breadcrumb" v-for="(currentQuestion,id) in questions")
         .breadcrumb_item( @click="changeCurrentQuestion($event,currentQuestion,id)" :class="") {{id+1}}
@@ -9,8 +9,6 @@
       .questions__list(v-if="questions.length")
         //- CURRENT_QUESTION(:item="item")
         .questions__item.question()
-          //- pre {{item}}
-          //- pre {{item}}
           QUESTION_ITEM( :qText="qText"  :_id="item._id" :item="item.question" :test_id="item.test_id" :level_id="item.level_id")
           div(v-if="item.type!=='handwritingAnswer'").answer__content
             .answers__title Просмотр ответов
@@ -37,7 +35,7 @@
                       :_id="item._id"
                       v-on:setAnswerImgURL="setCurrentAnswerIMG"
                       v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
-                      )
+                    )
                 ADD_NEW_ANSWER(
                   :answerLength="item.answers.length" :question_id="item.question.question_id" 
                   :test_id="item.test_id" :level_id="item.level_id"
@@ -45,14 +43,9 @@
                   :answerImgUrl="currentAnswerImgUrl"
                   :_id="item._id"
                   v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
-                  )
+                )
           div(v-else)
             KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type" :_id="item._id")
-            //- div.answers__title Ответы
-            //-   ul(v-for="keyword in item.keywordsArray").answers__list
-            //-     li.answers__item.answer()
-            //-       pre {{keyword}}
-      //- div(v-else).questions__empty Вопросы для этого уровня еще не созданы
     
 </template>
 
@@ -69,10 +62,10 @@ export default {
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
     KEYWORDS_ANSWER,
-    CURRENT_QUESTION,
+    CURRENT_QUESTION
   },
   props: {
-    questions: Array,
+    questions: Array
   },
   data() {
     return {
@@ -86,7 +79,7 @@ export default {
       isTestOpen: false,
       currentQuestionID: 1,
       currentAnswerImgUrl: "",
-      breadcrumbs: [],
+      breadcrumbs: []
       // answerImgUrl: ""
     };
   },
@@ -94,48 +87,55 @@ export default {
     ...mapActions("helped", [
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus",
-      "changeShowQuestionsStatus",
+      "changeShowQuestionsStatus"
     ]),
+    ...mapActions("tooltips", ["showTooltip"]),
     setCurrentQuestion() {
+      console.log(this.activeQuestion);
+      if (this.activeQuestion === this.questions.length) {
+        this.activeQuestion = this.questions.length - 1;
+        for (var i = 0; i < this.breadcrumbs.length; i++) {
+          i == this.activeQuestion
+            ? this.breadcrumbs[i].classList.add("breadcrumb--active")
+            : this.breadcrumbs[i].classList.remove("breadcrumb--active");
+        }
+      }
       this.item = this.questions[this.activeQuestion];
     },
     changeCurrentQuestion(e, currentQuestion, id) {
       console.log(e.target);
       this.activeQuestion = id;
       console.log(this.activeQuestion);
-      // console.log(currentQuestion);
-      // console.log(typeof currentQuestion);
-      // this.breadcrumbs[0].classList.add("breadcrumb--active");
+
       for (var i = 0; i < this.breadcrumbs.length; i++) {
-        // if (i === id) {
-        //   this.breadcrumbs[i].classList.add("breadcrumb--active");
-        // } else {
-        //   this.breadcrumbs[i].classList.remove("breadcrumb--active");
-        // }
         i == id
           ? this.breadcrumbs[i].classList.add("breadcrumb--active")
           : this.breadcrumbs[i].classList.remove("breadcrumb--active");
       }
       this.item = currentQuestion;
       this.qText = currentQuestion.question.text;
-      // console.log(this.questions[id]);
-      // this.item = this.questions[id];
-      // console.log(this.item);
-      // this.qText = item.question.text;
-      // this.activeQuestion = id;
     },
     loadAnwerPhoto(e) {
       const file = e.target.files[0];
-      console.log(file);
+      // console.log(file);
       const reader = new FileReader();
       try {
         reader.readAsDataURL(file);
+        // console.log(reader.result);
         reader.onload = () => {
           this.currentAnswerImgUrl = reader.result;
         };
+        this.showTooltip({
+          type: "success",
+          text: "Изображение успешно добавлено"
+        });
       } catch (error) {
-        alert(error.message);
-        console.log(error.message.errors.photo);
+        // alert(error.message);
+        this.showTooltip({
+          type: "error",
+          text: "Ошибка при добавлении изображения"
+        });
+        // console.log(error.message.errors.photo);
       }
     },
     changeAnswerPhoto(e) {
@@ -147,9 +147,17 @@ export default {
         reader.onload = () => {
           this.currentAnswerImgUrl = reader.result;
         };
+        this.showTooltip({
+          type: "success",
+          text: "Изображение успешно добавлено"
+        });
       } catch (error) {
-        alert(error.message);
-        console.log(error.message.errors.photo);
+        // alert(error.message);
+        // console.log(error.message.errors.photo);
+        this.showTooltip({
+          type: "error",
+          text: "Ошибка при добавлении изображения"
+        });
       }
     },
     resetAnswerImgUrl() {
@@ -161,12 +169,12 @@ export default {
     closeSection() {
       this.changeShowQuestionsStatus(false);
       this.changeCurrentTestStatus(true);
-    },
+    }
   },
   computed: {
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
-    }),
+      showQuestions: state => state.showQuestions
+    })
   },
   created() {
     this.setCurrentQuestion();
@@ -181,10 +189,11 @@ export default {
   },
   watch: {
     questions: function(questions) {
-      console.log(this.activeQuestion);
+      console.log("wowowowoow");
+      // console.log(this.activeQuestion);
       this.setCurrentQuestion();
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -286,7 +295,10 @@ export default {
   color: black;
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  align-self: flex-end;
+  width: 20px;
+  cursor: pointer;
 }
 .question {
   margin-bottom: 10px;

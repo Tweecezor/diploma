@@ -9,10 +9,12 @@
       v-on:showUsersAnswers="showAnswers"
     )
     .passing_test(v-else)
+      //- pre {{currentStudentData.testTime}}
       .passing_test__breadcrumbs-wrap
         ul.passing_test__breadcrumbs-list
           li.passing_test__breadcrumbs-item.breadcrumb( ref="breadcrumb" v-for="(question,pos) in questions" @click="")
             .breadcrumb__content(@click="changeCurrentQuestion($event,question,pos)") {{pos+1}}
+        progress.passing_test__progress_bar( ref="progressBar" value="0" max="100")
       .passing_test__question-wrap
         .passing_test__question.question
           .question__text-wrap
@@ -54,14 +56,17 @@ import MULTY_ANSWER from "./passing_test_-answer_multy";
 import ONE_ANSWER from "./passing_test-answer_one";
 import HANDWRITING_ANSWER from "./pasing_test-answer_hand";
 import TEST_RESULT from "./passing_test_result_public";
+
 export default {
   components: {
     MULTY_ANSWER,
     ONE_ANSWER,
     HANDWRITING_ANSWER,
-    TEST_RESULT,
+    TEST_RESULT
   },
-  props: {},
+  props: {
+    // testTime:Number
+  },
   data() {
     return {
       showResult: false,
@@ -74,6 +79,7 @@ export default {
       countOfCorrect: 0,
       // countOfQuestions: this.questions.length,
       finalMark: "",
+      id: ""
     };
   },
   methods: {
@@ -84,21 +90,31 @@ export default {
       this.setCompletedTestQuestions(this.copyQuestions);
       this.$router.push("/completedTest");
     },
-    completeTest() {
-      console.log(this.copyQuestions);
+    async completeTest() {
+      // console.log(this.copyQuestions);
       this.countOfCorrect = this.countCorrectAnswers();
-      console.log(this.countOfCorrect);
+      // console.log(this.countOfCorrect);
       this.calc(this.countOfCorrect);
       let studentResult = {
         ...this.currentStudentData,
-        mark: this.finalMark,
+        mark: this.finalMark
       };
-      console.log(studentResult);
+      // console.log(studentResult);
       this.showResult = true;
-      // this.addNewResult(studentResult);
-      this.$axios.post("http://localhost:3002/api/results", studentResult);
-      // this.setCompletedTestQuestions(this.copyQuestions);
-      // this.$router.push("/completedTest");
+      await this.$axios.post(
+        "http://localhost:3002/api/results",
+        studentResult
+      );
+      let studentData = {
+        fullName: this.currentStudentData.fullName,
+        group_id: this.currentStudentData.group_id,
+        student_id: this.currentStudentData.student_id
+      };
+      let id = this.currentStudentData._id;
+      window.scrollTo(0, window.innerHeight);
+      await this.$axios.delete(
+        `http://localhost:3002/api/passingTest/deleteUser/${id}`
+      );
     },
     calculateMark(correct, all, half, mark, percentOfCorrect) {
       if (correct < half) {
@@ -178,7 +194,7 @@ export default {
     },
     countCorrectAnswers() {
       let countOfCorrect = 0;
-      this.copyQuestions.forEach((item) => {
+      this.copyQuestions.forEach(item => {
         console.log(item);
         item.isAnswerCorrect ? countOfCorrect++ : "";
       });
@@ -187,7 +203,7 @@ export default {
     },
     saveUsersHandwriteAnswer(answerText, question_id, isAnswerCorrect) {
       console.log("emit event after select Handwrite");
-      let updatedQuestions = this.copyQuestions.map((item) => {
+      let updatedQuestions = this.copyQuestions.map(item => {
         console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
@@ -207,14 +223,15 @@ export default {
           ? this.breadcrumbs[i].classList.add("breadcrumb--active")
           : this.breadcrumbs[i].classList.remove("breadcrumb--active");
       }
+      window.scrollTo(0, window.innerHeight);
     },
     setAnswerWithUsersSelect_one(answer, question_id, isAnswerCorrect) {
       console.log("emit event after select OneAsnwer");
-      let updatedQuestions = this.questions.map((item) => {
+      let updatedQuestions = this.questions.map(item => {
         // console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map((item) => {
+          item.answers.map(item => {
             if (item.answer_id == answer.answer_id) {
               item.selectedByStudent = true;
             } else {
@@ -229,10 +246,10 @@ export default {
       this.copyQuestions = updatedQuestions;
     },
     setAnswerWithUsersSelect_multy(answer, question_id, isAnswerCorrect) {
-      let updatedQuestions = this.questions.map((item) => {
+      let updatedQuestions = this.questions.map(item => {
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map((prevAnswer) => {
+          item.answers.map(prevAnswer => {
             prevAnswer.answer_id == answer.answer_id ? answer : prevAnswer;
           });
         }
@@ -242,10 +259,10 @@ export default {
     },
 
     createQuestionsArrayWithUsersAnswers(questions) {
-      let newQuestionsArray = this.questions.forEach((item) => {
+      let newQuestionsArray = this.questions.forEach(item => {
         // console.log(item);
         if (item.type !== "handwritingAnswer") {
-          item.answers.forEach((answer) => {
+          item.answers.forEach(answer => {
             answer.selectedByStudent = false;
             return answer;
           });
@@ -268,34 +285,70 @@ export default {
     setCurrentQuestion() {
       this.currentQuestion = this.copyQuestions[this.activeQuestion];
     },
+    timeStart(progressBar, time) {
+      console.log(time);
+      let start = 0;
+      let lastMinute = ((time - 1) * 60000) / 100;
+      time = Math.round((time * 60000) / 100);
+      console.log(time);
+      let closeTest = this.completeTest;
+      // console.log(closeTest);
+      let interval = setInterval(function() {
+        if (start > 100) {
+          clearInterval(interval);
+          // alert("Время вышло");
+          closeTest();
+          // completeTest();
+        } else {
+          progressBar.value = start;
+        }
+        start++;
+      }, time);
+    }
   },
   computed: {
     ...mapState("helped", {
-      questions: (state) => state.questionsForCurrentPassingTest,
+      questions: state => state.questionsForCurrentPassingTest
     }),
     ...mapState("helped", {
-      currentStudentData: (state) => state.currentTestStudentData,
-    }),
+      currentStudentData: state => state.currentTestStudentData
+    })
     // ...mapState("results", {
     //   results: (state) => state.results,
     // }),
   },
   mounted() {
+    // this.id = this.currentStudentData._id;
+    // console.log(this.id);
     this.breadcrumbs = this.$refs.breadcrumb;
+    // this.currentStudentData.testTime
+    this.timeStart(this.$refs.progressBar, this.currentStudentData.testTime);
+    // console.log(this.$refs.progressBar);
     this.breadcrumbs[0].classList.add("breadcrumb--active");
     for (var i = 1; i < this.breadcrumbs.length; i++) {
       this.breadcrumbs[i].classList.remove("breadcrumb--active");
     }
   },
   created() {
-    this.copyQuestions = { ...this.questions };
-    this.setCurrentQuestion();
-    this.createQuestionsArrayWithUsersAnswers(this.questions);
     if (!this.questions.length) {
+      console.log(this.currentStudentData);
       console.log("hei heo");
       this.$router.push("./");
     }
-  },
+    this.copyQuestions = { ...this.questions };
+    this.setCurrentQuestion();
+    this.createQuestionsArrayWithUsersAnswers(this.questions);
+  }
+  // beforeUpdate() {
+  //   alert("afsdsgrwgfk");
+  // }
+  // updated() {
+
+  // },
+  // async bef() {
+  //   alert(this.id);
+
+  // }
 };
 </script>
 
@@ -304,7 +357,8 @@ export default {
 
 .passing_test__breadcrumbs-list {
   display: flex;
-  margin-bottom: 20px;
+  width: 75%;
+  /* margin-bottom: 20px; */
 }
 .breadcrumb {
   width: 1.25rem;
@@ -379,5 +433,39 @@ export default {
 .breadcrumb--active {
   color: #db9600;
   border: 1px solid #db9600;
+}
+.passing_test__breadcrumbs-wrap {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+progress {
+  /* Отключаем стиль (как правило, не требуется, но на всякий случай)  */
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  /* Убираем границы по умолчанию в Firefox и Opera */
+  border: none;
+  /* Чтобы фоновое изображение в Safari работало, как надо */
+  background-size: auto;
+}
+.passing_test__progress_bar {
+  align-self: center;
+  width: 25%;
+  display: block;
+
+  border: 1px solid black;
+  /* border-radius: 10px; */
+  color: red;
+  /* background: #db9600;   */
+}
+progress::-webkit-progress-value {
+  background: #db9600;
+  /* border-radius: 10px; */
+}
+progress::-webkit-progress-bar {
+  /* background-color: #db9600; */
+  background: #fff;
+  /* border-radius: 10px; */
 }
 </style>

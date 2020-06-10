@@ -1,6 +1,6 @@
 <template lang="pug">
   .container
-    //- pre {{item}}
+    //- pre {{uniqueQuestions}}
     .questions_current__list-wrap  
       .questions_current__list(v-if="showQuestion")
         .questions__belongs
@@ -15,10 +15,10 @@
               label Уровень:
               .aa {{item.level_id}}
           .questions__belongs_close-wrap
-            .questions__belongs_close(@click="showQuestion = false") X
+            .questions__belongs_close(@click="closeCurrentQuestion") X
         //- CURRENT_QUESTION(:item="item")
         .questions_current__item.question_current()
-          QUESTION_ITEM( :qText="qText" :_id="item._id" :item="item.question" :test_id="item.test_id" :level_id="item.level_id")
+          QUESTION_ITEM( :qText="qText" :_id="item._id" :item="item.question" :test_id="item.test_id" :level_id="item.level_id" v-on:closeQuestion="closeCurrentQuestion")
           div(v-if="item.type!=='handwritingAnswer'").answer__content
             .answers__title Просмотр ответов
             .answers__data
@@ -56,7 +56,26 @@
           div(v-else)
             KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type" :_id="item._id")
       .wrapper.questions
-        ul.questions__list
+        .filterQuestionsBreadcrumb
+          ul.filterQuestionsBreadcrumb__list
+            li.filterQuestionsBreadcrumb__item()
+              .breadcrumb( ref="filter" @click="setFilter($event,'Уровень')") {{'Уровень'}}
+              ul.filterList()
+                li.filterItem(v-for="item in filtersLevel") 
+                  .item(@click="filterQuestionsByChoosenFilter(item)") {{item}}
+            //- li.filterQuestionsBreadcrumb__item()
+            //-   .breadcrumb( ref="filter" @click="setFilter($event,'Группа')") {{'Группа'}}
+            //-   ul.filterList()
+            //-     li.filterItem(v-for="item in filtersGroups") 
+            //-       .item(@click="filterQuestionsByChoosenFilter(item)") {{item}}
+            li.filterQuestionsBreadcrumb__item()
+              .breadcrumb( ref="filter" @click="setFilter($event,'Тип вопроса')") {{'Тип вопроса'}}
+              ul.filterList()
+                li.filterItem(v-for="item in filtersType") 
+                  .item(@click="filterQuestionsByChoosenFilter(item)") {{item}}
+            li.filterQuestionsBreadcrumb__item()
+              .breadcrumb(@click="setFilter($event,'Сброс')") {{'Сброс'}}
+        ul.questions__list(v-if="!isFiltered")
           li.questions__item.question(v-for="question in uniqueQuestions")
             .question__add_topic-wrap
               h1.question__add_topic Содержание вопроса
@@ -64,7 +83,21 @@
               label.question__label Текст вопроса
             .question__text-wrap
               input.question__text(type="text" v-model="question.question.text")
-            button.question__show.btn(@click="showCurrentQuestion(question)") Показать полностью
+            button.question__show.btn(@click="showCurrentQuestion(question)") Развернуть вопрос
+            .question__add
+              .question__add_topic-wrap
+                h1.question__add_topic Загрузка вопроса 
+           
+            QUESTION_SELECT(:question="question")
+        ul.questions__list(v-else="isFiltered")
+          li.questions__item.question(v-for="question in filteredUniqueQuestions")
+            .question__add_topic-wrap
+              h1.question__add_topic Содержание вопроса
+            .question__label-wrap
+              label.question__label Текст вопроса
+            .question__text-wrap
+              input.question__text(type="text" v-model="question.question.text")
+            button.question__show.btn(@click="showCurrentQuestion(question)") Развернуть вопрос
             .question__add
               .question__add_topic-wrap
                 h1.question__add_topic Загрузка вопроса 
@@ -88,7 +121,7 @@ export default {
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
     KEYWORDS_ANSWER,
-    CURRENT_QUESTION,
+    CURRENT_QUESTION
   },
   props: {},
   data() {
@@ -102,10 +135,13 @@ export default {
       showQuestion: false,
       currentGroupName: "",
       currentTestName: "",
-
+      prevYcoords: "",
       activeQuestion: 0,
       qText: "",
       item: "",
+      filtersLevel: [],
+      filtersGroups: [],
+      filtersType: [],
       // item: this.questions[0],
       // currentQuestionItem: this.questions[1],
       showQImg: false,
@@ -114,30 +150,139 @@ export default {
       currentQuestionID: 1,
       currentAnswerImgUrl: "",
       breadcrumbs: [],
+      questionsUnique: "",
+      filteredUniqueQuestions: "",
+      isFiltered: false,
+      activeBreadcrumb: ""
+      // prevActiveBreadcrumb: this.$refs.filter,
     };
   },
   methods: {
     ...mapActions("questions", ["fetchQuestions"]),
+    filterQuestionsByChoosenFilter(filter, groups) {
+      // console.log(filter);
+      switch (filter) {
+        case "Однозначный":
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+            return item.type === "oneAnswer" ? item : "";
+          });
+          this.isFiltered = true;
+          break;
+        case "Множественный":
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+            return item.type === "multipleAnswer" ? item : "";
+          });
+          this.isFiltered = true;
+          break;
+        case "Рукописный":
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+            return item.type === "handwritingAnswer" ? item : "";
+          });
+          this.isFiltered = true;
+          break;
+        case 1:
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+            return item.level_id === 1 ? item : "";
+          });
+          this.isFiltered = true;
+          break;
+        case 2:
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+            return item.level_id === 2 ? item : "";
+          });
+          this.isFiltered = true;
+          break;
+        case 3:
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+            return item.level_id === 3 ? item : "";
+          });
+          this.isFiltered = true;
+          break;
+        default:
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+            console.log(item);
+            return item.groupName === filter ? item : "";
+          });
+          this.isFiltered = true;
 
+          break;
+      }
+      this.filtersGroups = [];
+      this.filtersType = [];
+      this.filtersLevel = [];
+      this.activeBreadcrumb.classList.remove("breadcrumb__active");
+    },
+    setFilter(e, filter) {
+      // console.log(this.prevActiveBreadcrumb);
+      if (this.prevActiveBreadcrumb) {
+        this.prevActiveBreadcrumb.classList.remove("breadcrumb__active");
+      }
+      switch (filter) {
+        case "Уровень":
+          this.filtersLevel = [1, 2, 3];
+          this.filtersGroups = [];
+          this.filtersType = [];
+          this.activeBreadcrumb = e.target;
+          this.activeBreadcrumb.classList.add("breadcrumb__active");
+          break;
+        case "Группа":
+          // this.filters = [];
+          this.filtersLevel = [];
+          this.filtersType = [];
+          this.filtersGroups = [];
+          this.groups.forEach(item => {
+            this.filtersGroups.push(item.groupName);
+          });
+          this.activeBreadcrumb = e.target;
+          this.activeBreadcrumb.classList.add("breadcrumb__active");
+          // this.filters = this.groups;
+          break;
+        case "Тип вопроса":
+          this.filtersGroups = [];
+          this.filtersLevel = [];
+          this.filtersType = ["Однозначный", "Множественный", "Рукописный"];
+          this.activeBreadcrumb = e.target;
+          this.activeBreadcrumb.classList.add("breadcrumb__active");
+          break;
+        case "Сброс":
+          console.log("afewgr");
+          this.filtersGroups = [];
+          this.filtersLevel = [];
+          this.filtersType = [];
+          this.isFiltered = false;
+          // console.log(this.uniqueQuestions);
+          break;
+
+        default:
+          break;
+      }
+      this.prevActiveBreadcrumb = e.target;
+    },
+    closeCurrentQuestion() {
+      this.showQuestion = false;
+      window.scrollTo(0, this.prevYcoords);
+    },
     showCurrentQuestion(question) {
-      console.log(question);
+      // console.log(question);
       this.showQuestion = true;
       let currentTestId = question.test_id;
 
-      console.log(currentTestId);
+      // console.log(currentTestId);
       let currentGroupName;
       let currentTestName;
-      this.tests.filter((item) => {
+      this.tests.filter(item => {
         item.id === currentTestId
           ? ((currentGroupName = item.group), (currentTestName = item.name))
           : "";
       });
-      console.log(currentGroupName);
+      // console.log(currentGroupName);
       this.currentGroupName = currentGroupName;
       this.currentTestName = currentTestName;
-      console.log(currentTestName);
+      // console.log(currentTestName);
       this.currentQuestion = question;
       this.item = question;
+      this.prevYcoords = window.pageYOffset;
+      window.scrollTo(0, 0);
     },
     filterQ() {
       let filter = [];
@@ -158,16 +303,16 @@ export default {
           filter.push(arr[i]);
         }
       }
-      console.log(filter);
+      // console.log(filter);
       this.filteredQuestions = filter;
     },
-    ...mapActions("questions", ["addNew"]),
+    ...mapActions("questions", ["addNew", "findUniqQuestions"]),
     setTest(e) {
       console.log(e.target.value);
       this.test_id = e.target.value;
     },
     filterTestByGroup(groupName) {
-      this.filteredTests = this.tests.filter((item) => {
+      this.filteredTests = this.tests.filter(item => {
         console.log(item);
         console.log(groupName);
         return item.group === groupName;
@@ -203,10 +348,10 @@ export default {
         question: {
           text: questionOld.question.text,
           img: questionOld.question.img,
-          question_id: filtered.length + 1,
+          question_id: filtered.length + 1
         },
         level_id: +this.level,
-        test_id: +this.test_id,
+        test_id: +this.test_id
       };
 
       console.log(newQuestion);
@@ -292,23 +437,54 @@ export default {
     closeSection() {
       this.changeShowQuestionsStatus(false);
     },
+    filterUniqQuestions() {
+      console.log(this.questions);
+      let filter = [];
+      let arr = this.questions;
+      // console.log(arr.length);
+      var uniq;
+      for (var i = 0; i < arr.length; i++) {
+        uniq = true;
+        for (var j = i + 1; j < arr.length; j++) {
+          if (
+            arr[i].question.text === arr[j].question.text &&
+            arr[i].type === arr[j].type
+          ) {
+            uniq = false;
+          }
+        }
+        if (uniq) {
+          filter.push(arr[i]);
+        }
+      }
+      return filter;
+    }
   },
   computed: {
     ...mapState("questions", {
-      questions: (state) => state.questions,
+      questions: state => state.questions
     }),
     // ...mapGetters("tests", ["getTests"]),
     ...mapState("tests", {
-      tests: (state) => state.tests,
+      tests: state => state.tests
     }),
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
-    ...mapGetters("questions", ["uniqueQuestions"]),
+    // ...mapState("questions", {
+    //   uniqueQuestions: (state) => state.uniqQuestions,
+    // }),
+
+    ...mapGetters("questions", ["uniqueQuestions"])
   },
-  created() {
-    this.fetchQuestions();
+  mounted() {
+    // console.log(this.uniqueQuestions);
+    // this.findUniqQuestions();
+    // this.questionsUnique = this.filterUniqQuestions();
   },
+  async created() {
+    await this.fetchQuestions();
+  }
 };
 </script>
 <style lang="postcss" scoped>
@@ -374,6 +550,7 @@ export default {
 }
 .question__show {
   margin-bottom: 10px;
+  width: 100%;
 }
 /////
 .questions_current__list {
@@ -477,6 +654,8 @@ export default {
   font-size: 17px;
   font-weight: bold;
   color: black;
+  cursor: pointer;
+  /* height: 100%; */
 }
 .questions__belongs__item label {
   font-weight: bold;
@@ -491,6 +670,73 @@ export default {
   margin-bottom: 1.875rem;
   font-size: 1.125rem;
   font-weight: 700;
+}
+.filterQuestionsBreadcrumb__list {
+  display: flex;
+  margin-bottom: 20px;
+}
+.filterQuestionsBreadcrumb__item {
+  margin-right: 10px;
+  position: relative;
+  border-radius: 5px;
+  cursor: pointer;
+  /* padding: 10px; */
+  /* background: white; */
+}
+.breadcrumb {
+  background: white;
+  padding: 5px;
+  /* padding-right: 25px; */
+  position: relative;
+  &:hover {
+    color: #db9600;
+  }
+  &:not(:last-child) {
+    padding-right: 25px;
+    &:after {
+      content: "^";
+      transform: rotate(180deg);
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      right: 10%;
+      color: black;
+      top: 50%;
+    }
+  }
+
+  /* background: #414c63; */
+}
+.filterList {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  /* height: 40px; */
+  /* bottom: 0; */
+}
+.filterItem {
+  cursor: pointer;
+  background: white;
+  padding: 10px;
+  text-align: center;
+  color: #414c63;
+  border-bottom: 1px solid black;
+  border-radius: 2px;
+  /* border-right: 1px solid black; */
+  /* border-left: 1px solid black; */
+  &:hover {
+    color: #db9600;
+  }
+  &:first-child {
+    border-top: 1px solid black;
+  }
+}
+.breadcrumb__active {
+  color: #db9600;
+}
+.filterQuestionsBreadcrumb {
+  width: 100%;
 }
 </style>
 

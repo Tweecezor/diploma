@@ -2,7 +2,7 @@
   .wrap 
     .current_test_back BACK
     .current_test_info
-      //- pre {{currentTest}}
+      //- pre {{selectedStudent}}
       //- pre {{studentsInCurrentGroup}}
       //- pre {{questions}}
       //- pre {{filteredQuestionsByLevel}}
@@ -21,7 +21,7 @@
             label.current_test_label Выберите ФИО
           select.current_test_select(@change="selectStudent($event)")
             option() Выберите ФИО
-            option(v-for="student in studentsInCurrentGroup" :value="student.fullName") {{student.fullName}}
+            option(v-for="student in studentsInCurrentGroup" :id="student.student_id" :value="student.fullName") {{student.fullName}}
           .current_test_start-wrap
             button(type="button" @click="startTest").current_test_start.btn  Начать тестирование
 
@@ -48,6 +48,7 @@ export default {
     return {
       selectedLevel: "",
       selectedStudent: "",
+      student_id: "",
       filteredQuestionsByLevel: "",
       description:
         "Выберите один из трех предложенных уровней теста. 1 уровень соответствует оценке 25-34. 2 уровень оценке 35-44. 3 уровень оценке 45-54.Для успешного заврешения теста необходимо ответить на половину вопросов.",
@@ -68,7 +69,7 @@ export default {
       );
       return filteredQuestions;
     },
-    startTest() {
+    async startTest() {
       if (this.selectedStudent === "" || this.selectedLevel === "") {
         // alert("Выберите уровень теста и ФИО");
         this.showTooltip({
@@ -77,25 +78,50 @@ export default {
         });
         return;
       }
-
-      let studentData = {
-        fullName: this.selectedStudent,
-        test_level: this.selectedLevel,
-        group: this.currentTest.group,
-        test_id: this.currentTest.id,
-        test_name: this.currentTest.name,
-      };
-      this.filteredQuestionsByLevel = this.filterQuestionsByLevel(
-        this.selectedLevel
-      );
-      console.log(this.filteredQuestionsByLevel);
-      console.log(studentData);
-      this.setCurrentTestStudentData(studentData); // добавить на галвную прохожеления теста
-      this.setQuestionsForCurrentPassingTest(this.filteredQuestionsByLevel);
-      this.$router.push("./passingTest");
+      try {
+        const response = await this.$axios.post(
+          "http://localhost:3002/api/passingTest/addUser",
+          {
+            fullName: this.selectedStudent,
+            group_id: this.currentTest.group_id,
+            student_id: this.student_id,
+          }
+        );
+        let _id = response.data.user._id;
+        let studentData = {
+          fullName: this.selectedStudent,
+          test_level: this.selectedLevel,
+          group: this.currentTest.group,
+          test_id: this.currentTest.id,
+          test_name: this.currentTest.name,
+          testTime: this.currentTest.time,
+          group_id: this.currentTest.group_id,
+          student_id: this.student_id,
+          _id,
+        };
+        this.filteredQuestionsByLevel = this.filterQuestionsByLevel(
+          this.selectedLevel
+        );
+        // console.log(this.filteredQuestionsByLevel);
+        // console.log(studentData);
+        this.setCurrentTestStudentData(studentData); // добавить на галвную прохожеления теста
+        let uniqueQuestions = this.shuffle(this.filteredQuestionsByLevel);
+        this.setQuestionsForCurrentPassingTest(uniqueQuestions);
+        this.$router.push("./passingTest");
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: "Выбранный пользователь уже начал прохождение тестирования",
+        });
+      }
     },
     selectStudent(e) {
-      // console.log(e.target.value);
+      this.studentsInCurrentGroup.forEach((student) => {
+        student.fullName === e.target.value
+          ? (this.student_id = student.student_id)
+          : "";
+      });
+      // console.log(this.student_id);
       this.selectedStudent = e.target.value;
     },
     selectLevel(e, level) {
@@ -104,6 +130,16 @@ export default {
         item.firstChild.classList.remove("level__value--active");
       });
       e.target.classList.add("level__value--active");
+    },
+    shuffle(arr) {
+      var j, temp;
+      for (var i = arr.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        temp = arr[j];
+        arr[j] = arr[i];
+        arr[i] = temp;
+      }
+      return arr;
     },
   },
   computed: {

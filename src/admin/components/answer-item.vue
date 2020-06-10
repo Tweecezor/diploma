@@ -55,7 +55,7 @@ export default {
     answerLength: Number,
     typeOfQuestion: String,
     answerImgUrl: String,
-    _id: String,
+    _id: String
   },
   data() {
     return {
@@ -68,10 +68,10 @@ export default {
       showAImg: false,
       prevCorrectAnswer: {
         correct: this.answer.correct,
-        text: this.answer.text,
+        text: this.answer.text
       },
       newImg: false,
-      prevAnswerImgUrl: "",
+      prevAnswerImgUrl: ""
     };
   },
   methods: {
@@ -80,7 +80,7 @@ export default {
       "changeAnswerStatus",
       "updateAnswer",
       "addNewAnswer",
-      "deleteAnswer",
+      "deleteAnswer"
     ]),
     ...mapActions("helped", ["setEditStatus"]),
     setEditMode() {
@@ -95,23 +95,31 @@ export default {
       this.$emit("emitResetAnswerImgUrl");
       this.setEditStatus(false);
     },
-    saveNewImg() {
-      console.log("save");
-      this.editPhotoMode = false;
-      this.updateAnswer({
-        text: this.currentAnswer.text,
-        imgURL: this.answerImgUrl,
-        answer_id: this.currentAnswer.answer_id,
-        level_id: this.level_id,
-        test_id: this.test_id,
-        question_id: this.question_id,
-        imgURL: this.answerImgUrl,
-        _id: this._id,
-      });
-      // console.log(this.answerImgUrl);
-      this.$emit("emitResetAnswerImgUrl");
+    async saveNewImg() {
+      try {
+        this.editPhotoMode = false;
+        await this.updateAnswer({
+          text: this.currentAnswer.text,
+          imgURL: this.answerImgUrl,
+          answer_id: this.currentAnswer.answer_id,
+          level_id: this.level_id,
+          test_id: this.test_id,
+          question_id: this.question_id,
+          imgURL: this.answerImgUrl,
+          _id: this._id
+        });
+        this.showTooltip({
+          type: "success",
+          text: "Изображение успешно изменено"
+        });
+        this.$emit("emitResetAnswerImgUrl");
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error
+        });
+      }
       this.setEditStatus(false);
-      // console.log(this.answer.imgURL);
     },
     setAnswerImgUrl(answer) {
       if (!this.isActiveModeActive) {
@@ -128,12 +136,12 @@ export default {
           text: this.newAnswer,
           correct: false,
           imgURL: this.newAnswerImgURL,
-          answer_id: Date.now(),
+          answer_id: Date.now()
           // answer_id: this.answerLength + 1
         },
         test_id: this.test_id,
         level_id: this.level_id,
-        question_id: this.question_id,
+        question_id: this.question_id
       };
       console.log(newAnswer);
       this.addNewAnswer(newAnswer);
@@ -158,90 +166,110 @@ export default {
     deleteImg() {
       this.currentAnswer.imgURL = "";
     },
-    deleteCurrentAnswer() {
+    async deleteCurrentAnswer() {
       if (!this.isActiveModeActive) {
-        console.log(this.currentAnswer);
-        this.deleteAnswer({
+        try {
+          await this.deleteAnswer({
+            answer_id: this.currentAnswer.answer_id,
+            level_id: this.level_id,
+            test_id: this.test_id,
+            question_id: this.question_id,
+            _id: this._id
+          });
+          this.showTooltip({
+            type: "success",
+            text: "Ответ успешно удален"
+          });
+        } catch (error) {
+          this.showTooltip({
+            type: "error",
+            text: error
+          });
+        }
+      }
+    },
+    async updateCurrentAnswer() {
+      try {
+        await this.updateAnswer({
+          text: this.currentAnswer.text,
+          imgURL: this.currentAnswer.imgURL,
           answer_id: this.currentAnswer.answer_id,
           level_id: this.level_id,
           test_id: this.test_id,
           question_id: this.question_id,
-          _id: this._id,
+          imgURL: this.currentAnswer.imgURL,
+          _id: this._id
         });
+        this.editMode = !this.editMode;
+        this.newImg = false;
+        this.showAImg = false;
         this.showTooltip({
           type: "success",
-          text: "Ответ успешно удален",
+          text: "Ответ успешно изменен"
+        });
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error
         });
       }
-    },
-    updateCurrentAnswer() {
-      this.updateAnswer({
-        text: this.currentAnswer.text,
-        imgURL: this.currentAnswer.imgURL,
-        answer_id: this.currentAnswer.answer_id,
-        level_id: this.level_id,
-        test_id: this.test_id,
-        question_id: this.question_id,
-        imgURL: this.currentAnswer.imgURL,
-        _id: this._id,
-      });
-      this.editMode = !this.editMode;
-      this.newImg = false;
-      this.showAImg = false;
-      this.showTooltip({
-        type: "success",
-        text: "Ответ успешно изменен",
-      });
+
       this.setEditStatus(false);
     },
-    cancelUpdate() {
-      this.changeAnswerStatus({
-        text: this.prevCorrectAnswer.text,
-        correct: this.prevCorrectAnswer.correct,
-        test_id: this.test_id,
-        level_id: this.level_id,
-        question_id: this.question_id,
-      });
-      this.currentAnswer = { ...this.answer };
-      this.editMode = !this.editMode;
-      this.showTooltip({
-        type: "success",
-        text: "Изменения отменены",
-      });
-      this.setEditStatus(false);
+    async cancelUpdate() {
+      try {
+        this.changeAnswerStatus({
+          text: this.prevCorrectAnswer.text,
+          correct: this.prevCorrectAnswer.correct,
+          test_id: this.test_id,
+          level_id: this.level_id,
+          question_id: this.question_id
+        });
+        this.currentAnswer = { ...this.answer };
+        this.editMode = !this.editMode;
+        this.showTooltip({
+          type: "success",
+          text: "Изменения отменены"
+        });
+        this.setEditStatus(false);
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error
+        });
+      }
     },
     showAnswerImage() {
       this.showAImg = !this.showAImg;
     },
-    setCorrectAnswer(e) {
-      // console.log(cancel);
-      // console.log(e.target.checked);
-      // console.log(e.target.value);
-      this.changeAnswerStatus({
-        answer_id: +e.target.value,
-        correct: e.target.checked,
-        test_id: this.test_id,
-        level_id: this.level_id,
-        question_id: this.question_id,
-        type: this.typeOfQuestion,
-        _id: this._id,
-      });
-    },
+    async setCorrectAnswer(e) {
+      try {
+        await this.changeAnswerStatus({
+          answer_id: +e.target.value,
+          correct: e.target.checked,
+          test_id: this.test_id,
+          level_id: this.level_id,
+          question_id: this.question_id,
+          type: this.typeOfQuestion,
+          _id: this._id
+        });
+      } catch (error) {}
+    }
   },
   watch: {
     answer: function(answer) {
       // console.log(answer);
       this.currentAnswer = { ...this.answer };
-    },
+    }
   },
   mounted() {
     this.setEditStatus(false);
   },
   computed: {
     ...mapState("helped", {
-      isActiveModeActive: (state) => state.isEditActive,
-    }),
-  },
+      isActiveModeActive: state => state.isEditActive
+    })
+  }
 };
 </script>
 <style lang="postcss" scoped>

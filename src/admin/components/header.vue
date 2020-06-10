@@ -1,42 +1,67 @@
 <template lang="pug">
   header.header
     .header-container.container
+      //- pre {{userAvatar}}
       .header__info
         .user
           .user__avatar
-            img(src="../../images/content/user11.jpg").user__img
+            img(:src="userAvatar ").user__img
           .user__name
             span Ксения Стоякова
         .header__title-wrap
           h1.header__title Панель Администрирования
       .header__logout
-        a(
-          @click="logout"
-        ).header__logout-link Выйти
+        a(@click="logout").header__logout-link Выйти
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { getAbsoluteImgPath } from "@/helpers/photos";
+import store from "@/store";
 export default {
+  data() {
+    return {
+      userAvatar: "",
+    };
+  },
   methods: {
     ...mapActions("user", ["userLogout"]),
     ...mapActions("tooltips", ["showTooltip"]),
     async logout() {
       try {
         await this.userLogout();
+        delete this.$axios.defaults.headers.common["Authorization"];
+        localStorage.removeItem("token");
+        store.commit("user/LOGOUT__USER");
         this.showTooltip({
           type: "success",
-          text: "Скоро увидимся"
+          text: "Скоро увидимся",
         });
         this.$router.push("/login");
       } catch (error) {
         this.showTooltip({
           type: "error",
-          text: error.message
+          text: error.message,
         });
       }
-    }
-  }
+    },
+  },
+  computed: {
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
+  },
+  created() {
+    this.userAvatar = getAbsoluteImgPath(this.user.photoUser);
+    // console.log(this.$axios);
+  },
+  watch: {
+    user() {
+      // this.currentWork = {...this.work};
+      this.userAvatar = getAbsoluteImgPath(this.user.photoUser);
+      // this.tagArray = this.work.techs.split(',');
+    },
+  },
 };
 </script>
 
@@ -99,4 +124,3 @@ export default {
   }
 }
 </style>
-

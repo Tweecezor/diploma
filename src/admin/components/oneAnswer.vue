@@ -1,7 +1,7 @@
 <template lang="pug">
   .wrapper-
-    //- pre {{currentLevel}}
-    //- pre {{questionPhotoURl}}
+    //- pre {{answerPhoto}}
+    //- pre {{questionPhotoFile}}
     //- pre {{answerPhotoURl}}
     //- pre {{isCorrectAnswerSet}}
     .question
@@ -43,6 +43,8 @@ export default {
     questionPhotoURl: String,
     answerPhotoURl: String,
     prevAnswerPhotoURl: String
+    // answerPhoto: File,
+    // questionID: Number,
   },
   data() {
     return {
@@ -63,6 +65,7 @@ export default {
       editQuestion: false,
       editQuestionMode: false,
       editAnswer: false
+      // answersPhoto: new FormData(),
     };
   },
   methods: {
@@ -169,6 +172,8 @@ export default {
 
         const questionWithAnswers = {
           type: "oneAnswer",
+          // fileQuestion: this.questionPhotoFile,
+          questionID: this.questionID,
           question: {
             text: this.currentQuestion,
             img: this.questionPhotoURl,
@@ -180,6 +185,11 @@ export default {
         };
 
         console.log(questionWithAnswers);
+        // this.addNew(questionWithAnswers);
+        // this.addNew({
+        //   questionWithAnswers,
+        //   // answersPhoto: this.answersPhoto,
+        // });
         this.addNew(questionWithAnswers);
         this.resetData();
         this.$emit("emitResetData");
@@ -215,13 +225,18 @@ export default {
           text: this.currentAnswer,
           correct: false,
           imgURL: this.answerPhotoURl,
+          // imgURL: "this.answerPhotoURl",
           answer_id: Date.now()
         };
+        // this.answersPhoto.append(answer.answer_id, this.answerPhoto);
         this.answers.push(answer);
         this.currentAnswer = "";
       }
       this.$emit("resetAnswerUrl");
     }
+  },
+  mounted() {
+    // this.answersPhoto.append("questionID", this.questionID);
   },
   computed: {
     ...mapGetters("questions", ["question_id"])
@@ -235,7 +250,7 @@ export default {
       }
     },
     answerPhotoURl: function(url) {
-      console.log(url);
+      // console.log(url);
     }
   }
 };

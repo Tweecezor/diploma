@@ -57,7 +57,7 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   components: {
-    GROUPS,
+    GROUPS
   },
   data() {
     return {
@@ -67,7 +67,7 @@ export default {
       filteredTestByGroup: [],
       currentTestName: "",
       breadcrumbGroup: "",
-      breadcrumbTest: "",
+      breadcrumbTest: ""
       // results: "",
       // groups: "",
       // tests: "",
@@ -94,13 +94,13 @@ export default {
       this.currentNav = item;
     },
     filterTestByGroup() {
-      this.filteredTestByGroup = this.tests.filter((item) => {
+      this.filteredTestByGroup = this.tests.filter(item => {
         // console.log(item);
         return item.group === this.currentGroup ? item : "";
       });
     },
     filterResultByGroup() {
-      this.filteredResultByGroup = this.results.filter((item) => {
+      this.filteredResultByGroup = this.results.filter(item => {
         return item.group === this.currentGroup ? item : "";
       });
       // console.log(this.filteredResultByGroup);
@@ -112,7 +112,7 @@ export default {
     // },
     showCurrentTestResult(testName, id) {
       // console.log(testName);
-      this.filteredResultByGroup = this.results.filter((item) => {
+      this.filteredResultByGroup = this.results.filter(item => {
         // console.log(item);
         return item.test_name === testName ? item : "";
       });
@@ -145,7 +145,7 @@ export default {
     },
     sortBreadcrumbGroupList() {
       // this.groups = this.group.
-    },
+    }
   },
   mounted() {
     // console.log(this.results);
@@ -170,14 +170,14 @@ export default {
   },
   computed: {
     ...mapState("results", {
-      results: (state) => state.results,
+      results: state => state.results
     }),
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
     ...mapState("tests", {
-      tests: (state) => state.tests,
-    }),
+      tests: state => state.tests
+    })
   },
   async created() {
     await this.fetchResults();
@@ -196,7 +196,7 @@ export default {
     // this.tests = TESTS.data;
     // this.results =
     // this.currentGroup = this.results[0].group;
-  },
+  }
 };
 </script>
 

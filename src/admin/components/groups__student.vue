@@ -25,13 +25,13 @@ div
 import { mapActions, mapState } from "vuex";
 export default {
   props: {
-    student: Object,
+    student: Object
   },
   data() {
     return {
       currentStudent: { ...this.student },
       editMode: false,
-      new: "",
+      new: ""
     };
   },
   methods: {
@@ -44,14 +44,20 @@ export default {
         this.setEditStatus(true);
       }
     },
-    deleteCurrentStudent() {
+    async deleteCurrentStudent() {
       if (!this.isActiveModeActive) {
-        console.log(this.currentStudent);
-        this.deleteStudent(this.currentStudent);
-        this.showTooltip({
-          type: "success",
-          text: "Студент успешно удален",
-        });
+        try {
+          await this.deleteStudent(this.currentStudent);
+          this.showTooltip({
+            type: "success",
+            text: "Студент успешно удален"
+          });
+        } catch (error) {
+          this.showTooltip({
+            type: "error",
+            text: error
+          });
+        }
       }
     },
     saveStudent() {
@@ -60,9 +66,7 @@ export default {
 
         let editedStudent = {
           ...this.currentStudent,
-          fullName: `${this.currentStudent.surname} ${
-            this.currentStudent.name
-          } ${this.currentStudent.thirdname}`,
+          fullName: `${this.currentStudent.surname} ${this.currentStudent.name} ${this.currentStudent.thirdname}`
         };
         console.log(this.currentStudent);
         console.log(editedStudent);
@@ -70,7 +74,7 @@ export default {
         this.editStudentInGroup(editedStudent);
         this.showTooltip({
           type: "success",
-          text: "Изменения успешно сохранены",
+          text: "Изменения успешно сохранены"
         });
         this.setEditStatus(false);
       }
@@ -81,22 +85,22 @@ export default {
         this.editMode = !this.editMode;
         this.showTooltip({
           type: "success",
-          text: "Изменения успешно отменены",
+          text: "Изменения успешно отменены"
         });
         this.setEditStatus(false);
       }
-    },
+    }
   },
   watch: {
     student: function(student) {
       this.currentStudent = { ...this.student };
-    },
+    }
   },
   computed: {
     ...mapState("helped", {
-      isActiveModeActive: (state) => state.isEditActive,
-    }),
-  },
+      isActiveModeActive: state => state.isEditActive
+    })
+  }
   // mounted() {
   //   this.setEditStatus(false);
   // }
@@ -124,20 +128,7 @@ export default {
     opacity: 0.7;
   }
 }
-.student__input {
-  border: none;
-  width: 28%;
-  margin-right: 2%;
-  border-bottom: 1px solid black;
-  &--surname {
-    width: 25%;
-    /* margin-right: 2; */
-  }
-  &--thirdname {
-    width: 30%;
-    /* margin-right: 2; */
-  }
-}
+
 .student__buttons {
   display: flex;
   align-items: center;
@@ -239,6 +230,32 @@ export default {
 .student__buttons__disabled {
   svg {
     opacity: 0.7;
+  }
+}
+input[type="text"]:disabled {
+  border-bottom: 1px solid black;
+  &:hover {
+    border-bottom: 1px solid black;
+  }
+}
+input[type="text"] {
+  border-bottom: 1px solid #edb947;
+  &:hover {
+    border-bottom: 1px solid #edb947;
+  }
+}
+.student__input {
+  border: none;
+  width: 28%;
+  margin-right: 2%;
+  border-bottom: 1px solid black;
+  &--surname {
+    width: 25%;
+    /* margin-right: 2; */
+  }
+  &--thirdname {
+    width: 30%;
+    /* margin-right: 2; */
   }
 }
 </style>

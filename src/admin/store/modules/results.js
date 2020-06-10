@@ -5,11 +5,13 @@ export default {
   },
   actions: {
     async fetchResults(store) {
-      const response = await this.$axios.get(
-        "http://localhost:3002/api/results"
-      );
-      const results = response.data;
-      store.commit("SET_RESULTS", results);
+      try {
+        const response = await this.$axios.get("api/results");
+        const results = response.data;
+        store.commit("SET_RESULTS", results);
+      } catch (error) {
+        throw new Error(error.respone.data.message);
+      }
     },
     addNewResult(store, result) {
       store.commit("ADD_NEW_RESULT", result);
@@ -20,8 +22,6 @@ export default {
       state.results = results;
     },
     ADD_NEW_RESULT(state, result) {
-      console.log(result);
-
       if (state.results.length) {
         let isNewResult = true;
         state.results.forEach((item) => {

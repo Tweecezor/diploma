@@ -21,6 +21,13 @@ export default [
     component: () => import("./../components/pages/adminSettings.vue"),
   },
   {
+    path: "/login",
+    component: () => import("./../components/pages/login"),
+    meta: {
+      public: true,
+    },
+  },
+  {
     path: "/groups",
     component: () => import("./../components/settings_groups"),
   },
@@ -43,5 +50,9 @@ export default [
   {
     path: "/completedTest",
     component: () => import("./../components/completed_test"),
+  },
+  {
+    path: "/settings",
+    component: () => import("./../components/settings"),
   },
 ];

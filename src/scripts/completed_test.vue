@@ -66,6 +66,7 @@ export default {
   methods: {
     closeTest() {
       this.$router.push("./");
+      window.scrollTo(0, window.innerHeight);
     },
     // completeTest() {
     //   console.log(this.copyQuestions);
@@ -93,6 +94,7 @@ export default {
           ? this.breadcrumbs[i].classList.add("breadcrumb--active")
           : this.breadcrumbs[i].classList.remove("breadcrumb--active");
       }
+      window.scrollTo(0, window.innerHeight);
       // this.changeCurrentQuestion(
       //   this.copyQuestions[this.activeQuestion],
       //   this.activeQuestion

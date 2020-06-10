@@ -1,6 +1,7 @@
 <template lang="pug">
   .question 
     //- pre {{item}}
+    //- pre {{_id}}
     //- pre {{currentQuestion}}
     //- pre {{test_id}}
     //- pre {{level_id}}
@@ -16,7 +17,7 @@
           label.question__data_label Текст вопроса
         .questions__data_content
           .question__data_text-wrap
-            //- input(type="text" v-model="item.text") 
+
             input(type="text" v-model="currentQuestion.text" :disabled="!isActiveModeActive").question__input.question__text
           .question__actions(v-if="!editMode" :class="{questions__actions__disabled:isActiveModeActive}")
             <svg @click="setEditMode" class="question__actions_correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
@@ -41,17 +42,7 @@
           .question__image_label Показать изображение вопроса
         .question_image_img-wrap(v-if="currentQuestion.img && showQImg")
           .question_image_img(:style="{'background-image':`url(${currentQuestion.img})`}")
-      //- ANSWER_ITEM(:answers="curr")
-    //- hr
-    //- .answers
-    //-   div.answers__title Ответы
-    //-   ul(v-for="answer in item.answers").answers__list
-    //-     li.answers__item.answer
-    //-       span.answer__text {{answer.text}}
-    //-       input(type="radio" name="isCorrect" :disabled="!editMode" :checked="answer.correct").answer__status
-    //-       div(@click="showAnswerImage" v-if="answer.imgURL") Показать изображение ответа
-    //-         div(v-if="answer.imgURL && showAImg").answer_img 
-    //-           .answer_avatar(:style="{'background-image':`url(${answer.imgURL})`}")
+      
 </template>
 
 <script>
@@ -59,21 +50,20 @@ import { mapActions, mapState } from "vuex";
 import ANSWER_ITEM from "./answer-item";
 export default {
   components: {
-    ANSWER_ITEM,
+    ANSWER_ITEM
   },
   props: {
     item: Object,
     test_id: Number,
     level_id: Number,
     qText: String,
-    _id: String,
+    _id: String
   },
   data() {
     return {
       showQImg: false,
-      // showAImg: false,
       editMode: false,
-      currentQuestion: { ...this.item },
+      currentQuestion: { ...this.item }
 
       // isTestOpen:false
     };
@@ -83,7 +73,7 @@ export default {
       "changeCurrentTestStatus",
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus",
-      "setEditStatus",
+      "setEditStatus"
     ]),
     ...mapActions("questions", ["updateQuestion", "deleteCurrentQuestion"]),
     ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
@@ -103,34 +93,52 @@ export default {
     // closeSection() {
     //   this.changeShowQuestionsStatus(false);
     // },
-    deleteQuestion() {
+    async deleteQuestion() {
       if (!this.isActiveModeActive) {
-        let deletedQuestion = {
-          _id: this._id,
-          level_id: this.level_id,
-          test_id: this.test_id,
-          question_id: this.currentQuestion.question_id,
-        };
-        console.log(deletedQuestion);
-        this.deleteCurrentQuestion(deletedQuestion);
+        try {
+          let deletedQuestion = {
+            _id: this._id,
+            level_id: this.level_id,
+            test_id: this.test_id,
+            question_id: this.currentQuestion.question_id
+          };
+          await this.deleteCurrentQuestion(deletedQuestion);
+          this.showTooltip({
+            type: "success",
+            text: "Вопрос успешно удален из теста"
+          });
+          this.$emit("closeQuestion");
+        } catch (error) {
+          this.showTooltip({
+            type: "error",
+            text: error
+          });
+        }
       }
     },
-    updateCurrentQuestion() {
+    async updateCurrentQuestion() {
       let updatedQuestion = {
         level_id: this.level_id,
         test_id: this.test_id,
         newQuestionTitle: this.currentQuestion.text,
         question_id: this.currentQuestion.question_id,
         img: this.currentQuestion.img,
-        _id: this._id,
+        _id: this._id
       };
-      console.log(updatedQuestion);
-      this.updateQuestion(updatedQuestion);
-      this.editMode = !this.editMode;
-      this.showTooltip({
-        type: "success",
-        text: "Текст вопроса успешно изменен",
-      });
+      try {
+        await this.updateQuestion(updatedQuestion);
+        this.editMode = !this.editMode;
+        this.showTooltip({
+          type: "success",
+          text: "Текст вопроса успешно изменен"
+        });
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error
+        });
+      }
+
       this.setEditStatus(false);
     },
     cancelUpdate() {
@@ -138,25 +146,25 @@ export default {
       this.editMode = !this.editMode;
       this.showTooltip({
         type: "success",
-        text: "Изменения отменены",
+        text: "Изменения отменены"
       });
       this.setEditStatus(false);
-    },
+    }
   },
   computed: {
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
+      showQuestions: state => state.showQuestions
     }),
     ...mapState("helped", {
-      isActiveModeActive: (state) => state.isEditActive,
-    }),
+      isActiveModeActive: state => state.isEditActive
+    })
   },
   watch: {
     item: function(item) {
       console.log(item);
       this.currentQuestion = { ...this.item };
-    },
-  },
+    }
+  }
 };
 </script>
 

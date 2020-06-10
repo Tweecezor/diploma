@@ -1,58 +1,54 @@
 export default {
   namespaced: true,
   state: {
-    tests: [
-      // {
-      //   id: 1,
-      //   level: "3",
-      //   name: "Тест по первой лекции",
-      //   group: "ИДБ 16 01",
-      // },
-      // {
-      //   id: 2,
-      //   level: "3",
-      //   name: "Тест по 1 лекции",
-      //   group: "МДБ 17 02",
-      // },
-      // {
-      //   id: 3,
-      //   level: "3",
-      //   name: "Тест по 2 лекции",
-      //   group: "МДБ 17 02",
-      // },
-      // {
-      //   id: 4,
-      //   level: "3",
-      //   name: "Лекция 1. ТЕстирование",
-      //   group: "ИДБ 16 01",
-      // },
-    ],
+    tests: [],
   },
   actions: {
     async addNew(store, obj) {
-      // console.log(obj);
-      store.commit("ADD_NEW_GROUP", obj);
+      try {
+        let response = await this.$axios.post("api/tests", obj);
+        let test = response.data;
+        console.log(test);
+        store.commit("ADD_NEW_GROUP", test);
+      } catch (error) {
+        throw new Error(error.response.data.message);
+      }
     },
     async fetchTests(store) {
-      console.log("IN STATE");
       try {
-        const response = await this.$axios.get(
-          "http://localhost:3002/api/tests"
-        );
+        const response = await this.$axios.get("api/tests");
 
         let tests = response.data;
-        console.log(tests);
         store.commit("SET_TESTS", tests);
       } catch (error) {
-        console.log("error");
+        throw new Error(error.response.data.message);
+      }
+    },
+    async setNewSettingsToTest(store, updatedTest) {
+      console.log(updatedTest);
+      try {
+        await this.$axios.patch("api/tests/updateSettings", updatedTest);
+      } catch (error) {
+        throw new Error(error.response.data.message);
+      }
+    },
+    async deleteCurrentTest(store, test_ID) {
+      try {
+        await this.$axios.delete(`api/tests/${test_ID}`);
+        store.commit("DELETE_CURRENT_TEST", test_ID);
+      } catch (error) {
+        throw new Error(error.response.data.message);
       }
     },
   },
   mutations: {
+    DELETE_CURRENT_TEST(state, id) {
+      state.tests = state.tests.filter((test) => {
+        return test._id !== id ? test : "";
+      });
+    },
     async ADD_NEW_GROUP(state, obj) {
-      // console.log(state);
       state.tests.unshift(obj);
-      await this.$axios.post("http://localhost:3002/api/tests", obj);
     },
     SET_TESTS(state, tests) {
       state.tests = tests.reverse();
