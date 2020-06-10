@@ -11,7 +11,7 @@ Vue.use(VueRouter);
 // import reviews from './components/pages/reviews'
 // import login from './components/pages/login'
 
-const baseURL = "http://localhost:3002/api";
+const baseURL = "https://young-anchorage-15160.herokuapp.com/api";
 
 const guard = axios.create({
   baseURL,

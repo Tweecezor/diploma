@@ -69,7 +69,7 @@ export default {
         console.log(this.userData);
         let userData = this.userData;
         const response = await this.$axios.post(
-          "http://localhost:3002/api/login",
+          "https://young-anchorage-15160.herokuapp.com/api/login",
           userData
         );
         console.log(response);

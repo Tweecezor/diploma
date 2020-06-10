@@ -102,7 +102,7 @@ export default {
       // console.log(studentResult);
       this.showResult = true;
       await this.$axios.post(
-        "http://localhost:3002/api/results",
+        "https://young-anchorage-15160.herokuapp.com/api/results",
         studentResult
       );
       let studentData = {
@@ -113,7 +113,7 @@ export default {
       let id = this.currentStudentData._id;
       window.scrollTo(0, window.innerHeight);
       await this.$axios.delete(
-        `http://localhost:3002/api/passingTest/deleteUser/${id}`
+        `https://young-anchorage-15160.herokuapp.com/api/passingTest/deleteUser/${id}`
       );
     },
     calculateMark(correct, all, half, mark, percentOfCorrect) {

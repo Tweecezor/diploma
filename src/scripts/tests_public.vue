@@ -165,11 +165,13 @@ export default {
 
     console.log(this.breadcrumbGroup);
     const TESTS = await this.$axios.get(
-      "http://localhost:3002/api/tests/public"
+      "https://young-anchorage-15160.herokuapp.com/api/tests/public"
     );
-    const GROUPS = await this.$axios.get("http://localhost:3002/api/groups");
+    const GROUPS = await this.$axios.get(
+      "https://young-anchorage-15160.herokuapp.com/api/groups"
+    );
     const QUESTIONS = await this.$axios.get(
-      "http://localhost:3002/api/questions"
+      "https://young-anchorage-15160.herokuapp.com/api/questions"
     );
     this.questions = QUESTIONS.data;
     this.tests = TESTS.data;

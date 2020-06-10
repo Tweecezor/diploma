@@ -42,7 +42,7 @@ export default {
   props: {
     currentTest: Object,
     questions: Array,
-    studentsInCurrentGroup: Array,
+    studentsInCurrentGroup: Array
   },
   data() {
     return {
@@ -51,20 +51,20 @@ export default {
       student_id: "",
       filteredQuestionsByLevel: "",
       description:
-        "Выберите один из трех предложенных уровней теста. 1 уровень соответствует оценке 25-34. 2 уровень оценке 35-44. 3 уровень оценке 45-54.Для успешного заврешения теста необходимо ответить на половину вопросов.",
+        "Выберите один из трех предложенных уровней теста. 1 уровень соответствует оценке 25-34. 2 уровень оценке 35-44. 3 уровень оценке 45-54.Для успешного заврешения теста необходимо ответить на половину вопросов."
     };
   },
   methods: {
     ...mapActions("helped", [
       "setQuestionsForCurrentPassingTest",
-      "setCurrentTestStudentData",
+      "setCurrentTestStudentData"
     ]),
     ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
 
     filterQuestionsByLevel(level) {
       let deepCopyQuestions = this.$_.cloneDeep(this.questions);
       console.log(deepCopyQuestions);
-      let filteredQuestions = deepCopyQuestions.filter((item) =>
+      let filteredQuestions = deepCopyQuestions.filter(item =>
         item.level_id === level ? item : ""
       );
       return filteredQuestions;
@@ -74,17 +74,17 @@ export default {
         // alert("Выберите уровень теста и ФИО");
         this.showTooltip({
           type: "error",
-          text: "Выберите уровень теста и ФИО",
+          text: "Выберите уровень теста и ФИО"
         });
         return;
       }
       try {
         const response = await this.$axios.post(
-          "http://localhost:3002/api/passingTest/addUser",
+          "https://young-anchorage-15160.herokuapp.com/api/passingTest/addUser",
           {
             fullName: this.selectedStudent,
             group_id: this.currentTest.group_id,
-            student_id: this.student_id,
+            student_id: this.student_id
           }
         );
         let _id = response.data.user._id;
@@ -97,7 +97,7 @@ export default {
           testTime: this.currentTest.time,
           group_id: this.currentTest.group_id,
           student_id: this.student_id,
-          _id,
+          _id
         };
         this.filteredQuestionsByLevel = this.filterQuestionsByLevel(
           this.selectedLevel
@@ -111,12 +111,12 @@ export default {
       } catch (error) {
         this.showTooltip({
           type: "error",
-          text: "Выбранный пользователь уже начал прохождение тестирования",
+          text: "Выбранный пользователь уже начал прохождение тестирования"
         });
       }
     },
     selectStudent(e) {
-      this.studentsInCurrentGroup.forEach((student) => {
+      this.studentsInCurrentGroup.forEach(student => {
         student.fullName === e.target.value
           ? (this.student_id = student.student_id)
           : "";
@@ -126,7 +126,7 @@ export default {
     },
     selectLevel(e, level) {
       this.selectedLevel = level;
-      this.$refs.levelList.forEach((item) => {
+      this.$refs.levelList.forEach(item => {
         item.firstChild.classList.remove("level__value--active");
       });
       e.target.classList.add("level__value--active");
@@ -140,34 +140,34 @@ export default {
         arr[i] = temp;
       }
       return arr;
-    },
+    }
   },
   computed: {
     ...mapState("groups", {
-      groups: (state) => state.groups,
+      groups: state => state.groups
     }),
     ...mapState("tests", {
-      tests: (state) => state.tests,
+      tests: state => state.tests
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
+      isCurrentLevelOpen: state => state.isCurrentLevelOpen
     }),
     ...mapState("helped", {
-      isTestOpen: (state) => state.isTestOpen,
+      isTestOpen: state => state.isTestOpen
     }),
     ...mapState("helped", {
-      showQuestions: (state) => state.showQuestions,
-    }),
+      showQuestions: state => state.showQuestions
+    })
     // ...mapState("questions", {
     //   questions: state => state.questions
     // })
   },
   mounted() {},
   watch: {
-    questions: (item) => {
+    questions: item => {
       console.log(item);
-    },
-  },
+    }
+  }
 };
 </script>
 
