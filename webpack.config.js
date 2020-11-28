@@ -36,7 +36,7 @@ module.exports = (env, argv) => {
   };
 
   const files = {
-    test: /\.(png|jpe?g|gif|woff2?)$/i,
+    test: /\.(png|jpe?g|gif|ttf|woff2?)$/i,
     loader: "file-loader",
     options: {
       name: "[hash].[ext]",
@@ -85,7 +85,8 @@ module.exports = (env, argv) => {
 
   const config = {
     entry: {
-      main: ["@babel/polyfill", "./src/main.js"],
+      main: ["@babel/polyfill", "./src/welcomePage.js"],
+      welcome: ["@babel/polyfill", "./src/main.js"],
       admin: ["@babel/polyfill", "./src/admin/main.js"],
     },
     output: {
@@ -115,8 +116,14 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: "src/index.pug",
+        template: "src/welcomePage.pug",
+        // filename: "welcome",
         chunks: ["main"],
+      }),
+      new HtmlWebpackPlugin({
+        template: "src/index.pug",
+        filename: "welcome",
+        chunks: ["welcome"],
       }),
       new HtmlWebpackPlugin({
         template: "src/admin/index.pug",

@@ -1,22 +1,19 @@
 <template lang="pug">
-  .container
-    .groups 
-      //- pre {{info}}
-      //- pre {{groups}}
-      ADD_NEW_GROUP(v-if="showAddGroup")
-      ul.groups__list
-        li.groups__item.groups__add_new(@click="showAddNew")
-          .groups__new  
-            .groups__new-icon
-              <svg version="1.1" class="groups__new-icon-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
-                <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
-              </svg>
-            .groups__new-text Добавить группу
-        li.groups__item(v-for="group in groups")
-          GROUP_ITEM(:group="group")
-
-        
-        
+.container
+  .groups 
+    //- pre {{ user }}
+    pre {{ groups }}
+    ADD_NEW_GROUP(v-if="showAddGroup")
+    ul.groups__list
+      li.groups__item.groups__add_new(@click="showAddNew")
+        .groups__new 
+          .groups__new-icon
+            <svg version="1.1" class="groups__new-icon-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+              g <path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/>
+            </svg>
+          .groups__new-text Добавить группу
+      li.groups__item(v-for="group in groups")
+        GROUP_ITEM(:group="group", :user="user")
 </template>
 
 <script>
@@ -48,10 +45,13 @@ export default {
     ...mapState("helped", {
       showAddGroup: (state) => state.showAddGroup,
     }),
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
   },
   async mounted() {
     this.changeShowGroupStatus(false);
-    this.fetchGroups();
+    this.fetchGroups(this.user._id);
     // await axios({
     //   url: "http://localhost:3000/test",
     //   method: "get",

@@ -1,40 +1,85 @@
 <template lang="pug">
-  .group__content.content
-    //- pre {{currentGroup}}
-    //- pre {{group_id}}
-    //- pre {{groupName}}
-    .group__title-wrap
-      h2.group__title.tittle Новая группа
-    .group__form
-      .group__info.group__info--group
-        .group__label-wrap.group__label-wrap--name
-          label().group__label.label Введите название группы
-          input(type="text" v-model="groupName" name="name" id="name" placeholder="Название группы").input.group__input
+.group__content.content
+  //- pre {{currentGroup}}
+  //- pre {{group_id}}
+  //- pre {{groupName}}
+  .group__title-wrap
+    h2.group__title.tittle Новая группа
+  .group__form
+    .group__info.group__info--group
+      .group__label-wrap.group__label-wrap--name
+        label.group__label.label Введите название группы
+        input#name.input.group__input(
+          type="text",
+          v-model="groupName",
+          name="name",
+          placeholder="Название группы"
+        )
 
-        .group__label-wrap.group__label-wrap--status
-          label().group__label.label Введите почту старосты
-          input(type="email" name="email" id="email" v-model="headmanEmail").input.group__input
-      .group__info.group__info--student()
-        h2.group__title.tittle.group__title--student Студент
+      .group__label-wrap.group__label-wrap--status
+        label.group__label.label Введите почту старосты
+        input#email.input.group__input(
+          type="email",
+          name="email",
+          v-model="headmanEmail"
+        )
+    .group__info.group__info--student
+      h2.group__title.tittle.group__title--student Студент
 
-        .group__label-wrap.group__label-wrap--student.group__label-wrap--surname
-          label().group__label.label Фамилия
-          input(type="text" v-model="student_surname" name="student" id="student" placeholder="Иванов").input.group__input
+      .group__label-wrap.group__label-wrap--student.group__label-wrap--surname
+        label.group__label.label Фамилия
+        input#student.input.group__input(
+          type="text",
+          v-model="student_surname",
+          name="student",
+          placeholder="Иванов"
+        )
 
-        .group__label-wrap.group__label-wrap--student
-          label().group__label.label Имя
-          input(type="text" v-model="student_name" name="student" id="student" placeholder="Иван").input.group__input
-        
-        .group__label-wrap.group__label-wrap--student.group__label-wrap--thirdname
-          label().group__label.label Отчество
-          input(type="text" v-model="student_thirdname" name="student" id="student" placeholder="Иванович").input.group__input
-        .group__label-wrap.group__label-addGroup
-          button(type="submit" name="submit" value="Сохранить" @click="addStudent" ).btn.group__submit Добавить студента
+      .group__label-wrap.group__label-wrap--student
+        label.group__label.label Имя
+        input#student.input.group__input(
+          type="text",
+          v-model="student_name",
+          name="student",
+          placeholder="Иван"
+        )
 
-      .group__buttons
-          button(type="reset" name="cancel" value="Отменить" @click="closeEdit" ).group__reset Отменить
-          button(type="submit" name="submit" value="Сохранить" v-if="mode=='add'" @click="submitNewGroup" ).btn.group__submit Создать группу
-          button(type="submit" name="submit" value="Сохранить" v-if="mode=='edit'" ).btn.group__submit Сохранить
+      .group__label-wrap.group__label-wrap--student.group__label-wrap--thirdname
+        label.group__label.label Отчество
+        input#student.input.group__input(
+          type="text",
+          v-model="student_thirdname",
+          name="student",
+          placeholder="Иванович"
+        )
+      .group__label-wrap.group__label-addGroup
+        button.btn.group__submit(
+          type="submit",
+          name="submit",
+          value="Сохранить",
+          @click="addStudent"
+        ) Добавить студента
+
+    .group__buttons
+      button.group__reset(
+        type="reset",
+        name="cancel",
+        value="Отменить",
+        @click="closeEdit"
+      ) Отменить
+      button.btn.group__submit(
+        type="submit",
+        name="submit",
+        value="Сохранить",
+        v-if="mode == 'add'",
+        @click="submitNewGroup"
+      ) Создать группу
+      button.btn.group__submit(
+        type="submit",
+        name="submit",
+        value="Сохранить",
+        v-if="mode == 'edit'"
+      ) Сохранить
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
@@ -53,7 +98,7 @@ export default {
       showStudent: false,
       studentsArray: [],
       headmanEmail: "test@mail.ru",
-      group_id: Date.now()
+      group_id: Date.now(),
     };
   },
   mounted() {
@@ -84,13 +129,13 @@ export default {
         thirdname: this.student_thirdname,
         fullName: `${this.student_surname} ${this.student_name} ${this.student_thirdname}`,
         group_id: this.group_id,
-        student_id: Date.now()
+        student_id: Date.now(),
       };
       if (this.student_name && this.student_surname && this.student_thirdname) {
         this.studentsArray.push(studentsData);
         this.showTooltip({
           type: "success",
-          text: "Студент успешно добавлен в группе"
+          text: "Студент успешно добавлен в группе",
         });
         this.student_name = "";
         this.student_surname = "";
@@ -98,7 +143,7 @@ export default {
       } else {
         this.showTooltip({
           type: "error",
-          text: "Введите ФИО нового студента"
+          text: "Введите ФИО нового студента",
         });
       }
     },
@@ -107,7 +152,8 @@ export default {
         group_id: this.group_id,
         groupName: this.groupName,
         headmanEmail: this.headmanEmail,
-        studentsInGroup: this.studentsArray
+        studentsInGroup: this.studentsArray,
+        creatorId: this.user._id,
       };
       // console.log(groupWithStudents);
       try {
@@ -115,24 +161,27 @@ export default {
         this.changeShowGroupStatus(false);
         this.showTooltip({
           type: "success",
-          text: "Группа успешно создана"
+          text: "Группа успешно создана",
         });
       } catch (error) {
         this.changeShowGroupStatus(false);
         this.showTooltip({
           type: "error",
-          text: error
+          text: error,
         });
       }
     },
     ...mapActions("helped", ["changeShowGroupStatus"]),
     closeEdit() {
       this.changeShowGroupStatus(false);
-    }
+    },
   },
   computed: {
-    ...mapGetters("groups", ["groupId"])
-  }
+    ...mapGetters("groups", ["groupId"]),
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
+  },
 };
 </script>
 

@@ -1,6 +1,8 @@
 import axios from "axios";
 const token = localStorage.getItem("token");
-axios.defaults.baseURL = "https://young-anchorage-15160.herokuapp.com";
+
+// axios.defaults.baseURL = "https://young-anchorage-15160.herokuapp.com";
+axios.defaults.baseURL = "http://localhost:3000";
 // axios.defaults.headers["Authorization"] = `${token}`;
 
 // axios.interceptors.response.use(

@@ -1,48 +1,49 @@
 <template lang="pug">
-  .wrapper-
-    //- pre {{answerPhoto}}
-    //- pre {{questionPhotoFile}}
-    //- pre {{answerPhotoURl}}
-    //- pre {{isCorrectAnswerSet}}
-    .question
-      .answer_new
-        .answer_new__data
-          .answer_new__topic-wrap
-            label.answer_new__topic Введите текст ответа
-          .answer_new__input-wrap
-            input(type="text" v-model="currentAnswer").answer_new__input
-            .answer_new__actions
-              button.answer_new__btn(@click="addAnswer").answer_new__btn Добавить ответ
-      .answers__title-wrap
-          h2.asnwers__title Список ответов
-      .answers__wrapper()
-        ul.answers__list(v-if="answers.length" v-for="(answer,id) in answers") 
-          ANSWER_ITEM(
-            :answer="answer" :answers="answers" 
-            :answerPhotoURl="answerPhotoURl"
-            :prevAnswerPhotoURl="prevAnswerPhotoURl"
-            v-on:emitSetCorrectAnswer="setCorrectAnswer" 
-            v-on:emitShowAnswerImg="showAnswerImg"
-            v-on:emitDropAnswerURL="resetAnswerUrl"
-            v-on:emitDeleteAnswer="deleteCurrentAnswer"
-          )
-    .actions__button-wrap
-      button(@click="endWorkWithQUestion").actions__button-end Завершить
-      button(@click="subitQuestion").save.btn Создать вопрос 
+.wrapper-
+  //- pre {{answerPhoto}}
+  //- pre {{questionPhotoFile}}
+  //- pre {{answerPhotoURl}}
+  //- pre {{isCorrectAnswerSet}}
+  .question
+    .answer_new
+      .answer_new__data
+        .answer_new__topic-wrap
+          label.answer_new__topic Введите текст ответа
+        .answer_new__input-wrap
+          input.answer_new__input(type="text", v-model="currentAnswer")
+          .answer_new__actions
+            button.answer_new__btn.answer_new__btn(@click="addAnswer") Добавить ответ
+    .answers__title-wrap
+      h2.asnwers__title Список ответов
+    .answers__wrapper
+      ul.answers__list(v-if="answers.length", v-for="(answer, id) in answers") 
+        ANSWER_ITEM(
+          :answer="answer",
+          :answers="answers",
+          :answerPhotoURl="answerPhotoURl",
+          :prevAnswerPhotoURl="prevAnswerPhotoURl",
+          v-on:emitSetCorrectAnswer="setCorrectAnswer",
+          v-on:emitShowAnswerImg="showAnswerImg",
+          v-on:emitDropAnswerURL="resetAnswerUrl",
+          v-on:emitDeleteAnswer="deleteCurrentAnswer"
+        )
+  .actions__button-wrap
+    button.actions__button-end(@click="endWorkWithQUestion") Завершить
+    button.save.btn(@click="subitQuestion") Создать вопрос
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
 import ANSWER_ITEM from "./answer_item-one";
 export default {
   components: {
-    ANSWER_ITEM
+    ANSWER_ITEM,
   },
   props: {
     currentLevel: Object,
     currentQuestion: String,
     questionPhotoURl: String,
     answerPhotoURl: String,
-    prevAnswerPhotoURl: String
+    prevAnswerPhotoURl: String,
     // answerPhoto: File,
     // questionID: Number,
   },
@@ -64,7 +65,7 @@ export default {
       currentQuestion_id: "",
       editQuestion: false,
       editQuestionMode: false,
-      editAnswer: false
+      editAnswer: false,
       // answersPhoto: new FormData(),
     };
   },
@@ -79,18 +80,18 @@ export default {
       this.$emit("resetAnswerUrl");
     },
     deleteCurrentAnswer(answer) {
-      this.answers = this.answers.filter(item => {
+      this.answers = this.answers.filter((item) => {
         console.log(item);
         return item.answer_id !== answer.answer_id ? item : "";
       });
       this.showTooltip({
         type: "success",
-        text: "Ответ успешно удален"
+        text: "Ответ успешно удален",
       });
     },
     changeAnswer(answer) {
       console.log(answer);
-      this.answers.forEach(item => {
+      this.answers.forEach((item) => {
         if (item.answer_id === answer.answer_id) {
           item.imgURL = this.answerPhotoURl;
         }
@@ -106,7 +107,7 @@ export default {
       console.log(this.editAnswer);
       this.editAnswer = !this.editAnswer;
       console.log(this.editAnswer);
-      this.answers.filter(item => {
+      this.answers.filter((item) => {
         if (item.answer_id === id) {
           item.text = newAnswerText;
           return item;
@@ -174,33 +175,29 @@ export default {
           type: "oneAnswer",
           // fileQuestion: this.questionPhotoFile,
           questionID: this.questionID,
+          creatorId: localStorage.getItem("creatorId"),
           question: {
             text: this.currentQuestion,
             img: this.questionPhotoURl,
-            question_id: Date.now()
+            question_id: Date.now(),
           },
           answers: this.answers,
           level_id: this.currentLevel.levelId,
-          test_id: this.currentLevel.testid
+          test_id: this.currentLevel.testid,
         };
 
         console.log(questionWithAnswers);
-        // this.addNew(questionWithAnswers);
-        // this.addNew({
-        //   questionWithAnswers,
-        //   // answersPhoto: this.answersPhoto,
-        // });
         this.addNew(questionWithAnswers);
         this.resetData();
         this.$emit("emitResetData");
         this.showTooltip({
           type: "success",
-          text: "Вопрос успешно создан"
+          text: "Вопрос успешно создан",
         });
       } else {
         this.showTooltip({
           type: "error",
-          text: "Выберите верный вариант ответа"
+          text: "Выберите верный вариант ответа",
         });
       }
     },
@@ -226,33 +223,33 @@ export default {
           correct: false,
           imgURL: this.answerPhotoURl,
           // imgURL: "this.answerPhotoURl",
-          answer_id: Date.now()
+          answer_id: Date.now(),
         };
         // this.answersPhoto.append(answer.answer_id, this.answerPhoto);
         this.answers.push(answer);
         this.currentAnswer = "";
       }
       this.$emit("resetAnswerUrl");
-    }
+    },
   },
   mounted() {
     // this.answersPhoto.append("questionID", this.questionID);
   },
   computed: {
-    ...mapGetters("questions", ["question_id"])
+    ...mapGetters("questions", ["question_id"]),
   },
   watch: {
-    questionWithPhoto: function(status) {
+    questionWithPhoto: function (status) {
       // console.log(status);
       if (!status) {
         // console.log(this.photoURl);
         this.questionPhotoURl = "";
       }
     },
-    answerPhotoURl: function(url) {
+    answerPhotoURl: function (url) {
       // console.log(url);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="postcss" scoped>

@@ -1,62 +1,92 @@
 <template lang="pug">
-  .container
-    //- pre {{groups}}
-    //- pre {{tests}}
-    //- pre {{obj.group}}
-    //- pre {{questions}}
-    .wrapper-test
-      .addedWrapper(v-if="showAllTests")
-        ul.created_test-list
-          li(v-if="" :class="{testAdding:showAddNew}").created_test-item.test.test--new
-            .test__preview#preview(v-if="!showAddNew" @click="showAddNew = true")
-              .test__preview_logo 
-                <svg version="1.1" class="test__preview_logo-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
-                  <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
-                </svg>
-              .test__preview_test Добавить тест
-            .test__add_new(v-else)
-              .test__header
-                .test__name-wrap
-                  label.test__name-label.test__label Введите название теста
-                .test__name-wrap
-                  input(type="text" v-model="obj.name" placeholder="Название теста").test__name-input
-              .test__levels
-                .test__levels-wrap
-                  label.test__levels-label.test__label Количество уровней
-                .test__levels-wrap 
-                  select(name="level" required v-model="obj.level").test__levels-select
-                    option(value="1").test__levels-option 1
-                    option(value="2").test__levels-option 2
-                    option(value="3").test__levels-option 3
-              .test__group
-                .test__group-wrap
-                  label.test__group-label.test__label Выберите группу
-                .test__group-wrap
-                  select(name="groups" required v-model="obj.group").test__group-select
-                    option(v-for="group in groups" :groupID="group.group_id" :value="group.groupName").test__group-option {{group.groupName}}
-              button(@click="addNewTest").btn Создать
-
-
-          li.created_test-item.test(v-if="tests" v-for="item in tests")
-            //- pre {{item}}
+.container
+  .wrapper-test
+    .addedWrapper(v-if="showAllTests")
+      //- pre {{ groups }}
+      ul.created_test-list
+        li.created_test-item.test.test--new(
+          v-if="",
+          :class="{ testAdding: showAddNew }"
+        )
+          #preview.test__preview(
+            v-if="!showAddNew",
+            @click="showAddNew = true"
+          )
+            .test__preview_logo 
+              <svg version="1.1" class="test__preview_logo-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                <path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/>
+              </svg>
+            .test__preview_test Добавить тест
+          .test__add_new(v-else)
             .test__header
               .test__name-wrap
-                label.test__label Название теста
+                label.test__name-label.test__label Введите название теста
               .test__name-wrap
-                input(type="text" v-model="item.name" disabled).test__name-input.test__input
-            //- .created-test__name {{item.name}}
+                input.test__name-input(
+                  type="text",
+                  v-model="obj.name",
+                  placeholder="Название теста"
+                )
             .test__levels
               .test__levels-wrap
                 label.test__levels-label.test__label Количество уровней
               .test__levels-wrap 
-                input(type="text" v-model="item.level" disabled).test__levels-input.test__input
+                select.test__levels-select(
+                  name="level",
+                  required,
+                  v-model="obj.level"
+                )
+                  option.test__levels-option(value="1") 1
+                  option.test__levels-option(value="2") 2
+                  option.test__levels-option(value="3") 3
             .test__group
               .test__group-wrap
-                label.test__group-label.test__label Для группы
+                label.test__group-label.test__label Выберите группу
               .test__group-wrap
-                input(type="text" v-model="item.group" disabled).test__group-input.test__input
-              //- .created-test__group {{item.group}}
-            button(@click="openTest(item)").btn Открыть
+                select.test__group-select(
+                  name="groups",
+                  required,
+                  v-model="obj.group"
+                )
+                  option.test__group-option(
+                    v-for="group in groups",
+                    :groupID="group.group_id",
+                    :value="group.groupName"
+                  ) {{ group.groupName }}
+            button.btn(@click="addNewTest") Создать
+
+        li.created_test-item.test(v-if="tests", v-for="item in tests")
+          //- pre {{item}}
+          .test__header
+            .test__name-wrap
+              label.test__label Название теста
+            .test__name-wrap
+              input.test__name-input.test__input(
+                type="text",
+                v-model="item.name",
+                disabled
+              )
+          //- .created-test__name {{item.name}}
+          .test__levels
+            .test__levels-wrap
+              label.test__levels-label.test__label Количество уровней
+            .test__levels-wrap 
+              input.test__levels-input.test__input(
+                type="text",
+                v-model="item.level",
+                disabled
+              )
+          .test__group
+            .test__group-wrap
+              label.test__group-label.test__label Для группы
+            .test__group-wrap
+              input.test__group-input.test__input(
+                type="text",
+                v-model="item.group",
+                disabled
+              )
+            //- .created-test__group {{item.group}}
+          button.btn(@click="openTest(item)") Открыть
 </template>
 
 <script>
@@ -77,7 +107,7 @@ export default {
     CURRENT_LEVEL_IN_TEST_GROUP,
     ALL_QUESTIONS_IN_GROUP,
     //
-    ACTIONS_WITH_CURRENT_TEST
+    ACTIONS_WITH_CURRENT_TEST,
   },
   data() {
     return {
@@ -89,8 +119,8 @@ export default {
       obj: {
         level: "3",
         name: "",
-        group: ""
-      }
+        group: "",
+      },
     };
   },
   methods: {
@@ -118,7 +148,7 @@ export default {
       }
     },
     filterQuestion(questions, levelId, groupId) {
-      let filteredQuestions = questions.filter(function(question) {
+      let filteredQuestions = questions.filter(function (question) {
         console.log(question);
         if (question.level_id === levelId && question.test_id === groupId) {
           console.log("correct == equal ");
@@ -142,11 +172,11 @@ export default {
       "changeCurrentLevelStatus",
       "changeShowQuestionsStatus",
       "setCurrentLevelInTestGroup",
-      "setCurrentTestGroup"
+      "setCurrentTestGroup",
     ]),
     setCurrentGroupId(groupName) {
       let groupId;
-      this.groups.forEach(group => {
+      this.groups.forEach((group) => {
         group.groupName === groupName ? (groupId = group.group_id) : "";
       });
       return groupId;
@@ -159,13 +189,14 @@ export default {
         access: false,
         time: 0,
         group_id,
-        ...this.obj
+        creatorId: this.user._id,
+        ...this.obj,
       };
       this.addNew(newTetsGroup);
       this.showAddNew = false;
       this.showTooltip({
         type: "success",
-        text: "Тест успешно создан"
+        text: "Тест успешно создан",
       });
     },
     CLICK() {
@@ -183,14 +214,14 @@ export default {
     addQuestion(obj) {
       console.log(obj);
       this.currentLevelInTestGroup = {
-        ...obj
+        ...obj,
       };
       console.log("my event !!");
       // this.isTestOpen = !this.isTestOpen;
       this.changeCurrentTestStatus(!this.isTestOpen);
       this.changeCurrentLevelStatus(!this.isCurrentLevelOpen);
       // this.isCurrentLevelOpen = !this.isCurrentLevelOpen;
-    }
+    },
   },
   mounted() {
     this.changeCurrentLevelStatus(false);
@@ -201,29 +232,32 @@ export default {
   created() {
     // this.fetchTests();
     this.fetchResults();
-    this.fetchGroups();
-    this.fetchTests();
+    this.fetchGroups(this.user._id);
+    this.fetchTests(this.user._id);
   },
   computed: {
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     ...mapState("tests", {
-      tests: state => state.tests
+      tests: (state) => state.tests,
     }),
     ...mapState("helped", {
-      isCurrentLevelOpen: state => state.isCurrentLevelOpen
+      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
     }),
     ...mapState("helped", {
-      isTestOpen: state => state.isTestOpen
+      isTestOpen: (state) => state.isTestOpen,
     }),
     ...mapState("helped", {
-      showQuestions: state => state.showQuestions
+      showQuestions: (state) => state.showQuestions,
     }),
     ...mapState("questions", {
-      questions: state => state.questions
-    })
-  }
+      questions: (state) => state.questions,
+    }),
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
+  },
 };
 </script>
 

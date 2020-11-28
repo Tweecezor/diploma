@@ -1,9 +1,8 @@
 <template lang="pug">
-  .container_
-    ul.tests__list
-      li.tests__item.test(v-for="test in tests")
-        CURRENT_TEST(:test="test")
-
+.container_
+  ul.tests__list
+    li.tests__item.test(v-for="test in tests")
+      CURRENT_TEST(:test="test")
 </template>
 
 <script>
@@ -12,34 +11,34 @@ import CURRENT_TEST from "./settings__currentTest";
 // import axios from "axios";
 export default {
   components: {
-    CURRENT_TEST
+    CURRENT_TEST,
   },
   data() {
     return {
       // testTime: "",
-      testAccess: false
+      testAccess: false,
     };
   },
   methods: {
     ...mapActions("helped", ["changeShowGroupStatus"]),
     ...mapActions("groups", ["fetchGroups"]),
-    ...mapActions("tests", ["fetchTests"])
+    ...mapActions("tests", ["fetchTests"]),
   },
   computed: {
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     ...mapState("tests", {
-      tests: state => state.tests
+      tests: (state) => state.tests,
     }),
     ...mapState("helped", {
-      showAddGroup: state => state.showAddGroup
-    })
+      showAddGroup: (state) => state.showAddGroup,
+    }),
   },
   async mounted() {},
   async created() {
-    await this.fetchTests();
-  }
+    await this.fetchTests(localStorage.getItem("creatorId"));
+  },
   // watch: {
   //   groups: function() {
   //     this.groups = this.groups;

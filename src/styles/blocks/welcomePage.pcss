@@ -1,0 +1,125 @@
+.welcome {
+  margin: 0 auto;
+}
+.container_welcome {
+  opacity: 0;
+  animation: show 2s;
+  animation-fill-mode: forwards;
+  animation-delay: 1s;
+  /* animation-iteration-count: 2; */
+  animation-fill-mode: forwards;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.container .welcome_logo-wrap {
+  display: flex;
+  justify-content: center;
+}
+.welcome_logo {
+  width: 400px;
+  height: 300px;
+  animation: scale 1s;
+  animation-delay: 1s;
+  animation-iteration-count: 1;
+  transition: 0.5s;
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: scale 1s;
+  animation-delay: 1s;
+  animation-iteration-count: 1;
+  transition: 0.5s;
+}
+.actions__confirm_button {
+  display: block;
+  /* width: 160px; */
+  line-height: 55px;
+  border-radius: 3px;
+  border: none;
+  color: #fff;
+  /* font-size: 14px; */
+  text-transform: uppercase;
+  text-align: center;
+  /* animation: scale 1s;
+  animation-delay: 1s;
+  animation-iteration-count: 1;
+  transition: 0.5s; */
+  width: 200px;
+  background: linear-gradient(190deg, #db9600, #edb947);
+  font-weight: 700;
+  color: white;
+  /* border-radius: 1px; */
+  &:hover {
+    background: linear-gradient(-190deg, #db9600, #edb947);
+  }
+  &[disable] {
+    background: grey;
+    cursor: default;
+  }
+}
+.actions__subject-wrap {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.el-input__inner {
+  font-weight: 600;
+}
+.el-select:hover .el-input__inner {
+  border-color: #edb947 !important;
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #edb947 !important;
+}
+
+.el-select .el-input__inner:focus {
+  border-color: #edb947 !important;
+}
+.el-select-dropdown__item.selected {
+  color: #edb947 !important;
+}
+.el-select {
+  margin-bottom: 20px;
+  width: 350px;
+}
+.stankinAround {
+  fill: red;
+}
+@keyframes scale {
+  0% {
+    /* -webkit-transform: scale3d(1, 1, 1); */
+    transform: scale3d(1, 1, 1);
+  }
+
+  25% {
+    /* -webkit-transform: scale3d(1.05, 1.05, 1.05); */
+    transform: scale3d(1.3, 1.3, 1.3);
+  }
+  50% {
+    /* -webkit-transform: scale3d(1.05, 1.05, 1.05); */
+    transform: scale3d(1, 1, 1);
+  }
+  75% {
+    /* -webkit-transform: scale3d(1.05, 1.05, 1.05); */
+    transform: scale3d(1.15, 1.15, 1.15);
+  }
+  100% {
+    /* -webkit-transform: scale3d(1, 1, 1); */
+    transform: scale3d(1, 1, 1);
+  }
+}
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

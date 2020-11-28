@@ -27,6 +27,20 @@ mixin skill(className,items)
               stop(offset="0%" stop-color="#ea7400")
               stop(offset="100%" stop-color="#f29400")
           .skill__item-tech=item.tech
+          
+mixin regisrationRow(label,text,model)
+  .registration__form-row
+    .registration__form_label-wrap
+      label.registration__form_label(for=`${label}`)=text
+    if(label=='email')
+      .registration__from_input-wrap
+        input(type="email" id=label v-model=`${model}`).registration__from_input(placeholder=`Введите ${text}`)
+    else if(label=='password')
+      .registration__from_input-wrap
+        input(type="password" id=label v-model=`${model}`).registration__from_input(placeholder=`Введите ${text}`)
+    else
+      .registration__from_input-wrap
+        input(id=label v-model=`${model}`).registration__from_input(placeholder=`Введите ${text}`)
 
 
 //- mixin reviews(obj)    

@@ -1,54 +1,58 @@
 <template lang="pug">
-  .container
-    .wrapper
-      //- h1 Мои Настройки
-      //- div.settings
-      //- .group_item(v-for="group in groups")
-      //- pre {{filteredTestByGroup}}
-      //- pre {{results}}
-      //- pre {{groups}}
-      //- pre {{tests}}
-      .group_breadcrumbs
-        ul.group_breadcrumbs__list
-          li.group_breadcrumbs_item.breadcrumb( ref="breadcrumb_group" v-for="(item,id) in groups" @click="changeCurrentGroup(item,id)")
-            .breadcrumb__text-wrap()
-              .breadcrumb__text {{item.groupName}}
-      .group_breadcrumbs
-        ul.test_breadcrumbs__list
-          li.test_breadcrumbs_item.breadcrumb( ref="breadcrumb_test" v-for="(item,id) in filteredTestByGroup" @click="showCurrentTestResult(item.name,id)")
-            .breadcrumb__text-wrap() 
-              .breadcrumb__text {{item.name}}
-      .result__table-wrap
-        .result__table-top
-          .result__table-head-wrap
-            .result__table-head Группа
-          .result__table-head-wrap
-            .result__table-head ФИО
-          .result__table-head-wrap
-            .result__table-head Тест
-          .result__table-head-wrap
-            .result__table-head Оценка
-        .result__table-bottom(v-for="result in filteredResultByGroup")
-          .result__table-content-wrap
-            .result__table-content {{result.group}}
-          .result__table-content-wrap
-            .result__table-content {{result.fullName}}
-          .result__table-content-wrap
-            .result__table-content {{result.test_name}}
-          .result__table-content-wrap
-            .result__table-content {{result.mark}}
+.container
+  .wrapper
+    //- h1 Мои Настройки
+    //- div.settings
+    //- .group_item(v-for="group in groups")
+    //- pre {{filteredTestByGroup}}
+    //- pre {{results}}
+    //- pre {{groups}}
+    //- pre {{tests}}
+    .group_breadcrumbs(v-if="groups")
+      ul.group_breadcrumbs__list
+        li.group_breadcrumbs_item.breadcrumb(
+          ref="breadcrumb_group",
+          v-for="(item, id) in groups",
+          @click="changeCurrentGroup(item, id)"
+        )
+          .breadcrumb__text-wrap
+            .breadcrumb__text {{ item.groupName }}
+    .group_breadcrumbs
+      ul.test_breadcrumbs__list
+        li.test_breadcrumbs_item.breadcrumb(
+          ref="breadcrumb_test",
+          v-for="(item, id) in filteredTestByGroup",
+          @click="showCurrentTestResult(item.name, id)"
+        )
+          .breadcrumb__text-wrap 
+            .breadcrumb__text {{ item.name }}
+    .result__table-wrap
+      .result__table-top
+        .result__table-head-wrap
+          .result__table-head Группа
+        .result__table-head-wrap
+          .result__table-head ФИО
+        .result__table-head-wrap
+          .result__table-head Тест
+        .result__table-head-wrap
+          .result__table-head Оценка
+      .result__table-bottom(v-for="result in filteredResultByGroup")
+        .result__table-content-wrap
+          .result__table-content {{ result.group }}
+        .result__table-content-wrap
+          .result__table-content {{ result.fullName }}
+        .result__table-content-wrap
+          .result__table-content {{ result.test_name }}
+        .result__table-content-wrap
+          .result__table-content {{ result.mark }}
 
-        
-      //- pre {{filteredResultByGroup}}
-      //- pre {{results}}
-        //- nav.settings__nav
-        //-   ul.settings__list
-        //-     li.settings__item( @click="setCurrentNav(item)" v-for="item in ['Личные данные','Группы','Помощь']") {{item}}
-        //- .settings__content
-        //-   GROUPS(v-if="currentNav==='Группы'")
-
-
-
+    //- pre {{filteredResultByGroup}}
+    //- pre {{results}}
+      //- nav.settings__nav
+      //-   ul.settings__list
+      //-     li.settings__item( @click="setCurrentNav(item)" v-for="item in ['Личные данные','Группы','Помощь']") {{item}}
+      //- .settings__content
+      //-   GROUPS(v-if="currentNav==='Группы'")
 </template>
 
 <script>
@@ -57,7 +61,7 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   components: {
-    GROUPS
+    GROUPS,
   },
   data() {
     return {
@@ -67,7 +71,7 @@ export default {
       filteredTestByGroup: [],
       currentTestName: "",
       breadcrumbGroup: "",
-      breadcrumbTest: ""
+      breadcrumbTest: "",
       // results: "",
       // groups: "",
       // tests: "",
@@ -94,13 +98,13 @@ export default {
       this.currentNav = item;
     },
     filterTestByGroup() {
-      this.filteredTestByGroup = this.tests.filter(item => {
+      this.filteredTestByGroup = this.tests.filter((item) => {
         // console.log(item);
         return item.group === this.currentGroup ? item : "";
       });
     },
     filterResultByGroup() {
-      this.filteredResultByGroup = this.results.filter(item => {
+      this.filteredResultByGroup = this.results.filter((item) => {
         return item.group === this.currentGroup ? item : "";
       });
       // console.log(this.filteredResultByGroup);
@@ -112,7 +116,7 @@ export default {
     // },
     showCurrentTestResult(testName, id) {
       // console.log(testName);
-      this.filteredResultByGroup = this.results.filter(item => {
+      this.filteredResultByGroup = this.results.filter((item) => {
         // console.log(item);
         return item.test_name === testName ? item : "";
       });
@@ -145,44 +149,38 @@ export default {
     },
     sortBreadcrumbGroupList() {
       // this.groups = this.group.
-    }
+    },
   },
   mounted() {
-    // console.log(this.results);
-    this.currentGroup = this.results[0].group;
-    // console.log(this.currentGroup);
-    this.filteredResultByGroup = this.results;
+    if (this.results.length) {
+      this.currentGroup = this.results[0].group;
 
-    // this.filterResultByGroup();
-    // this.filterTestByGroup();
-    this.breadcrumbGroup = this.$refs.breadcrumb_group;
-    // this.breadcrumbGroup[0].firstChild.classList.add("breadcrumb--active");
-    for (var i = 1; i < this.breadcrumbGroup.length; i++) {
-      this.breadcrumbGroup[i].firstChild.classList.remove("breadcrumb--active");
+      this.filteredResultByGroup = this.results;
+
+      this.breadcrumbGroup = this.$refs.breadcrumb_group;
+
+      for (var i = 1; i < this.breadcrumbGroup.length; i++) {
+        this.breadcrumbGroup[i].firstChild.classList.remove(
+          "breadcrumb--active"
+        );
+      }
     }
-    // console.log(this.$refs.breadcrumb_group);
-    // this.breadcrumbTest = this.$refs.breadcrumb_test;
-    // console.log(this.breadcrumbTest);
-    // this.breadcrumbTest[0].firstChild.classList.add("breadcrumb--active");
-    // for (var i = 1; i < this.breadcrumbTest.length; i++) {
-    //   this.breadcrumbTest[i].firstChild.classList.remove("breadcrumb--active");
-    // }
   },
   computed: {
     ...mapState("results", {
-      results: state => state.results
+      results: (state) => state.results,
     }),
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     ...mapState("tests", {
-      tests: state => state.tests
-    })
+      tests: (state) => state.tests,
+    }),
   },
   async created() {
-    await this.fetchResults();
-    await this.fetchGroups();
-    await this.fetchTests();
+    await this.fetchResults(localStorage.getItem("creatorId"));
+    await this.fetchGroups(localStorage.getItem("creatorId"));
+    await this.fetchTests(localStorage.getItem("creatorId"));
     this.filteredResultByGroup = this.results;
     // const REZ = await this.$axios("http://localhost:3002/api/results");
     // this.results = REZ.data;
@@ -196,7 +194,7 @@ export default {
     // this.tests = TESTS.data;
     // this.results =
     // this.currentGroup = this.results[0].group;
-  }
+  },
 };
 </script>
 

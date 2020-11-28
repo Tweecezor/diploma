@@ -1,35 +1,46 @@
 <template lang="pug">
-  .container_ 
-    //- pre {{user}}
-    .user__container
-      .user__content
-        .user__login-wrap 
-          h1.user__login Логин
-          .user__label-wrap
-            label.user__login_label Изменить логин
-          .user__login_input-wrap
-            input.user__login_input.user__input(type="text" v-model="user.login")
-        .user__password-wrap 
-          h1.user__password Пароль
-          .user__label-wrap
-            label.user__password_label Новый пароль
-          .user__password_input-wrap
-            input.user__input.user__password_input(type="password" v-model="password")
-          .user__label-wrap
-            label.user__password_label Повторить пароль
-          .user__password_input-wrap-
-            input.user__input.user__password_input(type="password" v-model="passwordRepeat")
-      .user__image
-        label(for="avatar").user__image-wrap(:style="{'background-image':`url(${currentAvatar})`}")
-          .btn.user__image_file Изменить
-        input(type="file" id="avatar" name="photo" accept="image/*" @change="loadAvatar").user__file
-        .user__save
-          .user__save_btn.btn(@click="save") Сохранить
-
-      
-
-        
-        
+.container_ 
+  pre {{ user }}
+  .user__container
+    .user__content
+      .user__login-wrap 
+        h1.user__login Логин
+        .user__label-wrap
+          label.user__login_label Изменить логин
+        .user__login_input-wrap
+          input.user__login_input.user__input(
+            type="text",
+            v-model="user.login"
+          )
+      .user__password-wrap 
+        h1.user__password Пароль
+        .user__label-wrap
+          label.user__password_label Новый пароль
+        .user__password_input-wrap
+          input.user__input.user__password_input(
+            type="password",
+            v-model="password"
+          )
+        .user__label-wrap
+          label.user__password_label Повторить пароль
+        .user__password_input-wrap-
+          input.user__input.user__password_input(
+            type="password",
+            v-model="passwordRepeat"
+          )
+    .user__image
+      label.user__image-wrap(for="avatar")(
+        :style="{ 'background-image': `url(${currentAvatar})` }"
+      )
+        .btn.user__image_file Изменить
+      input#avatar.user__file(
+        type="file",
+        name="photo",
+        accept="image/*",
+        @change="loadAvatar"
+      )
+      .user__save
+        .user__save_btn.btn(@click="save") Сохранить
 </template>
 
 <script>

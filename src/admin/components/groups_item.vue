@@ -1,55 +1,80 @@
 <template lang="pug">
-  div
-    //- pre {{group}}
-    //- pre {{isActiveModeActive}}
-    .group__preview
-      .group__preview-info
-        .group__name-wrap 
-          input(:class="{group__active:editMode}" type="text" ref="groupName" :disabled="!editMode" v-model="currentGroup.groupName").group__name
-        .group__status-wrap
-          input(type="text" :class="{group__active:editMode}" :disabled="!editMode" v-model="currentGroup.headmanEmail").group__status
-    .group__desc(ref="studentsList")
-      .group__desc-text(v-for="student in group.studentsInGroup" )
-        STUDENT_IN_GROUP(:student="student")
-    label.group__desc-label Добавить студента:
-    .group__desc-student.student
-        input(type="text" placeholder="Фамилия" v-model="studentSurname ").student__input.student__input--surname
-        input(type="text" placeholder="Имя"  v-model="studentName").student__input
-        input(type="text" placeholder="Отчество"  v-model="studentThirdname").student__input.student__input--thirdname
-        .student__add(@click="addStudent")
-    .group__desc-controls(v-if="!editMode" :class="{group__desc__disabled:isActiveModeActive}")
-      .group__desc-correct-wrap
-        label.group__desc_label(for="editIcon"  @click="correctGroup") Править
-        <svg @click="correctGroup" class="group__desc-correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
-            <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
-        </svg>
-      .group__desc-correct-wrap
-        label.group__desc_label(for="deleteIcon" @click="deleteCurrentGroup(group.group_id)") Удалить
-        <svg id="deleteIcon" class="group__desc-remove" @click="deleteCurrentGroup(group.group_id)" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="459px" height="459px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
-          <path d="M76.5,408c0,28.05,22.95,51,51,51h204c28.05,0,51-22.95,51-51V102h-306V408z M408,25.5h-89.25L293.25,0h-127.5l-25.5,25.5 H51v51h357V25.5z"/>
-        </svg>
-    .group__desc-controls(v-else)
-      .group__desc-correct-wrap
-        label.group__desc_label(for="deleteIcon" @click="saveGroup") Сохранить
-        <svg version="1.1" @click="saveGroup" class="group__desc-correct correct-save" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
-          <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
-        </svg>
-      .group__desc-correct-wrap
-        label.group__desc_label(for="deleteIcon" @click="cancelEdited") Отменить
-        <svg version="1.1" @click="cancelEdited" class="group__desc-remove remove-cancel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
-          <g><path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/></g>
-        </svg>
-
+div
+  //- pre {{ user }}
+  //- pre {{isActiveModeActive}}
+  .group__preview
+    .group__preview-info
+      .group__name-wrap 
+        input.group__name(
+          :class="{ group__active: editMode }",
+          type="text",
+          ref="groupName",
+          :disabled="!editMode",
+          v-model="currentGroup.groupName"
+        )
+      .group__status-wrap
+        input.group__status(
+          type="text",
+          :class="{ group__active: editMode }",
+          :disabled="!editMode",
+          v-model="currentGroup.headmanEmail"
+        )
+  .group__desc(ref="studentsList")
+    .group__desc-text(v-for="student in group.studentsInGroup")
+      STUDENT_IN_GROUP(:student="student")
+  label.group__desc-label Добавить студента:
+  .group__desc-student.student
+    input.student__input.student__input--surname(
+      type="text",
+      placeholder="Фамилия",
+      v-model="studentSurname"
+    )
+    input.student__input(type="text", placeholder="Имя", v-model="studentName")
+    input.student__input.student__input--thirdname(
+      type="text",
+      placeholder="Отчество",
+      v-model="studentThirdname"
+    )
+    .student__add(@click="addStudent")
+  .group__desc-controls(
+    v-if="!editMode",
+    :class="{ group__desc__disabled: isActiveModeActive }"
+  )
+    .group__desc-correct-wrap
+      label.group__desc_label(for="editIcon", @click="correctGroup") Править
+      <svg @click="correctGroup" class="group__desc-correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
+        <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
+      </svg>
+    .group__desc-correct-wrap
+      label.group__desc_label(
+        for="deleteIcon",
+        @click="deleteCurrentGroup(group.group_id)"
+      ) Удалить
+      <svg id="deleteIcon" class="group__desc-remove" @click="deleteCurrentGroup(group.group_id)" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="459px" height="459px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
+        <path d="M76.5,408c0,28.05,22.95,51,51,51h204c28.05,0,51-22.95,51-51V102h-306V408z M408,25.5h-89.25L293.25,0h-127.5l-25.5,25.5 H51v51h357V25.5z"/>
+      </svg>
+  .group__desc-controls(v-else)
+    .group__desc-correct-wrap
+      label.group__desc_label(for="deleteIcon", @click="saveGroup") Сохранить
+      <svg version="1.1" @click="saveGroup" class="group__desc-correct correct-save" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 342.357 342.357" style="enable-background:new 0 0 342.357 342.357;" xml:space="preserve">
+        <polygon points="290.04,33.286 118.861,204.427 52.32,137.907 0,190.226 118.862,309.071 342.357,85.606 "/>
+      </svg>
+    .group__desc-correct-wrap
+      label.group__desc_label(for="deleteIcon", @click="cancelEdited") Отменить
+      <svg version="1.1" @click="cancelEdited" class="group__desc-remove remove-cancel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+        g <path d="M585.8,500l385.9-385.9c24.5-24.5,24.5-61.3,0-85.8c-24.5-24.5-61.3-24.5-85.8,0L500,414.3L114.1,28.4c-24.5-24.5-61.2-24.5-85.8,0c-24.5,24.5-24.5,61.3,0,85.8L411.2,500L28.4,885.9c-24.5,24.5-24.5,61.3,0,85.8c9.2,12.3,27.6,18.4,42.9,18.4c15.3,0,30.6-6.1,42.9-18.4L500,585.8l385.9,385.9c12.3,12.3,27.6,18.4,42.9,18.4s30.6-6.1,42.9-18.4c24.5-24.5,24.5-61.3,0-85.8L585.8,500z"/>
+      </svg>
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
 import STUDENT_IN_GROUP from "./groups__student";
 export default {
   components: {
-    STUDENT_IN_GROUP
+    STUDENT_IN_GROUP,
   },
   props: {
-    group: Object
+    group: Object,
+    user: Object,
   },
   data() {
     return {
@@ -58,7 +83,7 @@ export default {
       editedGroup: "",
       studentSurname: "",
       studentName: "",
-      studentThirdname: ""
+      studentThirdname: "",
     };
   },
   methods: {
@@ -71,7 +96,7 @@ export default {
         this.currentGroup = { ...this.group };
         this.showTooltip({
           type: "success",
-          text: "Изменения успешно отменены"
+          text: "Изменения успешно отменены",
         });
         this.setEditStatus(false);
       }
@@ -82,12 +107,12 @@ export default {
           await this.deleteGroup(groupID);
           this.showTooltip({
             type: "success",
-            text: "Группа успешно удалена"
+            text: "Группа успешно удалена",
           });
         } catch (error) {
           this.showTooltip({
             type: "error",
-            text: error
+            text: error,
           });
         }
       }
@@ -107,21 +132,21 @@ export default {
           this.editedGroup = {
             ...this.currentGroup,
             groupName: this.currentGroup.groupName,
-            headmanEmail: this.currentGroup.headmanEmail
+            headmanEmail: this.currentGroup.headmanEmail,
           };
           // console.log(this.editedGroup);
           this.editMode = !this.editMode;
           await this.editGroup(this.editedGroup);
           this.showTooltip({
             type: "success",
-            text: "Изменения успешно сохранены"
+            text: "Изменения успешно сохранены",
           });
           this.setEditStatus(false);
         } catch (error) {
           this.setEditStatus(false);
           this.showTooltip({
             type: "error",
-            text: error
+            text: error,
           });
         }
       }
@@ -133,7 +158,8 @@ export default {
         thirdname: this.studentThirdname,
         fullName: `${this.studentSurname} ${this.studentName} ${this.studentThirdname}`,
         group_id: this.group.group_id,
-        student_id: Date.now()
+        student_id: Date.now(),
+        creatorId: this.user._id,
         // student_id: this.group.studentsInGroup.length + 1
       };
       // console.log(newStudent);
@@ -141,7 +167,7 @@ export default {
         this.addNewStudent(newStudent);
         this.showTooltip({
           type: "success",
-          text: "Новый студент успешно добавлен"
+          text: "Новый студент успешно добавлен",
         });
         this.studentName = "";
         this.studentSurname = "";
@@ -150,32 +176,35 @@ export default {
       } else {
         this.showTooltip({
           type: "error",
-          text: "Добавьте ФИО нового студента"
+          text: "Добавьте ФИО нового студента",
         });
       }
-    }
+    },
   },
   computed: {
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
     ...mapState("helped", {
-      isActiveModeActive: state => state.isEditActive
-    })
+      isActiveModeActive: (state) => state.isEditActive,
+    }),
   },
   mounted() {
     this.setEditStatus(false);
   },
   watch: {
-    group: function(group) {
+    group: function (group) {
       this.currentGroup = { ...this.group };
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      isActiveModeActive: state => state.isEditActive
-    })
+      isActiveModeActive: (state) => state.isEditActive,
+    }),
   },
   mounted() {
     this.setEditStatus(false);
-  }
+  },
 };
 </script>
 

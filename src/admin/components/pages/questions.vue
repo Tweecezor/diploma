@@ -1,109 +1,136 @@
 <template lang="pug">
-  .container
-    //- pre {{uniqueQuestions}}
-    .questions_current__list-wrap  
-      .questions_current__list(v-if="showQuestion")
-        .questions__belongs
-          .questions__belongs_wrap
-            .questions__belongs__item
-              label Группа:
-              .aa {{currentGroupName}}
-            .questions__belongs__item 
-              label Название:
-              .aa {{currentTestName}}
-            .questions__belongs__item 
-              label Уровень:
-              .aa {{item.level_id}}
-          .questions__belongs_close-wrap
-            .questions__belongs_close(@click="closeCurrentQuestion") X
-        //- CURRENT_QUESTION(:item="item")
-        .questions_current__item.question_current()
-          QUESTION_ITEM( :qText="qText" :_id="item._id" :item="item.question" :test_id="item.test_id" :level_id="item.level_id" v-on:closeQuestion="closeCurrentQuestion")
-          div(v-if="item.type!=='handwritingAnswer'").answer__content
-            .answers__title Просмотр ответов
-            .answers__data
-              .answers__data_img
-                .current_level__files(:style="{'background-image':`url(${currentAnswerImgUrl})`}")
-                  .current_level__file-upload
-                    label(for="photoFile").current_level__load-text
-                      p Изображение для вопроса
-                      .dropzone(id="drop1" v-if="currentAnswerImgUrl==''")
-                        input(type="file" id="photoFile" @change="loadAnwerPhoto" accept="image/*").current_level__file-input
-                        .current_level__file-btn.btn Загрузить
-                      .dropzone(v-else)
-                        input(type="file" id="photoFile" @change="changeAnswerPhoto" accept="image/*").current_level__file-input
-                        .current_level__file-btn.btn Изменить
-              .answers__data_content
-                ul().answers__list
-                  li.answers__item.answer(v-for="answer in item.answers")
-                    ANSWER_ITEM(
-                      :typeOfQuestion="item.type" :answerLength="item.answers.length" 
-                      :question_id="item.question.question_id" :answer="answer" 
-                      :test_id="item.test_id" :level_id="item.level_id"
-                      :answerImgUrl="currentAnswerImgUrl"
-                      :_id="item._id"
-                      v-on:setAnswerImgURL="setCurrentAnswerIMG"
-                      v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
+.container
+  //- pre {{uniqueQuestions}}
+  .questions_current__list-wrap 
+    .questions_current__list(v-if="showQuestion")
+      .questions__belongs
+        .questions__belongs_wrap
+          .questions__belongs__item
+            label Группа:
+            .aa {{ currentGroupName }}
+          .questions__belongs__item 
+            label Название:
+            .aa {{ currentTestName }}
+          .questions__belongs__item 
+            label Уровень:
+            .aa {{ item.level_id }}
+        .questions__belongs_close-wrap
+          .questions__belongs_close(@click="closeCurrentQuestion") X
+      //- CURRENT_QUESTION(:item="item")
+      .questions_current__item.question_current
+        QUESTION_ITEM(
+          :qText="qText",
+          :_id="item._id",
+          :item="item.question",
+          :test_id="item.test_id",
+          :level_id="item.level_id",
+          v-on:closeQuestion="closeCurrentQuestion"
+        )
+        div.answer__content(v-if="item.type !== 'handwritingAnswer'")
+          .answers__title Просмотр ответов
+          .answers__data
+            .answers__data_img
+              .current_level__files(
+                :style="{ 'background-image': `url(${currentAnswerImgUrl})` }"
+              )
+                .current_level__file-upload
+                  label.current_level__load-text(for="photoFile")
+                    p Изображение для вопроса
+                    #drop1.dropzone(, v-if="currentAnswerImgUrl == ''")
+                      input#photoFile.current_level__file-input(
+                        type="file",
+                        @change="loadAnwerPhoto",
+                        accept="image/*"
                       )
-                ADD_NEW_ANSWER(
-                  :answerLength="item.answers.length" :question_id="item.question.question_id" 
-                  :test_id="item.test_id" :level_id="item.level_id"
-                  :currentAnswerImgUrl="currentAnswerImgUrl"
-                  :answerImgUrl="currentAnswerImgUrl"
-                  :_id="item._id"
-                  v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
+                      .current_level__file-btn.btn Загрузить
+                    .dropzone(v-else)
+                      input#photoFile.current_level__file-input(
+                        type="file",
+                        @change="changeAnswerPhoto",
+                        accept="image/*"
+                      )
+                      .current_level__file-btn.btn Изменить
+            .answers__data_content
+              ul.answers__list
+                li.answers__item.answer(v-for="answer in item.answers")
+                  ANSWER_ITEM(
+                    :typeOfQuestion="item.type",
+                    :answerLength="item.answers.length",
+                    :question_id="item.question.question_id",
+                    :answer="answer",
+                    :test_id="item.test_id",
+                    :level_id="item.level_id",
+                    :answerImgUrl="currentAnswerImgUrl",
+                    :_id="item._id",
+                    v-on:setAnswerImgURL="setCurrentAnswerIMG",
+                    v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
                   )
-          div(v-else)
-            KEYWORDS_ANSWER(:keywords="item.keywordsArray" :typeOfQuestion="item.type" :_id="item._id")
-      .wrapper.questions
-        .filterQuestionsBreadcrumb
-          ul.filterQuestionsBreadcrumb__list
-            li.filterQuestionsBreadcrumb__item()
-              .breadcrumb( ref="filter" @click="setFilter($event,'Уровень')") {{'Уровень'}}
-              ul.filterList()
-                li.filterItem(v-for="item in filtersLevel") 
-                  .item(@click="filterQuestionsByChoosenFilter(item)") {{item}}
-            //- li.filterQuestionsBreadcrumb__item()
-            //-   .breadcrumb( ref="filter" @click="setFilter($event,'Группа')") {{'Группа'}}
-            //-   ul.filterList()
-            //-     li.filterItem(v-for="item in filtersGroups") 
-            //-       .item(@click="filterQuestionsByChoosenFilter(item)") {{item}}
-            li.filterQuestionsBreadcrumb__item()
-              .breadcrumb( ref="filter" @click="setFilter($event,'Тип вопроса')") {{'Тип вопроса'}}
-              ul.filterList()
-                li.filterItem(v-for="item in filtersType") 
-                  .item(@click="filterQuestionsByChoosenFilter(item)") {{item}}
-            li.filterQuestionsBreadcrumb__item()
-              .breadcrumb(@click="setFilter($event,'Сброс')") {{'Сброс'}}
-        ul.questions__list(v-if="!isFiltered")
-          li.questions__item.question(v-for="question in uniqueQuestions")
+              ADD_NEW_ANSWER(
+                :answerLength="item.answers.length",
+                :question_id="item.question.question_id",
+                :test_id="item.test_id",
+                :level_id="item.level_id",
+                :currentAnswerImgUrl="currentAnswerImgUrl",
+                :answerImgUrl="currentAnswerImgUrl",
+                :_id="item._id",
+                v-on:emitResetAnswerImgUrl="resetAnswerImgUrl"
+              )
+        div(v-else)
+          KEYWORDS_ANSWER(
+            :keywords="item.keywordsArray",
+            :typeOfQuestion="item.type",
+            :_id="item._id"
+          )
+    .wrapper.questions
+      .filterQuestionsBreadcrumb
+        ul.filterQuestionsBreadcrumb__list
+          li.filterQuestionsBreadcrumb__item
+            .breadcrumb(ref="filter", @click="setFilter($event, 'Уровень')") {{ 'Уровень' }}
+            ul.filterList
+              li.filterItem(v-for="item in filtersLevel") 
+                .item(@click="filterQuestionsByChoosenFilter(item)") {{ item }}
+          //- li.filterQuestionsBreadcrumb__item()
+          //-   .breadcrumb( ref="filter" @click="setFilter($event,'Группа')") {{'Группа'}}
+          //-   ul.filterList()
+          //-     li.filterItem(v-for="item in filtersGroups") 
+          //-       .item(@click="filterQuestionsByChoosenFilter(item)") {{item}}
+          li.filterQuestionsBreadcrumb__item
+            .breadcrumb(ref="filter", @click="setFilter($event, 'Тип вопроса')") {{ 'Тип вопроса' }}
+            ul.filterList
+              li.filterItem(v-for="item in filtersType") 
+                .item(@click="filterQuestionsByChoosenFilter(item)") {{ item }}
+          li.filterQuestionsBreadcrumb__item
+            .breadcrumb(@click="setFilter($event, 'Сброс')") {{ 'Сброс' }}
+      ul.questions__list(v-if="!isFiltered")
+        li.questions__item.question(v-for="question in uniqueQuestions")
+          .question__add_topic-wrap
+            h1.question__add_topic Содержание вопроса
+          .question__label-wrap
+            label.question__label Текст вопроса
+          .question__text-wrap
+            input.question__text(type="text", v-model="question.question.text")
+          button.question__show.btn(@click="showCurrentQuestion(question)") Развернуть вопрос
+          .question__add
             .question__add_topic-wrap
-              h1.question__add_topic Содержание вопроса
-            .question__label-wrap
-              label.question__label Текст вопроса
-            .question__text-wrap
-              input.question__text(type="text" v-model="question.question.text")
-            button.question__show.btn(@click="showCurrentQuestion(question)") Развернуть вопрос
-            .question__add
-              .question__add_topic-wrap
-                h1.question__add_topic Загрузка вопроса 
-           
-            QUESTION_SELECT(:question="question")
-        ul.questions__list(v-else="isFiltered")
-          li.questions__item.question(v-for="question in filteredUniqueQuestions")
+              h1.question__add_topic Загрузка вопроса
+
+          QUESTION_SELECT(:question="question")
+      ul.questions__list(v-else="isFiltered")
+        li.questions__item.question(
+          v-for="question in filteredUniqueQuestions"
+        )
+          .question__add_topic-wrap
+            h1.question__add_topic Содержание вопроса
+          .question__label-wrap
+            label.question__label Текст вопроса
+          .question__text-wrap
+            input.question__text(type="text", v-model="question.question.text")
+          button.question__show.btn(@click="showCurrentQuestion(question)") Развернуть вопрос
+          .question__add
             .question__add_topic-wrap
-              h1.question__add_topic Содержание вопроса
-            .question__label-wrap
-              label.question__label Текст вопроса
-            .question__text-wrap
-              input.question__text(type="text" v-model="question.question.text")
-            button.question__show.btn(@click="showCurrentQuestion(question)") Развернуть вопрос
-            .question__add
-              .question__add_topic-wrap
-                h1.question__add_topic Загрузка вопроса 
-           
-            QUESTION_SELECT(:question="question")
-          
+              h1.question__add_topic Загрузка вопроса
+
+          QUESTION_SELECT(:question="question")
 </template>
 
 <script>
@@ -121,7 +148,7 @@ export default {
     ANSWER_ITEM,
     ADD_NEW_ANSWER,
     KEYWORDS_ANSWER,
-    CURRENT_QUESTION
+    CURRENT_QUESTION,
   },
   props: {},
   data() {
@@ -153,7 +180,7 @@ export default {
       questionsUnique: "",
       filteredUniqueQuestions: "",
       isFiltered: false,
-      activeBreadcrumb: ""
+      activeBreadcrumb: "",
       // prevActiveBreadcrumb: this.$refs.filter,
     };
   },
@@ -163,43 +190,43 @@ export default {
       // console.log(filter);
       switch (filter) {
         case "Однозначный":
-          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter((item) => {
             return item.type === "oneAnswer" ? item : "";
           });
           this.isFiltered = true;
           break;
         case "Множественный":
-          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter((item) => {
             return item.type === "multipleAnswer" ? item : "";
           });
           this.isFiltered = true;
           break;
         case "Рукописный":
-          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter((item) => {
             return item.type === "handwritingAnswer" ? item : "";
           });
           this.isFiltered = true;
           break;
         case 1:
-          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter((item) => {
             return item.level_id === 1 ? item : "";
           });
           this.isFiltered = true;
           break;
         case 2:
-          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter((item) => {
             return item.level_id === 2 ? item : "";
           });
           this.isFiltered = true;
           break;
         case 3:
-          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter((item) => {
             return item.level_id === 3 ? item : "";
           });
           this.isFiltered = true;
           break;
         default:
-          this.filteredUniqueQuestions = this.uniqueQuestions.filter(item => {
+          this.filteredUniqueQuestions = this.uniqueQuestions.filter((item) => {
             console.log(item);
             return item.groupName === filter ? item : "";
           });
@@ -230,7 +257,7 @@ export default {
           this.filtersLevel = [];
           this.filtersType = [];
           this.filtersGroups = [];
-          this.groups.forEach(item => {
+          this.groups.forEach((item) => {
             this.filtersGroups.push(item.groupName);
           });
           this.activeBreadcrumb = e.target;
@@ -270,7 +297,7 @@ export default {
       // console.log(currentTestId);
       let currentGroupName;
       let currentTestName;
-      this.tests.filter(item => {
+      this.tests.filter((item) => {
         item.id === currentTestId
           ? ((currentGroupName = item.group), (currentTestName = item.name))
           : "";
@@ -312,7 +339,7 @@ export default {
       this.test_id = e.target.value;
     },
     filterTestByGroup(groupName) {
-      this.filteredTests = this.tests.filter(item => {
+      this.filteredTests = this.tests.filter((item) => {
         console.log(item);
         console.log(groupName);
         return item.group === groupName;
@@ -348,17 +375,17 @@ export default {
         question: {
           text: questionOld.question.text,
           img: questionOld.question.img,
-          question_id: filtered.length + 1
+          question_id: filtered.length + 1,
         },
         level_id: +this.level,
-        test_id: +this.test_id
+        test_id: +this.test_id,
       };
 
       console.log(newQuestion);
       this.addNew(newQuestion);
     },
     filterQuestion(questions, levelId, groupId) {
-      let filteredQuestions = questions.filter(function(question) {
+      let filteredQuestions = questions.filter(function (question) {
         console.log(question);
         if (question.level_id === levelId && question.test_id === groupId) {
           // console.log("correct == equal ");
@@ -458,24 +485,24 @@ export default {
         }
       }
       return filter;
-    }
+    },
   },
   computed: {
     ...mapState("questions", {
-      questions: state => state.questions
+      questions: (state) => state.questions,
     }),
     // ...mapGetters("tests", ["getTests"]),
     ...mapState("tests", {
-      tests: state => state.tests
+      tests: (state) => state.tests,
     }),
     ...mapState("groups", {
-      groups: state => state.groups
+      groups: (state) => state.groups,
     }),
     // ...mapState("questions", {
     //   uniqueQuestions: (state) => state.uniqQuestions,
     // }),
 
-    ...mapGetters("questions", ["uniqueQuestions"])
+    ...mapGetters("questions", ["uniqueQuestions"]),
   },
   mounted() {
     // console.log(this.uniqueQuestions);
@@ -483,8 +510,8 @@ export default {
     // this.questionsUnique = this.filterUniqQuestions();
   },
   async created() {
-    await this.fetchQuestions();
-  }
+    await this.fetchQuestions(localStorage.getItem("creatorId"));
+  },
 };
 </script>
 <style lang="postcss" scoped>

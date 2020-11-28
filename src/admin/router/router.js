@@ -11,7 +11,8 @@ Vue.use(VueRouter);
 // import reviews from './components/pages/reviews'
 // import login from './components/pages/login'
 
-const baseURL = "https://young-anchorage-15160.herokuapp.com/api";
+// const baseURL = "https://young-anchorage-15160.herokuapp.com/api";
+const baseURL = "http://localhost:3000/api";
 
 const guard = axios.create({
   baseURL,
@@ -27,10 +28,15 @@ router.beforeEach(async (to, from, next) => {
   // console.log("BeforeEachROuter");
   // console.log(guard.defaults.headers["Authorization"]);
   const isPublicRoute = to.matched.some((record) => record.meta.public);
+  const isRegRoute = to.matched.some((record) => record.meta.reg);
   // console.log(isPublicRoute);
   const isUserLogged = store.getters["user/userIsLogged"];
   // console.log(isUserLogged);
-  if (isPublicRoute === false && isUserLogged === false) {
+  if (
+    isPublicRoute === false &&
+    isUserLogged === false &&
+    isRegRoute === false
+  ) {
     console.log("inside router IF");
     const token = localStorage.getItem("token");
     // console.log(localStorage);
@@ -39,7 +45,9 @@ router.beforeEach(async (to, from, next) => {
     // console.log(guard.defaults.headers["Authorization"]);
     try {
       console.log("try user");
-      const response = await guard.get("/user");
+      let userLogin = localStorage.getItem("userLogin");
+      console.log(userLogin);
+      const response = await guard.post("/user", { login: userLogin });
       console.log(response);
       store.commit("user/SET_USER", response.data.user);
       next();

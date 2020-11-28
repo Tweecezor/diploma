@@ -1,17 +1,17 @@
 <template lang="pug">
-  header.header
-    .header-container.container
-      //- pre {{userAvatar}}
-      .header__info
-        .user
-          .user__avatar
-            img(:src="userAvatar ").user__img
-          .user__name
-            span Ксения Стоякова
-        .header__title-wrap
-          h1.header__title Панель Администрирования
-      .header__logout
-        a(@click="logout").header__logout-link Выйти
+header.header
+  .header-container.container
+    //- pre {{userAvatar}}
+    .header__info
+      .user
+        .user__avatar
+          img.user__img(:src="userAvatar")
+        .user__name
+          span {{ `${user.name} ${user.surname}` }}
+      .header__title-wrap
+        h1.header__title Панель Администрирования
+    .header__logout
+      a.header__logout-link(@click="logout") Выйти
 </template>
 
 <script>

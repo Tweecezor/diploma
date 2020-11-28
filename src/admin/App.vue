@@ -1,16 +1,20 @@
 
 <template lang="pug">
-  div
-    .wrapper__container
-      .admin__content
-        div(v-if="$route.meta.public")
-          router-view
-          tooltips
-        div(v-else)
-          headerComponent
-          navComponent
-          router-view
-          tooltips  
+div
+  .wrapper__container
+    .admin__content
+      //- el-button(type="primary") Primary
+      div(v-if="$route.meta.public")
+        router-view
+        tooltips
+      div(v-else-if="$route.meta.reg")
+        router-view
+        tooltips
+      div(v-else)
+        headerComponent
+        navComponent
+        router-view
+        tooltips 
 </template>
 
 <script>
@@ -30,18 +34,18 @@ export default {
     // works,
     // reviews,
     // login,
-    tooltips: () => import("./components/tooltips")
+    tooltips: () => import("./components/tooltips"),
   },
   computed: {
     ...mapState("tooltips", {
-      status: state => state.toolData.active
-    })
+      status: (state) => state.toolData.active,
+    }),
   },
   methods: {
-    ...mapActions("tooltips", ["hideTooltip"])
+    ...mapActions("tooltips", ["hideTooltip"]),
   },
   watch: {
-    status: function() {
+    status: function () {
       if (this.status) {
         let timeout;
         clearTimeout(timeout);
@@ -49,8 +53,8 @@ export default {
           this.hideTooltip();
         }, 3000);
       }
-    }
-  }
+    },
+  },
   // created(){
   //   const isLoggin = store.getters["user/userIsLogged"];
   // }

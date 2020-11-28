@@ -6,7 +6,9 @@ export default {
   actions: {
     async fetchResults(store) {
       try {
-        const response = await this.$axios.get("api/results");
+        const response = await this.$axios.get(
+          `api/results/${localStorage.getItem("creatorId")}`
+        );
         const results = response.data;
         store.commit("SET_RESULTS", results);
       } catch (error) {

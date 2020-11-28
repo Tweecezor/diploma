@@ -28,6 +28,13 @@ export default [
     },
   },
   {
+    path: "/register",
+    component: () => import("./../components/pages/registration"),
+    meta: {
+      reg: true,
+    },
+  },
+  {
     path: "/groups",
     component: () => import("./../components/settings_groups"),
   },

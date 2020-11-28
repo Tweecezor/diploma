@@ -110,9 +110,9 @@ export default {
         throw new Error(error.response.data.message);
       }
     },
-    async fetchQuestions(store) {
+    async fetchQuestions(store, creatorId) {
       try {
-        const response = await this.$axios.get("api/questions");
+        const response = await this.$axios.get(`api/questions/${creatorId}`);
         const questions = response.data;
         store.commit("SET_QUESTIONS", questions);
       } catch (error) {

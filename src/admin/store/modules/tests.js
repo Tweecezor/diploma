@@ -14,9 +14,9 @@ export default {
         throw new Error(error.response.data.message);
       }
     },
-    async fetchTests(store) {
+    async fetchTests(store, userID) {
       try {
-        const response = await this.$axios.get("api/tests");
+        const response = await this.$axios.get(`api/tests/${userID}`);
 
         let tests = response.data;
         store.commit("SET_TESTS", tests);

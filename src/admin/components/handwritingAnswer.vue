@@ -1,19 +1,22 @@
 <template lang="pug">
-  .wrapper-
-    .keywords__add
-      .keywords__add_label-wrap
-        label(for="input-tag").keywords__add_label Ключевое слово
-      .keywords__add_text-wrap
-        input(type="text" name="tag" id="input-tag" v-model='keyword').keywords__add_text
-        button(type="button" @click="addKeyword").addKeyword.btn +
-      //- div.error-input()
-    .addWorks__tags-list-wrap(v-if="keywordsArray.length")
-      ul.addWorks__tags-list()
-        li(v-for="(item,index) in keywordsArray" v-if="keywordsArray.length!=0 && item!=''" ).addWorks__tags-item {{item}}
-          .deleteTag(@click="removeKeyword(index)") x
-    .actions__button-wrap
-      button(@click="endWorkWithQUestion").actions__button-end Завершить
-      button(@click="subitQuestion").save.btn Создать вопрос
+.wrapper-
+  .keywords__add
+    .keywords__add_label-wrap
+      label.keywords__add_label(for="input-tag") Ключевое слово
+    .keywords__add_text-wrap
+      input#input-tag.keywords__add_text(type="text", name="tag", v-model="keyword")
+      button.addKeyword.btn(type="button", @click="addKeyword") +
+    //- div.error-input()
+  .addWorks__tags-list-wrap(v-if="keywordsArray.length")
+    ul.addWorks__tags-list
+      li.addWorks__tags-item(
+        v-for="(item, index) in keywordsArray",
+        v-if="keywordsArray.length != 0 && item != ''"
+      ) {{ item }}
+        .deleteTag(@click="removeKeyword(index)") x
+  .actions__button-wrap
+    button.actions__button-end(@click="endWorkWithQUestion") Завершить
+    button.save.btn(@click="subitQuestion") Создать вопрос
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
@@ -21,7 +24,7 @@ export default {
   props: {
     currentLevel: Object,
     currentQuestion: String,
-    questionPhotoURl: String
+    questionPhotoURl: String,
   },
   data() {
     return {
@@ -34,7 +37,7 @@ export default {
       editQuestionMode: false,
       keyword: "",
       showInputAnswer: false,
-      keywordsArray: []
+      keywordsArray: [],
     };
   },
   methods: {
@@ -57,12 +60,12 @@ export default {
         this.keyword = "";
         this.showTooltip({
           type: "success",
-          text: "Ключевое слово добавлено"
+          text: "Ключевое слово добавлено",
         });
       } else {
         this.showTooltip({
           type: "error",
-          text: "Введите ключевое слово"
+          text: "Введите ключевое слово",
         });
       }
     },
@@ -71,7 +74,7 @@ export default {
       this.keywordsArray.splice(currentKeyword, 1);
       this.showTooltip({
         type: "success",
-        text: "Ключевое слово успешно удалено"
+        text: "Ключевое слово успешно удалено",
       });
       console.log(this.keywordsArray);
     },
@@ -126,15 +129,16 @@ export default {
 
         const questionWithKeywords = {
           type: "handwritingAnswer",
+          creatorId: localStorage.getItem("creatorId"),
           question: {
             text: this.currentQuestion,
             img: this.questionPhotoURl,
-            question_id: Date.now()
+            question_id: Date.now(),
             // question_id: this.currentQuestion_id
           },
           keywordsArray: this.keywordsArray,
           level_id: this.currentLevel.levelId,
-          test_id: this.currentLevel.testid
+          test_id: this.currentLevel.testid,
         };
 
         console.log(questionWithKeywords);
@@ -143,12 +147,12 @@ export default {
         this.$emit("emitResetData");
         this.showTooltip({
           type: "success",
-          text: "Вопрос успешно создан"
+          text: "Вопрос успешно создан",
         });
       } else {
         this.showTooltip({
           type: "error",
-          text: "Сначала добавьте ключевые слова"
+          text: "Сначала добавьте ключевые слова",
         });
       }
     },
@@ -164,18 +168,18 @@ export default {
         this.editQuestion = !this.editQuestion;
         this.editQuestionMode = !this.editQuestionMode;
       }
-    }
+    },
   },
   computed: {
-    ...mapGetters("questions", ["question_id"])
+    ...mapGetters("questions", ["question_id"]),
   },
   watch: {
-    questionWithPhoto: function(status) {
+    questionWithPhoto: function (status) {
       if (!status) {
         this.questionPhotoURl = "";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="postcss" scoped>

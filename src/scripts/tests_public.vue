@@ -1,54 +1,68 @@
 <template lang="pug">
-  .container-
-    .wrap
-      .admin__content(v-if="!opened")
-        //- pre {{breadcrumbGroup}}
-        //- pre {{questions}}
-        //- pre {{questions}}
-        //- pre {{currentTestsList}}
-        //- pre {{studentsInCurrentGroup}}
-        //- pre {{filteredQuestions}}
-        .group_breadcrumbs
-          ul.group_breadcrumbs__list
-            li.group_breadcrumbs_item.breadcrumb(v-for="(item,id) in groups" ref="breadcrumb_group")
-              .breadcrumb__text-wrap(@click="filterTestByGroup(item,id)") 
-                .breadcrumb__text {{item.groupName}}
-        .test__content
-          ul.test__list
-            li.test__item(v-for="item in currentTestsList")
-              .test__header
-                .test__name-wrap
-                  label.test__label Название теста
-                .test__name-wrap
-                  input(type="text" v-model="item.name" disabled).test__name-input.test__input
-              //- .created-test__name {{item.name}}
-              .test__levels
-                .test__levels-wrap
-                  label.test__levels-label.test__label Количество уровней
-                .test__levels-wrap 
-                  input(type="text" v-model="item.level" disabled).test__levels-input.test__input
-              .test__group
-                .test__group-wrap
-                  label.test__group-label.test__label Для группы
-                .test__group-wrap
-                  input(type="text" v-model="item.group" disabled).test__group-input.test__input
-                //- .created-test__group {{item.group}}
-              button(@click="openTest(item)").btn Открыть
-      TEST_PREVIEW(
-        v-if="opened"
-        :currentTest="currentTest"
-        :studentsInCurrentGroup="studentsInCurrentGroup"
-        :questions="filteredQuestions"
-      )
-
-        //- div(v-if="$route.meta.public")
-        //-   router-view
-        //-   tooltips
-        //- div(v-else)
-        //-   headerComponent
-        //-   navComponent
-        //-   router-view
-        //-   tooltips  
+.container-
+  .wrap
+    .admin__content(v-if="!opened")
+      //- pre {{breadcrumbGroup}}
+      //- pre {{questions}}
+      //- pre {{questions}}
+      //- pre {{currentTestsList}}
+      //- pre {{studentsInCurrentGroup}}
+      //- pre {{filteredQuestions}}
+      .group_breadcrumbs
+        ul.group_breadcrumbs__list
+          li.group_breadcrumbs_item.breadcrumb(
+            v-for="(item, id) in groups",
+            ref="breadcrumb_group"
+          )
+            .breadcrumb__text-wrap(@click="filterTestByGroup(item, id)") 
+              .breadcrumb__text {{ item.groupName }}
+      .test__content
+        ul.test__list
+          li.test__item(v-for="item in currentTestsList")
+            .test__header
+              .test__name-wrap
+                label.test__label Название теста
+              .test__name-wrap
+                input.test__name-input.test__input(
+                  type="text",
+                  v-model="item.name",
+                  disabled
+                )
+            //- .created-test__name {{item.name}}
+            .test__levels
+              .test__levels-wrap
+                label.test__levels-label.test__label Количество уровней
+              .test__levels-wrap 
+                input.test__levels-input.test__input(
+                  type="text",
+                  v-model="item.level",
+                  disabled
+                )
+            .test__group
+              .test__group-wrap
+                label.test__group-label.test__label Для группы
+              .test__group-wrap
+                input.test__group-input.test__input(
+                  type="text",
+                  v-model="item.group",
+                  disabled
+                )
+              //- .created-test__group {{item.group}}
+            button.btn(@click="openTest(item)") Открыть
+    TEST_PREVIEW(
+      v-if="opened",
+      :currentTest="currentTest",
+      :studentsInCurrentGroup="studentsInCurrentGroup",
+      :questions="filteredQuestions"
+    )
+      //- div(v-if="$route.meta.public")
+      //-   router-view
+      //-   tooltips
+      //- div(v-else)
+      //-   headerComponent
+      //-   navComponent
+      //-   router-view
+      //-   tooltips  
 </template>
 
 <script>
@@ -57,7 +71,7 @@ import TEST_PREVIEW from "./tests_preview_public";
 // import PASSING_TEST from "./passing_test";
 export default {
   components: {
-    TEST_PREVIEW
+    TEST_PREVIEW,
     // PASSING_TEST
   },
   data() {
@@ -70,7 +84,7 @@ export default {
       tests: "",
       groups: "",
       questions: "",
-      breadcrumbGroup: "hello"
+      breadcrumbGroup: "hello",
     };
   },
   methods: {
@@ -80,7 +94,7 @@ export default {
       this.currentTest = item;
       console.log();
       let studentsInCurrentGroup;
-      this.groups.filter(group =>
+      this.groups.filter((group) =>
         group.groupName === item.group
           ? (studentsInCurrentGroup = group.studentsInGroup)
           : ""
@@ -92,7 +106,7 @@ export default {
     },
     filterQuestionsByTest(currentTest) {
       console.log(currentTest);
-      let filteredQuestionsByTest = this.questions.filter(item =>
+      let filteredQuestionsByTest = this.questions.filter((item) =>
         item.test_id === currentTest.id ? item : ""
       );
       console.log(filteredQuestionsByTest);
@@ -100,7 +114,7 @@ export default {
     },
     filterTestByGroup(group, id) {
       console.log(group);
-      let filteredTests = this.tests.filter(item =>
+      let filteredTests = this.tests.filter((item) =>
         item.group === group.groupName ? item : ""
       );
       console.log(filteredTests);
@@ -120,7 +134,7 @@ export default {
           );
         }
       }
-    }
+    },
   },
   computed: {
     // ...mapState("groups", {
@@ -130,20 +144,20 @@ export default {
     //   tests: (state) => state.tests,
     // }),
     ...mapState("helped", {
-      isCurrentLevelOpen: state => state.isCurrentLevelOpen
+      isCurrentLevelOpen: (state) => state.isCurrentLevelOpen,
     }),
     ...mapState("helped", {
-      isTestOpen: state => state.isTestOpen
+      isTestOpen: (state) => state.isTestOpen,
     }),
     ...mapState("helped", {
-      showQuestions: state => state.showQuestions
+      showQuestions: (state) => state.showQuestions,
     }),
     // ...mapState("questions", {
     //   questions: (state) => state.questions,
     // }),
     ...mapState("results", {
-      results: state => state.results
-    })
+      results: (state) => state.results,
+    }),
   },
   async mounted() {
     // let response = await this.$axios.get("http://localhost:3002/api/tests");
@@ -164,20 +178,35 @@ export default {
     // console.log(this.$refs);
 
     console.log(this.breadcrumbGroup);
+    // const TESTS = await this.$axios.get(
+    //   "https://young-anchorage-15160.herokuapp.com/api/tests/public"
+    // );
+    // const GROUPS = await this.$axios.get(
+    //   "https://young-anchorage-15160.herokuapp.com/api/groups"
+    // );
+    // const QUESTIONS = await this.$axios.get(
+    //   "https://young-anchorage-15160.herokuapp.com/api/questions"
+    // );
     const TESTS = await this.$axios.get(
-      "https://young-anchorage-15160.herokuapp.com/api/tests/public"
+      `http://localhost:3000/api/tests/public/${localStorage.getItem(
+        "creatorIdPublic"
+      )}`
     );
     const GROUPS = await this.$axios.get(
-      "https://young-anchorage-15160.herokuapp.com/api/groups"
+      `http://localhost:3000/api/groups/${localStorage.getItem(
+        "creatorIdPublic"
+      )}`
     );
     const QUESTIONS = await this.$axios.get(
-      "https://young-anchorage-15160.herokuapp.com/api/questions"
+      `http://localhost:3000/api/questions/${localStorage.getItem(
+        "creatorIdPublic"
+      )}`
     );
     this.questions = QUESTIONS.data;
     this.tests = TESTS.data;
     this.currentTestsList = TESTS.data;
     this.groups = GROUPS.data;
-  }
+  },
 };
 </script>
 

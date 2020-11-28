@@ -68,9 +68,9 @@ export default {
         throw new Error(error.response.data.message);
       }
     },
-    async fetchGroups(store) {
+    async fetchGroups(store, creatorID) {
       try {
-        const response = await this.$axios.get("api/groups");
+        const response = await this.$axios.get(`api/groups/${creatorID}`);
         const groups = response.data;
         store.commit("SET_GROUPS", groups);
       } catch (error) {

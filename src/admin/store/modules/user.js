@@ -34,6 +34,13 @@ export default {
     // },
   },
   actions: {
+    async createNewUser(store, userData) {
+      try {
+        await this.$axios.post(`api/register`, userData);
+      } catch (error) {
+        throw new Error("Ошибка при регистрации");
+      }
+    },
     async changeUsersData(store, newData) {
       // console.log(newData);
       const data = wrapIntoFormData(newData);

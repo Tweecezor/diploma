@@ -1,32 +1,39 @@
 <template lang="pug">
-  section.login.fullscreen-section 
-    .login__block
-      .login__block-wrap
-        .login__title-wrap
-          h1.login__title Авторизация
-        form(@submit.prevent="login").login__form
-          .login__form-label-wrap
-            label(for="").login__form-label Логин
-            .login__form-input-wrap
-              input(
-                type="text" name="login" id="login"
-                v-model="userData.login"
-               
-              ).login__form-input.login__form-input--login
-              .login__form-input-icon-login.login__form-input-icon
-           
-          .login__form-label-wrap
-            label(for="").login__form-label Пароль
-            .login__form-input-wrap
-              input(
-                type="password" name="passowrd" id="password"
-                v-model="userData.password"
-              ).login__form-input.login__form-input--password
-              .login__form-input-icon-password.login__form-input-icon  
-          input(type="submit" :disabled="disable" name="sumbit" value="Войти" :class="{ activeForm : active }").login__form-submit
-        a(:href="currentUrl" @click.prevent='goToMainPage').login__close
-    //- pre {{userData.name}}    
-  
+section.login.fullscreen-section 
+  .login__block
+    .login__block-wrap
+      .login__title-wrap
+        h1.login__title Авторизация
+      form.login__form(@submit.prevent="login")
+        .login__form-label-wrap
+          label.login__form-label(for="") Логин
+          .login__form-input-wrap
+            input#login.login__form-input.login__form-input--login(
+              type="text",
+              name="login",
+              v-model="userData.login"
+            )
+            .login__form-input-icon-login.login__form-input-icon
+
+        .login__form-label-wrap
+          label.login__form-label(for="") Пароль
+          .login__form-input-wrap
+            input#password.login__form-input.login__form-input--password(
+              type="password",
+              name="passowrd",
+              v-model="userData.password"
+            )
+            .login__form-input-icon-password.login__form-input-icon 
+        input.login__form-submit(
+          type="submit",
+          :disabled="disable",
+          name="sumbit",
+          value="Войти",
+          :class="{ activeForm: active }"
+        )
+      a.login__close(:href="currentUrl", @click.prevent="goToMainPage")
+    h2(@click="$router.replace('/register')") Регистрация
+  //- pre {{userData.name}}    
 </template>
 
 <script>
@@ -49,10 +56,10 @@ export default {
       currentUrl: "",
       userData: {
         login: "",
-        password: ""
+        password: "",
       },
       active: false,
-      disable: true
+      disable: true,
     };
   },
   methods: {
@@ -68,11 +75,17 @@ export default {
       try {
         console.log(this.userData);
         let userData = this.userData;
+        // const response = await this.$axios.post(
+        //   "https://young-anchorage-15160.herokuapp.com/api/login",
+        //   userData
+        // );
         const response = await this.$axios.post(
-          "https://young-anchorage-15160.herokuapp.com/api/login",
+          "http://localhost:3000/api/login",
           userData
         );
         console.log(response);
+        localStorage.setItem("userLogin", response.data.login);
+        localStorage.setItem("creatorId", response.data.userId);
         const token = response.data.token;
         // let token = "";
         // console.log(fullToken);
@@ -90,12 +103,12 @@ export default {
           // console.log(localStorage);
           this.showTooltip({
             type: "success",
-            text: "Добро пожаловать"
+            text: "Добро пожаловать",
           });
         } else {
           this.showTooltip({
             type: "error",
-            text: "Неверный логин или пароль"
+            text: "Неверный логин или пароль",
           });
         }
       } catch (error) {
@@ -103,7 +116,7 @@ export default {
         //   console.log("catch error");
         this.showTooltip({
           type: "error",
-          text: error.response.data.message
+          text: error.response.data.message,
         });
         //   // console.log('after SHOWTOOLTIP');
         //   // alert(error.response.data.error);
@@ -118,7 +131,7 @@ export default {
         0,
         this.currentUrl.indexOf("/admin")
       )}`;
-    }
+    },
   },
   watch: {
     "userData.name"() {
@@ -140,7 +153,7 @@ export default {
         this.active = false;
         this.disable = true;
       }
-    }
+    },
   },
   created() {
     var currentUrl = window.location.href;
@@ -156,7 +169,7 @@ export default {
     }
     // this.validation.reset();
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 

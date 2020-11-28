@@ -1,53 +1,72 @@
 <template lang="pug">
-  .container_
-    //- pre {{currentStudentData}}
-    TEST_RESULT(
-      v-if="showResult"
-      :countOfCorrect="countOfCorrect"
-      :countOfQuestions="questions.length"
-      :finalMark="finalMark"
-      v-on:showUsersAnswers="showAnswers"
-    )
-    .passing_test(v-else)
-      //- pre {{currentStudentData.testTime}}
-      .passing_test__breadcrumbs-wrap
-        ul.passing_test__breadcrumbs-list
-          li.passing_test__breadcrumbs-item.breadcrumb( ref="breadcrumb" v-for="(question,pos) in questions" @click="")
-            .breadcrumb__content(@click="changeCurrentQuestion($event,question,pos)") {{pos+1}}
-        progress.passing_test__progress_bar( ref="progressBar" value="0" max="100")
-      .passing_test__question-wrap
-        .passing_test__question.question
-          .question__text-wrap
-            p.question__text {{currentQuestion.question.text}}
-          .question__img-wrap(v-if="currentQuestion.question.img")
-            .question__img(:style="{'background-image':`url(${currentQuestion.question.img})`}")
-        .passing_test__answers
-          .passing_test_answers_label Варианты ответов
-          MULTY_ANSWER(
-            v-if="currentQuestion.type==='multipleAnswer'"
-            :question_id="currentQuestion.question.question_id"
-            :answers="currentQuestion.answers"
-            v-on:changeAnswer="setAnswerWithUsersSelect_multy"
+.container_
+  //- pre {{currentStudentData}}
+  TEST_RESULT(
+    v-if="showResult",
+    :countOfCorrect="countOfCorrect",
+    :countOfQuestions="questions.length",
+    :finalMark="finalMark",
+    v-on:showUsersAnswers="showAnswers"
+  )
+  .passing_test(v-else)
+    //- pre {{currentStudentData.testTime}}
+    .passing_test__breadcrumbs-wrap
+      ul.passing_test__breadcrumbs-list
+        li.passing_test__breadcrumbs-item.breadcrumb(
+          ref="breadcrumb",
+          v-for="(question, pos) in questions",
+          @click=""
+        )
+          .breadcrumb__content(
+            @click="changeCurrentQuestion($event, question, pos)"
+          ) {{ pos + 1 }}
+      progress.passing_test__progress_bar(
+        ref="progressBar",
+        value="0",
+        max="100"
+      )
+    .passing_test__question-wrap
+      .passing_test__question.question
+        .question__text-wrap
+          p.question__text {{ currentQuestion.question.text }}
+        .question__img-wrap(v-if="currentQuestion.question.img")
+          .question__img(
+            :style="{ 'background-image': `url(${currentQuestion.question.img})` }"
           )
-          ONE_ANSWER(
-            v-if="currentQuestion.type==='oneAnswer'"
-            :question_id="currentQuestion.question.question_id"
-            :answers="currentQuestion.answers"
-            v-on:changeAnswer_one="setAnswerWithUsersSelect_one"
-          )
-          HANDWRITING_ANSWER( 
-            v-if="currentQuestion.type==='handwritingAnswer'"
-            :keywords="currentQuestion.keywordsArray"
-            :question_id="currentQuestion.question.question_id"
-            :userHandwriteAnswer="currentQuestion.userHandwriteAnswer"
-            v-on:saveHandwrite="saveUsersHandwriteAnswer"
-          )
-        .passing_test__answers_next-wrap
-          button(type="button" @click="completeTest" v-if="activeQuestion == questions.length-1").passing_test__answers_next.btn Завершить тестирование
-          button(type="button" @click="setNextQuestion" v-else).passing_test__answers_next.btn Следующий вопрос
+      .passing_test__answers
+        .passing_test_answers_label Варианты ответов
+        MULTY_ANSWER(
+          v-if="currentQuestion.type === 'multipleAnswer'",
+          :question_id="currentQuestion.question.question_id",
+          :answers="currentQuestion.answers",
+          v-on:changeAnswer="setAnswerWithUsersSelect_multy"
+        )
+        ONE_ANSWER(
+          v-if="currentQuestion.type === 'oneAnswer'",
+          :question_id="currentQuestion.question.question_id",
+          :answers="currentQuestion.answers",
+          v-on:changeAnswer_one="setAnswerWithUsersSelect_one"
+        )
+        HANDWRITING_ANSWER(
+          v-if="currentQuestion.type === 'handwritingAnswer'",
+          :keywords="currentQuestion.keywordsArray",
+          :question_id="currentQuestion.question.question_id",
+          :userHandwriteAnswer="currentQuestion.userHandwriteAnswer",
+          v-on:saveHandwrite="saveUsersHandwriteAnswer"
+        )
+      .passing_test__answers_next-wrap
+        button.passing_test__answers_next.btn(
+          type="button",
+          @click="completeTest",
+          v-if="activeQuestion == questions.length - 1"
+        ) Завершить тестирование
+        button.passing_test__answers_next.btn(
+          type="button",
+          @click="setNextQuestion",
+          v-else
+        ) Следующий вопрос
 
-
-    //- pre {{questions}}
+  //- pre {{questions}}
 </template>
 
 <script>
@@ -62,7 +81,7 @@ export default {
     MULTY_ANSWER,
     ONE_ANSWER,
     HANDWRITING_ANSWER,
-    TEST_RESULT
+    TEST_RESULT,
   },
   props: {
     // testTime:Number
@@ -79,7 +98,7 @@ export default {
       countOfCorrect: 0,
       // countOfQuestions: this.questions.length,
       finalMark: "",
-      id: ""
+      id: "",
     };
   },
   methods: {
@@ -97,23 +116,26 @@ export default {
       this.calc(this.countOfCorrect);
       let studentResult = {
         ...this.currentStudentData,
-        mark: this.finalMark
+        mark: this.finalMark,
+        creatorId: localStorage.getItem("creatorIdPublic"),
       };
       // console.log(studentResult);
       this.showResult = true;
       await this.$axios.post(
-        "https://young-anchorage-15160.herokuapp.com/api/results",
+        // "https://young-anchorage-15160.herokuapp.com/api/results",
+        `http://localhost:3000/api/results`,
         studentResult
       );
       let studentData = {
         fullName: this.currentStudentData.fullName,
         group_id: this.currentStudentData.group_id,
-        student_id: this.currentStudentData.student_id
+        student_id: this.currentStudentData.student_id,
       };
       let id = this.currentStudentData._id;
       window.scrollTo(0, window.innerHeight);
       await this.$axios.delete(
-        `https://young-anchorage-15160.herokuapp.com/api/passingTest/deleteUser/${id}`
+        // `https://young-anchorage-15160.herokuapp.com/api/passingTest/deleteUser/${id}`
+        `http://localhost:3000/api/passingTest/deleteUser/${id}`
       );
     },
     calculateMark(correct, all, half, mark, percentOfCorrect) {
@@ -194,7 +216,7 @@ export default {
     },
     countCorrectAnswers() {
       let countOfCorrect = 0;
-      this.copyQuestions.forEach(item => {
+      this.copyQuestions.forEach((item) => {
         console.log(item);
         item.isAnswerCorrect ? countOfCorrect++ : "";
       });
@@ -203,7 +225,7 @@ export default {
     },
     saveUsersHandwriteAnswer(answerText, question_id, isAnswerCorrect) {
       console.log("emit event after select Handwrite");
-      let updatedQuestions = this.copyQuestions.map(item => {
+      let updatedQuestions = this.copyQuestions.map((item) => {
         console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
@@ -227,11 +249,11 @@ export default {
     },
     setAnswerWithUsersSelect_one(answer, question_id, isAnswerCorrect) {
       console.log("emit event after select OneAsnwer");
-      let updatedQuestions = this.questions.map(item => {
+      let updatedQuestions = this.questions.map((item) => {
         // console.log(item);
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map(item => {
+          item.answers.map((item) => {
             if (item.answer_id == answer.answer_id) {
               item.selectedByStudent = true;
             } else {
@@ -246,10 +268,10 @@ export default {
       this.copyQuestions = updatedQuestions;
     },
     setAnswerWithUsersSelect_multy(answer, question_id, isAnswerCorrect) {
-      let updatedQuestions = this.questions.map(item => {
+      let updatedQuestions = this.questions.map((item) => {
         if (item.question.question_id === question_id) {
           item.isAnswerCorrect = isAnswerCorrect;
-          item.answers.map(prevAnswer => {
+          item.answers.map((prevAnswer) => {
             prevAnswer.answer_id == answer.answer_id ? answer : prevAnswer;
           });
         }
@@ -259,10 +281,10 @@ export default {
     },
 
     createQuestionsArrayWithUsersAnswers(questions) {
-      let newQuestionsArray = this.questions.forEach(item => {
+      let newQuestionsArray = this.questions.forEach((item) => {
         // console.log(item);
         if (item.type !== "handwritingAnswer") {
-          item.answers.forEach(answer => {
+          item.answers.forEach((answer) => {
             answer.selectedByStudent = false;
             return answer;
           });
@@ -293,7 +315,7 @@ export default {
       console.log(time);
       let closeTest = this.completeTest;
       // console.log(closeTest);
-      let interval = setInterval(function() {
+      let interval = setInterval(function () {
         if (start > 100) {
           clearInterval(interval);
           // alert("Время вышло");
@@ -304,15 +326,15 @@ export default {
         }
         start++;
       }, time);
-    }
+    },
   },
   computed: {
     ...mapState("helped", {
-      questions: state => state.questionsForCurrentPassingTest
+      questions: (state) => state.questionsForCurrentPassingTest,
     }),
     ...mapState("helped", {
-      currentStudentData: state => state.currentTestStudentData
-    })
+      currentStudentData: (state) => state.currentTestStudentData,
+    }),
     // ...mapState("results", {
     //   results: (state) => state.results,
     // }),
@@ -338,7 +360,7 @@ export default {
     this.copyQuestions = { ...this.questions };
     this.setCurrentQuestion();
     this.createQuestionsArrayWithUsersAnswers(this.questions);
-  }
+  },
   // beforeUpdate() {
   //   alert("afsdsgrwgfk");
   // }
