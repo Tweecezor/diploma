@@ -2,7 +2,7 @@
 .container
   .groups 
     //- pre {{ user }}
-    pre {{ groups }}
+    //- pre {{ groups }}
     ADD_NEW_GROUP(v-if="showAddGroup")
     ul.groups__list
       li.groups__item.groups__add_new(@click="showAddNew")
@@ -17,140 +17,166 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import ADD_NEW_GROUP from "./groups_add-new";
-import GROUP_ITEM from "./groups_item";
+import { mapActions, mapState } from 'vuex'
+import ADD_NEW_GROUP from './groups_add-new'
+import GROUP_ITEM from './groups_item'
 // import axios from "axios";
 export default {
-  components: {
-    ADD_NEW_GROUP,
-    GROUP_ITEM,
-  },
-  data() {
-    return {
-      info: "",
-    };
-  },
-  methods: {
-    ...mapActions("helped", ["changeShowGroupStatus"]),
-    ...mapActions("groups", ["fetchGroups"]),
-    showAddNew() {
-      this.changeShowGroupStatus(true);
-    },
-  },
-  computed: {
-    ...mapState("groups", {
-      groups: (state) => state.groups,
-    }),
-    ...mapState("helped", {
-      showAddGroup: (state) => state.showAddGroup,
-    }),
-    ...mapState("user", {
-      user: (state) => state.user,
-    }),
-  },
-  async mounted() {
-    this.changeShowGroupStatus(false);
-    this.fetchGroups(this.user._id);
-    // await axios({
-    //   url: "http://localhost:3000/test",
-    //   method: "get",
-    //   data: {
-    //     name: this.name,
-    //     email: this.email,
-    //     address: this.address,
-    //     gender: this.gender,
-    //   },
-    // });
-    // this.$axios
-    //   .get("http://localhost:3002/api/groups")
-    //   .then((response) => (this.info = response.data));
-  },
-  // watch: {
-  //   groups: function() {
-  //     this.groups = this.groups;
-  //   }
-  // }
-};
+	components: {
+		ADD_NEW_GROUP,
+		GROUP_ITEM,
+	},
+	data() {
+		return {
+			info: '',
+		}
+	},
+	methods: {
+		...mapActions('helped', ['changeShowGroupStatus']),
+		...mapActions('groups', ['fetchGroups']),
+		showAddNew() {
+			this.changeShowGroupStatus(true)
+		},
+	},
+	computed: {
+		...mapState('groups', {
+			groups: (state) => state.groups,
+		}),
+		...mapState('helped', {
+			showAddGroup: (state) => state.showAddGroup,
+		}),
+		...mapState('user', {
+			user: (state) => state.user,
+		}),
+	},
+	async mounted() {
+		this.changeShowGroupStatus(false)
+		this.fetchGroups(this.user._id)
+		// await axios({
+		//   url: "http://localhost:3000/test",
+		//   method: "get",
+		//   data: {
+		//     name: this.name,
+		//     email: this.email,
+		//     address: this.address,
+		//     gender: this.gender,
+		//   },
+		// });
+		// this.$axios
+		//   .get("http://localhost:3002/api/groups")
+		//   .then((response) => (this.info = response.data));
+	},
+	// watch: {
+	//   groups: function() {
+	//     this.groups = this.groups;
+	//   }
+	// }
+}
 </script>
 
 <style lang="postcss" scoped>
-@import url("../../styles/mixins.pcss");
+@import url('../../styles/mixins.pcss');
 .groups {
-  width: 100%;
-  height: 100%;
-  /* background: red; */
-  /* border: 1px solid black; */
+	width: 100%;
+	height: 100%;
+	/* background: red; */
+	/* border: 1px solid black; */
 }
 .groups__list {
-  display: flex;
-  flex-wrap: wrap;
+	display: flex;
+	flex-wrap: wrap;
 }
 .groups__item {
-  min-height: 380px;
-  padding: 15px 10px;
-  width: calc((100%-1%) / 2);
-  margin-right: 1%;
-  margin-bottom: 5%;
-  background: white;
-  box-shadow: 4px 3px 20px rgba(0, 0, 0, 0.07);
-  position: relative;
-  padding-bottom: 50px;
-  &:nth-child(2n) {
-    margin-right: 0px;
-  }
-  @include tablets {
-    width: 48%;
-    margin-right: 4%;
-    &:nth-child(2n) {
-      margin-right: 0px;
-    }
-    &:nth-child(3n) {
-      margin-right: 4%;
-    }
-  }
-  @include phones {
-    width: 100%;
-    margin-right: 0%;
-    &:nth-child(2n) {
-      margin-right: 0px;
-    }
-    &:nth-child(3n) {
-      margin-right: 0%;
-    }
-  }
+	min-height: 380px;
+	padding: 15px 10px;
+	width: calc((100%-1%) / 2);
+	margin-right: 1%;
+	margin-bottom: 5%;
+	background: white;
+	box-shadow: 4px 3px 20px rgba(0, 0, 0, 0.07);
+	position: relative;
+	padding-bottom: 50px;
+	background: #ffffff;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+	padding: 20px;
+	padding-bottom: 60px;
+	&:nth-child(2n) {
+		margin-right: 0px;
+	}
+	@include tablets {
+		width: 48%;
+		margin-right: 4%;
+		&:nth-child(2n) {
+			margin-right: 0px;
+		}
+		&:nth-child(3n) {
+			margin-right: 4%;
+		}
+	}
+	@include phones {
+		width: 100%;
+		margin-right: 0%;
+		&:nth-child(2n) {
+			margin-right: 0px;
+		}
+		&:nth-child(3n) {
+			margin-right: 0%;
+		}
+	}
 }
 .groups__add_new {
-  /* background: linear-gradient(to left, #ea7400 0%, #f29400 100%); */
-  background: linear-gradient(190deg, #db9600 0%, #edb947);
-  &:hover {
-    background: linear-gradient(to left, #db9600 0%, #edb947);
-  }
-  /* width: 30%; */
+	/* background: linear-gradient(to left, #ea7400 0%, #f29400 100%); */
+	background: linear-gradient(
+		190deg,
+		#0078cf,
+		#0177cc,
+		#0673c3,
+		#0d6cb4,
+		#18629e,
+		#255583,
+		#324969
+	);
+	/* background: #ffffff; */
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+	&:hover {
+		background: linear-gradient(
+			-190deg,
+			#0078cf,
+			#0177cc,
+			#0673c3,
+			#0d6cb4,
+			#18629e,
+			#255583,
+			#324969
+		);
+	}
+	/* width: 30%; */
 }
 .groups__new {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  @include phones {
-    flex-direction: row;
-    height: 100%;
-  }
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	@include phones {
+		flex-direction: row;
+		height: 100%;
+	}
 }
 .groups__new-icon {
-  display: flex;
-  width: 150px;
-  height: 150px;
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  position: relative;
-  /* &:before {
+	display: flex;
+	width: 150px;
+	height: 150px;
+	border: 2px solid #ffffff;
+	border-radius: 50%;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+	position: relative;
+	/* &:before {
     content: "";
     background: svg-load("remove.svg", fill= "#fff") center center no-repeat /
       contain;
@@ -161,46 +187,46 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
   } */
-  @include phones {
-    width: 4.375rem;
-    height: 4.375rem;
-    margin-bottom: 0;
-  }
+	@include phones {
+		width: 4.375rem;
+		height: 4.375rem;
+		margin-bottom: 0;
+	}
 }
 .groups__new-icon-icon {
-  top: 50%;
-  left: 50%;
-  fill: white;
-  position: absolute;
-  width: 2.125rem;
-  height: 2.125rem;
-  transform: translate(-50%, -50%) rotate(45deg);
+	top: 50%;
+	left: 50%;
+	fill: white;
+	position: absolute;
+	width: 2.125rem;
+	height: 2.125rem;
+	transform: translate(-50%, -50%) rotate(45deg);
 }
 .groups__new-text {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 30px;
-  color: white;
-  width: 5.875rem;
-  text-align: center;
-  @include phones {
-    font-size: 0.875rem;
-    font-weight: 700;
-    line-height: 1.875rem;
-    color: #fff;
-    width: 9.875rem;
-    text-align: center;
-  }
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 30px;
+	color: white;
+	width: 5.875rem;
+	text-align: center;
+	@include phones {
+		font-size: 0.875rem;
+		font-weight: 700;
+		line-height: 1.875rem;
+		color: #fff;
+		width: 9.875rem;
+		text-align: center;
+	}
 }
-input[type="text"] {
+/* input[type="text"] {
   &:hover {
-    border-bottom: 2px solid #edb947;
+    border-bottom: 2px solid #0078cf;
   }
   &:active {
-    border-bottom: 2px solid #edb947;
+    border-bottom: 2px solid #0078cf;
   }
 }
 input[type="text"] {
   border-bottom: 2px solid #000;
-}
+} */
 </style>

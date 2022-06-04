@@ -17,7 +17,7 @@
             li.test__item(v-for="item in currentTestsList")
               .test__header
                 .test__name-wrap
-                  label.test__label Название теста
+                  label.test__label Название теста1
                 .test__name-wrap
                   input(type="text" v-model="item.name" disabled).test__name-input.test__input
               //- .created-test__name {{item.name}}
@@ -153,7 +153,7 @@ export default {
 .breadcrumb {
   &:hover {
     cursor: pointer;
-    color: #edb947;
+    color: #0078cf;
   }
 }
 .breadcrumb__text-wrap {

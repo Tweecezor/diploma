@@ -19,9 +19,18 @@
         .current_test_actions-fullname
           .current_test_label-wrap
             label.current_test_label Выберите ФИО
-          select.current_test_select(@change="selectStudent($event)")
-            option() Выберите ФИО
-            option(v-for="student in studentsInCurrentGroup" :value="student.fullName") {{student.fullName}}
+            <el-select v-model="value" placeholder="Выберите предмет">
+              el-option(
+                v-for="(student, index) in studentsInCurrentGroup"
+                :key="index"
+                :label="student.fullName"
+                :value="student.fullName"
+                
+              )
+            </el-select>
+          //- select.current_test_select(@change="selectStudent($event)")
+          //-   option() Выберите ФИО
+          //-   option(v-for="student in studentsInCurrentGroup" :value="student.fullName") {{student.fullName}}
           .current_test_start-wrap
             button(type="button" @click="startTest").current_test_start.btn  Начать тестирование
 

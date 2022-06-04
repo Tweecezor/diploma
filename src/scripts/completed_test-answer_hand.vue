@@ -124,7 +124,7 @@ export default {
   height: 20px;
   &:before {
     content: "";
-    background: svg-load("tick.svg", fill= "#edb947") center center no-repeat /
+    background: svg-load("tick.svg", fill= "#0078cf") center center no-repeat /
       contain;
     width: 20px;
     height: 20px;

@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'New_Zelek';
+    src: url('./fonts/NewZelek-Normal.eot');
+    src: url('./fonts/NewZelek-Normal.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/NewZelek-Normal.woff2') format('woff2'),
+         url('./fonts/NewZelek-Normal.ttf')  format('truetype'),
+         url('./fonts/NewZelek.woff') format('woff');
+
+}

@@ -1,9 +1,12 @@
 {
   "text-color": "#414c63",
-  "orange":" #ff9a00;",
+  "orange":" #0078cf;",
   "links-color": "#4b6fd7",
   "bp-desktop-hd": "1800px",
   "bp-desktop": "1200px",
   "bp-tablets": "768px",
-  "bp-phones": "480px"
+  "bp-phones": "480px",
+  "blue-gradient":"#0078cf, #0177cc,#0673c3,#0d6cb4,#18629e,#255583,#324969",
+  "color-link":"0078cf",
+  "color-hover":"0078cf"
 }

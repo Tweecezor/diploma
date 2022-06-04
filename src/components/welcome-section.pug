@@ -1,6 +1,10 @@
 section.welcome-section
+  canvas#c
+  .welcome-header
+    .container
+      include ./header.pug
   .container.welcome-container.fullscreen-section
-    include ./header.pug
+   
 
 
     .welcome-section__content
@@ -9,9 +13,9 @@ section.welcome-section
         //-   h3.welcome-section__title Дисциплина
         .welcome-section__name-title-wrap
           h1.welcome-section__name-title
-    .welcome-section__scroll
-      a.welcome-section__scroll-link(href='#') Скролл
-      //- img(url="../images/icons/scroll.svg")
-      +icon('scroll', 'welcome-section__scroll-icon')
+    //- .welcome-section__scroll
+    //-   a.welcome-section__scroll-link(href='#') Скролл
+    //-   //- img(url="../images/icons/scroll.svg")
+    //-   +icon('scroll', 'welcome-section__scroll-icon')
   include ./hamburger-menu.pug
   //- include ./about.pug

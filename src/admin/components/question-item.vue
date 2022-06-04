@@ -10,23 +10,26 @@
     //- input(type="text" v-model="qText")
     //- input(type="text" v-model="item.text")
     .question__title-wrap
-      h1.question__title Просмотр вопроса
+      h1.question__title Текст вопроса
     .question__content
       .question__data
-        .question__data_label-wrap
-          label.question__data_label Текст вопроса
+        //- .question__data_label-wrap
+          //- label.question__data_label Текст вопроса
         .questions__data_content
           .question__data_text-wrap
-
             input(type="text" v-model="currentQuestion.text" :disabled="!isActiveModeActive").question__input.question__text
           .question__actions(v-if="!editMode" :class="{questions__actions__disabled:isActiveModeActive}")
-            <svg @click="setEditMode" class="question__actions_correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
-              <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
-            </svg>
+            div.icon_wrap(@click="setEditMode")
+              myIcon.question__actions_correct(iconName="pencil")
+            //- <svg @click="setEditMode" class="question__actions_correct" version="1.1" id="editIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="528.899px" height="528.899px" viewBox="0 0 528.899 528.899" style="enable-background:new 0 0 528.899 528.899;"xml:space="preserve">
+            //-   <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069L27.473,390.597L0.3,512.69z"/>
+            //- </svg>
             //- .question__actions_correct(@click="editMode = true") 
-            <svg  class="question__actions_trash" @click="deleteQuestion" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="459px" height="459px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
-              <path d="M76.5,408c0,28.05,22.95,51,51,51h204c28.05,0,51-22.95,51-51V102h-306V408z M408,25.5h-89.25L293.25,0h-127.5l-25.5,25.5 H51v51h357V25.5z"/>
-            </svg>
+            div.icon_wrap(@click="deleteQuestion")
+              myIcon.question__actions_trash(iconName="trash")
+            //- <svg  class="question__actions_trash" @click="deleteQuestion" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="459px" height="459px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
+            //-   <path d="M76.5,408c0,28.05,22.95,51,51,51h204c28.05,0,51-22.95,51-51V102h-306V408z M408,25.5h-89.25L293.25,0h-127.5l-25.5,25.5 H51v51h357V25.5z"/>
+            //- </svg>
             //- .question__actions_trash(@click="deleteQuestion") 
           .question__actions(v-else)
             //- .question__actions_save(@click="updateCurrentQuestion") 
@@ -46,264 +49,280 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import ANSWER_ITEM from "./answer-item";
+import { mapActions, mapState } from 'vuex'
+import ANSWER_ITEM from './answer-item'
+import myIcon from './myIcon.vue'
 export default {
-  components: {
-    ANSWER_ITEM
-  },
-  props: {
-    item: Object,
-    test_id: Number,
-    level_id: Number,
-    qText: String,
-    _id: String
-  },
-  data() {
-    return {
-      showQImg: false,
-      editMode: false,
-      currentQuestion: { ...this.item }
+	components: {
+		ANSWER_ITEM,
+		myIcon,
+	},
+	props: {
+		item: Object,
+		test_id: Number,
+		level_id: Number,
+		qText: String,
+		_id: String,
+	},
+	data() {
+		return {
+			showQImg: false,
+			editMode: false,
+			currentQuestion: { ...this.item },
 
-      // isTestOpen:false
-    };
-  },
-  methods: {
-    ...mapActions("helped", [
-      "changeCurrentTestStatus",
-      "changeCurrentLevelStatus",
-      "changeShowQuestionsStatus",
-      "setEditStatus"
-    ]),
-    ...mapActions("questions", ["updateQuestion", "deleteCurrentQuestion"]),
-    ...mapActions("tooltips", ["showTooltip", "hideTooltip"]),
-    setEditMode() {
-      if (!this.isActiveModeActive) {
-        this.editMode = true;
-        this.setEditStatus(true);
-      }
-    },
-    showQuestionImage() {
-      // console.log(this.showingImg);
-      this.showQImg = !this.showQImg;
-    },
-    showAnswerImage() {
-      this.showAImg = !this.showAImg;
-    },
-    // closeSection() {
-    //   this.changeShowQuestionsStatus(false);
-    // },
-    async deleteQuestion() {
-      if (!this.isActiveModeActive) {
-        try {
-          let deletedQuestion = {
-            _id: this._id,
-            level_id: this.level_id,
-            test_id: this.test_id,
-            question_id: this.currentQuestion.question_id
-          };
-          await this.deleteCurrentQuestion(deletedQuestion);
-          this.showTooltip({
-            type: "success",
-            text: "Вопрос успешно удален из теста"
-          });
-          this.$emit("closeQuestion");
-        } catch (error) {
-          this.showTooltip({
-            type: "error",
-            text: error
-          });
-        }
-      }
-    },
-    async updateCurrentQuestion() {
-      let updatedQuestion = {
-        level_id: this.level_id,
-        test_id: this.test_id,
-        newQuestionTitle: this.currentQuestion.text,
-        question_id: this.currentQuestion.question_id,
-        img: this.currentQuestion.img,
-        _id: this._id
-      };
-      try {
-        await this.updateQuestion(updatedQuestion);
-        this.editMode = !this.editMode;
-        this.showTooltip({
-          type: "success",
-          text: "Текст вопроса успешно изменен"
-        });
-      } catch (error) {
-        this.showTooltip({
-          type: "error",
-          text: error
-        });
-      }
+			// isTestOpen:false
+		}
+	},
+	methods: {
+		...mapActions('helped', [
+			'changeCurrentTestStatus',
+			'changeCurrentLevelStatus',
+			'changeShowQuestionsStatus',
+			'setEditStatus',
+		]),
+		...mapActions('questions', ['updateQuestion', 'deleteCurrentQuestion']),
+		...mapActions('tooltips', ['showTooltip', 'hideTooltip']),
+		setEditMode() {
+			if (!this.isActiveModeActive) {
+				this.editMode = true
+				this.setEditStatus(true)
+			}
+		},
+		showQuestionImage() {
+			// console.log(this.showingImg);
+			this.showQImg = !this.showQImg
+		},
+		showAnswerImage() {
+			this.showAImg = !this.showAImg
+		},
+		// closeSection() {
+		//   this.changeShowQuestionsStatus(false);
+		// },
+		async deleteQuestion() {
+			if (!this.isActiveModeActive) {
+				try {
+					let deletedQuestion = {
+						_id: this._id,
+						level_id: this.level_id,
+						test_id: this.test_id,
+						question_id: this.currentQuestion.question_id,
+					}
+					await this.deleteCurrentQuestion(deletedQuestion)
+					this.showTooltip({
+						type: 'success',
+						text: 'Вопрос успешно удален из теста',
+					})
+					this.$emit('closeQuestion')
+				} catch (error) {
+					this.showTooltip({
+						type: 'error',
+						text: error,
+					})
+				}
+			}
+		},
+		async updateCurrentQuestion() {
+			let updatedQuestion = {
+				level_id: this.level_id,
+				test_id: this.test_id,
+				newQuestionTitle: this.currentQuestion.text,
+				question_id: this.currentQuestion.question_id,
+				img: this.currentQuestion.img,
+				_id: this._id,
+			}
+			try {
+				await this.updateQuestion(updatedQuestion)
+				this.editMode = !this.editMode
+				this.showTooltip({
+					type: 'success',
+					text: 'Текст вопроса успешно изменен',
+				})
+			} catch (error) {
+				this.showTooltip({
+					type: 'error',
+					text: error,
+				})
+			}
 
-      this.setEditStatus(false);
-    },
-    cancelUpdate() {
-      this.currentQuestion = { ...this.item };
-      this.editMode = !this.editMode;
-      this.showTooltip({
-        type: "success",
-        text: "Изменения отменены"
-      });
-      this.setEditStatus(false);
-    }
-  },
-  computed: {
-    ...mapState("helped", {
-      showQuestions: state => state.showQuestions
-    }),
-    ...mapState("helped", {
-      isActiveModeActive: state => state.isEditActive
-    })
-  },
-  watch: {
-    item: function(item) {
-      console.log(item);
-      this.currentQuestion = { ...this.item };
-    }
-  }
-};
+			this.setEditStatus(false)
+		},
+		cancelUpdate() {
+			this.currentQuestion = { ...this.item }
+			this.editMode = !this.editMode
+			this.showTooltip({
+				type: 'success',
+				text: 'Изменения отменены',
+			})
+			this.setEditStatus(false)
+		},
+	},
+	computed: {
+		...mapState('helped', {
+			showQuestions: (state) => state.showQuestions,
+		}),
+		...mapState('helped', {
+			isActiveModeActive: (state) => state.isEditActive,
+		}),
+	},
+	watch: {
+		item: function(item) {
+			console.log(item)
+			this.currentQuestion = { ...this.item }
+		},
+	},
+}
 </script>
 
 <style lang="postcss" scoped>
 .question {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 40px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 40px;
 }
 .question__content {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 .question__data {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }
 .question__actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
 }
 .questions__data_content {
-  display: flex;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 .question__data_text-wrap {
-  width: 100%;
-  margin-right: 10px;
+	width: 100%;
+	margin-right: 10px;
 }
 .question__image_label-wrap {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 .question_image_img-wrap {
-  width: 80%;
-  margin: 0 auto;
-  height: 300px;
-  border: 1px dashed;
+	width: 80%;
+	margin: 0 auto;
+	height: 300px;
+	border: 1px dashed;
 }
 .question_image_img {
-  width: 100%;
-  height: 100%;
-  background-size: contain;
-  background-repeat: no-repeat;
+	width: 100%;
+	height: 100%;
+	background-size: contain;
+	background-repeat: no-repeat;
 
-  background-position: 50% 50%;
+	background-position: 50% 50%;
 }
 
 .questions {
-  position: relative;
-  width: 100%;
-  /* padding: 40px; */
-  margin-bottom: 20px;
-  background: transparent;
-  display: flex;
-  flex-direction: column-reverse;
-  /* display: flex; */
+	position: relative;
+	width: 100%;
+	/* padding: 40px; */
+	margin-bottom: 20px;
+	background: transparent;
+	display: flex;
+	flex-direction: column-reverse;
+	/* display: flex; */
 }
 .questions__list {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
 }
 .questions__item {
-  width: 400px;
-  background-color: white;
-  min-height: 300px;
-  border: 1px solid black;
+	width: 400px;
+	background-color: white;
+	min-height: 300px;
+	border: 1px solid black;
+	background: #ffffff;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
 }
 .question_img {
-  width: 100%;
-  height: 200px;
+	width: 100%;
+	height: 200px;
 }
 .question_avatar {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
 }
 
 .questions__empty {
-  width: 100%;
-  padding: 30px;
-  background-color: white;
-  height: 100px;
+	width: 100%;
+	padding: 30px;
+	background-color: white;
+	height: 100px;
 }
 .questions__close {
-  /* position: absolute;
+	/* position: absolute;
   top: -10%;
   right: -5%; */
-  text-align: right;
-  color: black;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
+	text-align: right;
+	color: black;
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 .question__input {
-  padding: 20px;
+	padding: 20px;
 }
 .question__title {
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid #414c63;
-  margin-bottom: 1.875rem;
-  font-size: 1.125rem;
-  font-weight: 700;
+	/* padding-bottom: 1.25rem; */
+	/* border-bottom: 1px solid #414c63; */
+	/* margin-bottom: 1.875rem; */
+	font-size: 1.125rem;
+	font-weight: 700;
+	margin-bottom: 32px;
 }
 .question__text {
-  width: 100%;
-  background-color: transparent;
-  font-weight: 700;
-  border: none;
-  border-bottom: 2px solid #414c63;
-  padding: 0 0.3125rem 0.625rem;
-  /* margin-bottom: 1.875rem;s */
+	width: 100%;
+	background-color: transparent;
+	font-weight: 700;
+	/* border: none;
+	border-bottom: 2px solid #414c63;
+	padding: 0 0.3125rem 0.625rem; */
+	/* margin-bottom: 1.875rem;s */
+	border: 1px solid #0a9ebe;
+	padding: 10px 12px;
+	background: #fff;
+	border-radius: 8px;
 }
 .question__data {
-  width: 100%;
+	width: 100%;
 }
 .question__data_label-wrap {
-  margin-bottom: 0.625rem;
+	margin-bottom: 0.625rem;
 }
 .question__data_label {
-  display: block;
-  opacity: 0.5;
-  color: #414c63;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.875rem;
+	display: block;
+	opacity: 0.5;
+	color: #414c63;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.875rem;
 }
 .question_aсtions {
-  display: flex;
+	display: flex;
 }
 .question__actions_correct {
-  position: relative;
-  margin-right: 15px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  fill: blue;
-  /* &:before {
+	position: relative;
+	margin-right: 15px;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	color: #0a9ebe;
+	transition: all 0.3s;
+	&:hover {
+		color: blue;
+	}
+	/* &:before {
     content: "";
     background: svg-load("pencil.svg", fill= "#383bcf") center center no-repeat /
       contain;
@@ -316,13 +335,17 @@ export default {
   } */
 }
 .question__actions_trash {
-  position: relative;
-  /* margin-right: 20px; */
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  fill: red;
-  /* &:before {
+	position: relative;
+	/* margin-right: 20px; */
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	color: #0a9ebe;
+	transition: all 0.3s;
+	&:hover {
+		color: red;
+	}
+	/* &:before {
     content: "";
     background: svg-load("trash.svg", fill= "red") center center no-repeat /
       contain;
@@ -335,13 +358,13 @@ export default {
   } */
 }
 .question__actions_save {
-  position: relative;
-  margin-right: 15px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  fill: green;
-  /* &:before {
+	position: relative;
+	margin-right: 15px;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	fill: green;
+	/* &:before {
     content: "";
     background: svg-load("tick.svg", fill= "green") center center no-repeat /
       contain;
@@ -354,13 +377,13 @@ export default {
   } */
 }
 .question__actions_cancel {
-  position: relative;
-  /* margin-right: 20px; */
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  fill: red;
-  /* &:before {
+	position: relative;
+	/* margin-right: 20px; */
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	fill: red;
+	/* &:before {
     content: "";
     background: svg-load("remove.svg", fill= "red") center center no-repeat /
       contain;
@@ -373,8 +396,13 @@ export default {
   } */
 }
 .questions__actions__disabled {
-  svg {
-    opacity: 0.5;
-  }
+	svg {
+		opacity: 0.5;
+	}
+}
+
+.question__title {
+	font-size: 24px;
+	color: #183582;
 }
 </style>

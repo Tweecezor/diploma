@@ -2,6 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  @include tablets{
+    display: none;
+  }
   @include phones {
     display: none;
   }
@@ -22,7 +25,7 @@
   opacity: 0.65;
   transition: 0.75s;
   &:hover {
-    fill: #ff9a00;
+    fill: #0078cf;
     opacity: 1;
     transition: 0.76s;
   }
@@ -34,8 +37,8 @@
 }
 .socials__link--stankin {
   .socials-link {
-    width: 80px;
-    height: 55px;
+    width: 96px;
+    height: 68px;
   }
 }
 
@@ -62,7 +65,7 @@
     }
     &:hover {
       transition: 0.75s;
-      border: 1px solid #ff9a00;
+      border: 1px solid #0078cf;
     }
   }
 }
@@ -71,7 +74,7 @@
   display: flex;
   .socials__item {
     .socials__link {
-      fill: #ff9a00;
+      fill: #0078cf;
       opacity: 1;
       .socials-link {
       }
