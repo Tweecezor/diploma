@@ -516,7 +516,8 @@ new Vue({
 				localStorage.setItem('currentSubject', this.currentData.subjectName)
 				localStorage.setItem('creatorIdPublic', this.currentData.creatorId)
 				// window.location.href = "http://localhost:8080/welcome";
-				window.location.href = `${window.location.href}/welcome`
+				window.location.href =
+					'https://tweecezor.github.io/diploma/dist/welcome'
 			}
 		},
 		filterSubject() {
