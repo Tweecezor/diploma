@@ -516,8 +516,7 @@ new Vue({
 				localStorage.setItem('currentSubject', this.currentData.subjectName)
 				localStorage.setItem('creatorIdPublic', this.currentData.creatorId)
 				// window.location.href = "http://localhost:8080/welcome";
-				window.location.href =
-					'https://young-anchorage-15160.herokuapp.com/welcome'
+				window.location.href = `${window.location.href}/welcome`
 			}
 		},
 		filterSubject() {
