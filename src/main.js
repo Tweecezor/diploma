@@ -1,83 +1,539 @@
 import './styles/main.pcss'
-// import currentSubject from "./welcomePage";
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
+const axios = require('axios')
+// axios.baseUrl = "http://localhost:3000/";
+axios.baseUrl = 'https://young-anchorage-15160.herokuapp.com/'
+let select = document.querySelector('.actions__subject')
+let link = document.querySelector('.actions__confirm_button')
+let currentSelected
+;(function() {
+	var canvas = document.createElement('canvas'),
+		ctx = canvas.getContext('2d'),
+		w = (canvas.width = innerWidth),
+		h = (canvas.height = innerHeight),
+		particles = [],
+		properties = {
+			bgColor: 'white',
+			particleColor: '#0078cf',
+			particleRadius: 3,
+			particleCount: 60,
+			particleMaxVelocity: 0.5,
+			lineLength: 150,
+			particleLife: 6,
+		}
+	canvas.classList.add('canvas')
 
-if (process.env.NODE_ENV === 'development') {
-	require('file-loader!./index.pug')
-}
-// console.log(currentSubject);
-let title = localStorage.getItem('currentSubject')
+	document.querySelector('body').appendChild(canvas)
 
-console.log(title)
-const subjectName = document.querySelector('.welcome-section__name-title')
-document.querySelector('.main-title').innerText = title
-subjectName.innerText = title
-
-// geting canvas by Boujjou Achraf
-var c = document.getElementById('c')
-var ctx = c.getContext('2d')
-
-//making the canvas full screen
-c.height = window.innerHeight
-c.width = window.innerWidth
-
-//chinese characters - taken from the unicode charset
-// var matrix = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
-var matrix = '01'
-//converting the string into an array of single characters
-matrix = matrix.split('')
-
-var font_size = 10
-var columns = c.width / font_size //number of columns for the rain
-//an array of drops - one per column
-var drops = []
-//x below is the x coordinate
-//1 = y co-ordinate of the drop(same for every drop initially)
-for (var x = 0; x < columns; x++) drops[x] = 1
-
-//drawing the characters
-function draw() {
-	//Black BG for the canvas
-	//translucent BG to show trail
-	ctx.fillStyle = 'rgba(0, 0, 0, 0.04)'
-	ctx.fillRect(0, 0, c.width, c.height)
-
-	ctx.fillStyle = '#18629e' // text color
-	ctx.font = font_size + 'px NewZelek'
-	//looping over drops
-	for (var i = 0; i < drops.length; i++) {
-		//a random chinese character to print
-		var text = matrix[Math.floor(Math.random() * matrix.length)]
-		//x = i*font_size, y = value of drops[i]*font_size
-		ctx.fillText(text, i * font_size, drops[i] * font_size)
-
-		//sending the drop back to the top randomly after it has crossed the screen
-		//adding a randomness to the reset to make the drops scattered on the Y axis
-		if (drops[i] * font_size > c.height && Math.random() > 0.975) drops[i] = 0
-
-		//incrementing Y coordinate
-		drops[i]++
+	window.onresize = function() {
+		;(w = canvas.width = innerWidth), (h = canvas.height = innerHeight)
 	}
-}
 
-let timeInterval = 1
+	class Particle {
+		constructor() {
+			this.x = Math.random() * w
+			this.y = Math.random() * h
+			this.velocityX =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.velocityY =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.life = Math.random() * properties.particleLife * 60
+		}
+		position() {
+			;(this.x + this.velocityX > w && this.velocityX > 0) ||
+			(this.x + this.velocityX < 0 && this.velocityX < 0)
+				? (this.velocityX *= -1)
+				: this.velocityX
+			;(this.y + this.velocityY > h && this.velocityY > 0) ||
+			(this.y + this.velocityY < 0 && this.velocityY < 0)
+				? (this.velocityY *= -1)
+				: this.velocityY
+			this.x += this.velocityX
+			this.y += this.velocityY
+		}
+		reDraw() {
+			ctx.beginPath()
+			ctx.arc(this.x, this.y, properties.particleRadius, 0, Math.PI * 2)
+			ctx.closePath()
+			ctx.fillStyle = properties.particleColor
+			ctx.fill()
+		}
+		reCalculateLife() {
+			if (this.life < 1) {
+				this.x = Math.random() * w
+				this.y = Math.random() * h
+				this.velocityX =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.velocityY =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.life = Math.random() * properties.particleLife * 60
+			}
+			this.life--
+		}
+	}
 
-function changeTimeInterval() {
-	timeInterval = 35
-}
-// setTimeout(changeTimeInterval, 1)
-var drawInterval = setInterval(draw, 15)
-setTimeout(() => {
-	clearInterval(drawInterval)
-	// timeInterval = 35
-	setInterval(draw, 45)
-}, 1100)
+	function reDrawBackground() {
+		ctx.fillStyle = properties.bgColor
+		ctx.fillRect(0, 0, w, h)
+	}
 
-// import "./scripts/skills";
-// import "./scripts/parallax";
-// import "./scripts/reviews";
-// import "./welcomePage";
-import './scripts/hamburger-menu'
-// import "./scripts/style";
-import './scripts/myWorks'
-// import "./scripts/contact-form-validate";
-// import "./scripts/scrollTo";
+	function drawLines() {
+		var x1, y1, x2, y2, length, opacity
+		for (var i in particles) {
+			for (var j in particles) {
+				x1 = particles[i].x
+				y1 = particles[i].y
+				x2 = particles[j].x
+				y2 = particles[j].y
+				length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+				if (length < properties.lineLength) {
+					opacity = 1 - length / properties.lineLength
+					ctx.lineWidth = '0.5'
+					ctx.strokeStyle = '#0078cf'
+					ctx.beginPath()
+					ctx.moveTo(x1, y1)
+					ctx.lineTo(x2, y2)
+					ctx.closePath()
+					ctx.stroke()
+				}
+			}
+		}
+	}
+
+	function reDrawParticles() {
+		for (var i in particles) {
+			particles[i].reCalculateLife()
+			particles[i].position()
+			particles[i].reDraw()
+		}
+	}
+
+	function loop() {
+		reDrawBackground()
+		reDrawParticles()
+		drawLines()
+		requestAnimationFrame(loop)
+	}
+
+	function init() {
+		for (var i = 0; i < properties.particleCount; i++) {
+			particles.push(new Particle())
+		}
+		loop()
+	}
+
+	init()
+})()
+;(function() {
+	var canvas = document.createElement('canvas'),
+		ctx = canvas.getContext('2d'),
+		w = (canvas.width = innerWidth),
+		h = (canvas.height = innerHeight),
+		particles = [],
+		properties = {
+			bgColor: 'white',
+			particleColor: '#0078cf',
+			particleRadius: 3,
+			particleCount: 60,
+			particleMaxVelocity: 0.5,
+			lineLength: 150,
+			particleLife: 6,
+		}
+	canvas.classList.add('canvas3')
+
+	document.querySelector('body').appendChild(canvas)
+
+	window.onresize = function() {
+		;(w = canvas.width = innerWidth), (h = canvas.height = innerHeight)
+	}
+
+	class Particle {
+		constructor() {
+			this.x = Math.random() * w
+			this.y = Math.random() * h
+			this.velocityX =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.velocityY =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.life = Math.random() * properties.particleLife * 60
+		}
+		position() {
+			;(this.x + this.velocityX > w && this.velocityX > 0) ||
+			(this.x + this.velocityX < 0 && this.velocityX < 0)
+				? (this.velocityX *= -1)
+				: this.velocityX
+			;(this.y + this.velocityY > h && this.velocityY > 0) ||
+			(this.y + this.velocityY < 0 && this.velocityY < 0)
+				? (this.velocityY *= -1)
+				: this.velocityY
+			this.x += this.velocityX
+			this.y += this.velocityY
+		}
+		reDraw() {
+			ctx.beginPath()
+			ctx.arc(this.x, this.y, properties.particleRadius, 0, Math.PI * 2)
+			ctx.closePath()
+			ctx.fillStyle = properties.particleColor
+			ctx.fill()
+		}
+		reCalculateLife() {
+			if (this.life < 1) {
+				this.x = Math.random() * w
+				this.y = Math.random() * h
+				this.velocityX =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.velocityY =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.life = Math.random() * properties.particleLife * 60
+			}
+			this.life--
+		}
+	}
+
+	function reDrawBackground() {
+		ctx.fillStyle = properties.bgColor
+		ctx.fillRect(0, 0, w, h)
+	}
+
+	function drawLines() {
+		var x1, y1, x2, y2, length, opacity
+		for (var i in particles) {
+			for (var j in particles) {
+				x1 = particles[i].x
+				y1 = particles[i].y
+				x2 = particles[j].x
+				y2 = particles[j].y
+				length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+				if (length < properties.lineLength) {
+					opacity = 1 - length / properties.lineLength
+					ctx.lineWidth = '0.5'
+					ctx.strokeStyle = '#0078cf'
+					ctx.beginPath()
+					ctx.moveTo(x1, y1)
+					ctx.lineTo(x2, y2)
+					ctx.closePath()
+					ctx.stroke()
+				}
+			}
+		}
+	}
+
+	function reDrawParticles() {
+		for (var i in particles) {
+			particles[i].reCalculateLife()
+			particles[i].position()
+			particles[i].reDraw()
+		}
+	}
+
+	function loop() {
+		reDrawBackground()
+		reDrawParticles()
+		drawLines()
+		requestAnimationFrame(loop)
+	}
+
+	function init() {
+		for (var i = 0; i < properties.particleCount; i++) {
+			particles.push(new Particle())
+		}
+		loop()
+	}
+
+	init()
+})()
+;(function() {
+	var canvas = document.createElement('canvas'),
+		ctx = canvas.getContext('2d'),
+		w = (canvas.width = innerWidth),
+		h = (canvas.height = innerHeight),
+		particles = [],
+		properties = {
+			bgColor: 'white',
+			particleColor: '#0078cf',
+			particleRadius: 3,
+			particleCount: 60,
+			particleMaxVelocity: 0.5,
+			lineLength: 150,
+			particleLife: 6,
+		}
+	canvas.classList.add('canvas4')
+
+	document.querySelector('body').appendChild(canvas)
+
+	window.onresize = function() {
+		;(w = canvas.width = innerWidth), (h = canvas.height = innerHeight)
+	}
+
+	class Particle {
+		constructor() {
+			this.x = Math.random() * w
+			this.y = Math.random() * h
+			this.velocityX =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.velocityY =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.life = Math.random() * properties.particleLife * 60
+		}
+		position() {
+			;(this.x + this.velocityX > w && this.velocityX > 0) ||
+			(this.x + this.velocityX < 0 && this.velocityX < 0)
+				? (this.velocityX *= -1)
+				: this.velocityX
+			;(this.y + this.velocityY > h && this.velocityY > 0) ||
+			(this.y + this.velocityY < 0 && this.velocityY < 0)
+				? (this.velocityY *= -1)
+				: this.velocityY
+			this.x += this.velocityX
+			this.y += this.velocityY
+		}
+		reDraw() {
+			ctx.beginPath()
+			ctx.arc(this.x, this.y, properties.particleRadius, 0, Math.PI * 2)
+			ctx.closePath()
+			ctx.fillStyle = properties.particleColor
+			ctx.fill()
+		}
+		reCalculateLife() {
+			if (this.life < 1) {
+				this.x = Math.random() * w
+				this.y = Math.random() * h
+				this.velocityX =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.velocityY =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.life = Math.random() * properties.particleLife * 60
+			}
+			this.life--
+		}
+	}
+
+	function reDrawBackground() {
+		ctx.fillStyle = properties.bgColor
+		ctx.fillRect(0, 0, w, h)
+	}
+
+	function drawLines() {
+		var x1, y1, x2, y2, length, opacity
+		for (var i in particles) {
+			for (var j in particles) {
+				x1 = particles[i].x
+				y1 = particles[i].y
+				x2 = particles[j].x
+				y2 = particles[j].y
+				length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+				if (length < properties.lineLength) {
+					opacity = 1 - length / properties.lineLength
+					ctx.lineWidth = '0.5'
+					ctx.strokeStyle = '#0078cf'
+					ctx.beginPath()
+					ctx.moveTo(x1, y1)
+					ctx.lineTo(x2, y2)
+					ctx.closePath()
+					ctx.stroke()
+				}
+			}
+		}
+	}
+
+	function reDrawParticles() {
+		for (var i in particles) {
+			particles[i].reCalculateLife()
+			particles[i].position()
+			particles[i].reDraw()
+		}
+	}
+
+	function loop() {
+		reDrawBackground()
+		reDrawParticles()
+		drawLines()
+		requestAnimationFrame(loop)
+	}
+
+	function init() {
+		for (var i = 0; i < properties.particleCount; i++) {
+			particles.push(new Particle())
+		}
+		loop()
+	}
+
+	init()
+})()
+;(function() {
+	var canvas = document.createElement('canvas'),
+		ctx = canvas.getContext('2d'),
+		w = (canvas.width = innerWidth),
+		h = (canvas.height = innerHeight),
+		particles = [],
+		properties = {
+			bgColor: 'white',
+			particleColor: '#0078cf',
+			particleRadius: 3,
+			particleCount: 60,
+			particleMaxVelocity: 0.5,
+			lineLength: 150,
+			particleLife: 6,
+		}
+	canvas.classList.add('canvas2')
+
+	document.querySelector('body').appendChild(canvas)
+
+	window.onresize = function() {
+		;(w = canvas.width = innerWidth), (h = canvas.height = innerHeight)
+	}
+
+	class Particle {
+		constructor() {
+			this.x = Math.random() * w
+			this.y = Math.random() * h
+			this.velocityX =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.velocityY =
+				Math.random() * (properties.particleMaxVelocity * 2) -
+				properties.particleMaxVelocity
+			this.life = Math.random() * properties.particleLife * 60
+		}
+		position() {
+			;(this.x + this.velocityX > w && this.velocityX > 0) ||
+			(this.x + this.velocityX < 0 && this.velocityX < 0)
+				? (this.velocityX *= -1)
+				: this.velocityX
+			;(this.y + this.velocityY > h && this.velocityY > 0) ||
+			(this.y + this.velocityY < 0 && this.velocityY < 0)
+				? (this.velocityY *= -1)
+				: this.velocityY
+			this.x += this.velocityX
+			this.y += this.velocityY
+		}
+		reDraw() {
+			ctx.beginPath()
+			ctx.arc(this.x, this.y, properties.particleRadius, 0, Math.PI * 2)
+			ctx.closePath()
+			ctx.fillStyle = properties.particleColor
+			ctx.fill()
+		}
+		reCalculateLife() {
+			if (this.life < 1) {
+				this.x = Math.random() * w
+				this.y = Math.random() * h
+				this.velocityX =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.velocityY =
+					Math.random() * (properties.particleMaxVelocity * 2) -
+					properties.particleMaxVelocity
+				this.life = Math.random() * properties.particleLife * 60
+			}
+			this.life--
+		}
+	}
+
+	function reDrawBackground() {
+		ctx.fillStyle = properties.bgColor
+		ctx.fillRect(0, 0, w, h)
+	}
+
+	function drawLines() {
+		var x1, y1, x2, y2, length, opacity
+		for (var i in particles) {
+			for (var j in particles) {
+				x1 = particles[i].x
+				y1 = particles[i].y
+				x2 = particles[j].x
+				y2 = particles[j].y
+				length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+				if (length < properties.lineLength) {
+					opacity = 1 - length / properties.lineLength
+					ctx.lineWidth = '0.5'
+					ctx.strokeStyle = '#0078cf'
+					ctx.beginPath()
+					ctx.moveTo(x1, y1)
+					ctx.lineTo(x2, y2)
+					ctx.closePath()
+					ctx.stroke()
+				}
+			}
+		}
+	}
+
+	function reDrawParticles() {
+		for (var i in particles) {
+			particles[i].reCalculateLife()
+			particles[i].position()
+			particles[i].reDraw()
+		}
+	}
+
+	function loop() {
+		reDrawBackground()
+		reDrawParticles()
+		drawLines()
+		requestAnimationFrame(loop)
+	}
+
+	function init() {
+		for (var i = 0; i < properties.particleCount; i++) {
+			particles.push(new Particle())
+		}
+		loop()
+	}
+
+	init()
+})()
+
+new Vue({
+	el: '#test',
+	data: function() {
+		return {
+			visible: false,
+			subjects: [],
+			value: '',
+			currentData: '',
+		}
+	},
+	methods: {
+		async changePage() {
+			if (this.value) {
+				this.filterSubject()
+				console.log(this.currentData)
+				localStorage.setItem('currentSubject', this.currentData.subjectName)
+				localStorage.setItem('creatorIdPublic', this.currentData.creatorId)
+				window.location.href = `${window.location.href}welcome.html`
+				// window.location.href =
+				// 	'https://tweecezor.github.io/diploma/dist/welcome'
+			}
+		},
+		filterSubject() {
+			this.subjects.map((item) =>
+				item._id === this.value ? (this.currentData = item) : ''
+			)
+		},
+	},
+	async created() {
+		// let response = await axios.get('http://localhost:3000/api/allSubjects')
+		let response = await axios.get(
+			'https://young-anchorage-15160.herokuapp.com/api/allSubjects'
+		)
+		this.subjects = response.data
+		// response.data.forEach((item) => {
+		//   this.subjects.push(item.subjectName);
+		// });
+	},
+})
