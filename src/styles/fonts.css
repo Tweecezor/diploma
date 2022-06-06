@@ -1,9 +1,9 @@
 @font-face {
-    font-family: 'New_Zelek';
-    src: url('./fonts/NewZelek-Normal.eot');
-    src: url('./fonts/NewZelek-Normal.eot?#iefix') format('embedded-opentype'),
-         url('./fonts/NewZelek-Normal.woff2') format('woff2'),
-         url('./fonts/NewZelek-Normal.ttf')  format('truetype'),
-         url('./fonts/NewZelek.woff') format('woff');
-
+	font-family: 'New_Zelek';
+	src: url('../../src/styles/fonts/NewZelek-Normal.eot');
+	src: url('../../src/styles/fonts/NewZelek-Normal.eot?#iefix')
+			format('embedded-opentype'),
+		url('../../src/styles/fonts/NewZelek-Normal.woff2') format('woff2'),
+		url('../../src/styles/fonts/NewZelek-Normal.ttf') format('truetype'),
+		url('../../src/styles/fonts/NewZelek.woff') format('woff');
 }
