@@ -7,3 +7,14 @@
 		url('../../src/styles/fonts/NewZelek-Normal.ttf') format('truetype'),
 		url('../../src/styles/fonts/NewZelek.woff') format('woff');
 }
+
+@font-face {
+	font-family: 'New_zelek';
+	font-style: normal;
+	font-weight: 400;
+	src: local('New_Zelek'), local('New_Zelek-Normal'),
+		url(https://allfont.ru/cache/fonts/new_zelek_9a80e67caf7f9c5f9bd6c2d3d260fed8.woff)
+			format('woff'),
+		url(https://allfont.ru/cache/fonts/new_zelek_9a80e67caf7f9c5f9bd6c2d3d260fed8.ttf)
+			format('truetype');
+}
