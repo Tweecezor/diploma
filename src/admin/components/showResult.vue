@@ -8,50 +8,61 @@
     //- pre {{results}}
     //- pre {{groups}}
     //- pre {{tests}}
-
-    .group_breadcrumbs(v-if="groups")
-      ul.group_breadcrumbs__list
-        li.group_breadcrumbs_item.breadcrumb(
-          ref="breadcrumb_group",
-          v-for="(item, id) in groups",
-          @click="changeCurrentGroup(item, id)"
-        )
-          .breadcrumb__text-wrap
-            .breadcrumb__text {{ item.groupName }}
-    .group_breadcrumbs
-      ul.test_breadcrumbs__list
-        li.test_breadcrumbs_item.breadcrumb(
-          ref="breadcrumb_test",
-          v-for="(item, id) in filteredTestByGroup",
-          @click="showCurrentTestResult(item.name, id)"
-        )
-          .breadcrumb__text-wrap 
-            .breadcrumb__text {{ item.name }}
-      div(v-if="filteredResultByGroup.length")
-        .result__table-wrap
-          .result__table-top
-            .result__table-head-wrap
-              .result__table-head Группа
-            .result__table-head-wrap
-              .result__table-head ФИО
-            .result__table-head-wrap
-              .result__table-head Тест
-            .result__table-head-wrap
-              .result__table-head Оценка
-          .result__table-bottom(v-for="result in filteredResultByGroup")
-            .result__table-content-wrap
-              .result__table-content {{ result.group }}
-            .result__table-content-wrap
-              .result__table-content {{ result.fullName }}
-            .result__table-content-wrap
-              .result__table-content {{ result.test_name }}
-            .result__table-content-wrap
-              .result__table-content {{ result.mark }}
-        div.excel(@click="exportDataToExcel")
-          MyIcon.icon(iconName="excel")
-      div.no_content(v-else)
-        myIcon(iconName="noData")
-        div.no_content_text Результатов пока нет
+    ul.sidebar__list
+      li.sidebar__item.sidebar__item_content(
+        v-for="(item,pos) in ['Графики','Таблица']" ref="sidebar_item" 
+        @click="changeContent(item,pos)"
+      )
+        div.sidebar__text {{item}}
+    
+    div(v-if="currentMenuItem === 'Графики'")
+      <Bar :chart-options="chartOptions" :chart-data="chartData" :chart-id="chartId" :dataset-id-key="datasetIdKey" :plugins="plugins" :css-classes="cssClasses" :styles="styles" :width="width" :height="height"/>
+      <Pie :chart-options="chartOptions" :chart-data="chartData" :chart-id="chartId" :dataset-id-key="datasetIdKey" :plugins="plugins" :css-classes="cssClasses" :styles="styles" :width="width" :height="height"/>
+    
+    div(v-if="currentMenuItem === 'Таблица'")
+      .group_breadcrumbs(v-if="groups")
+        ul.group_breadcrumbs__list
+          li.group_breadcrumbs_item.breadcrumb(
+            ref="breadcrumb_group",
+            v-for="(item, id) in groups",
+            @click="changeCurrentGroup(item, id)"
+          )
+            .breadcrumb__text-wrap
+              .breadcrumb__text {{ item.groupName }}
+      .group_breadcrumbs
+        ul.test_breadcrumbs__list
+          li.test_breadcrumbs_item.breadcrumb(
+            ref="breadcrumb_test",
+            v-for="(item, id) in filteredTestByGroup",
+            @click="showCurrentTestResult(item.name, id)"
+          )
+            .breadcrumb__text-wrap 
+              .breadcrumb__text {{ item.name }}
+        div(v-if="filteredResultByGroup.length")
+          .result__table-wrap
+            .result__table-top
+              .result__table-head-wrap
+                .result__table-head Группа
+              .result__table-head-wrap
+                .result__table-head ФИО
+              .result__table-head-wrap
+                .result__table-head Тест
+              .result__table-head-wrap
+                .result__table-head Оценка
+            .result__table-bottom(v-for="result in filteredResultByGroup")
+              .result__table-content-wrap
+                .result__table-content {{ result.group }}
+              .result__table-content-wrap
+                .result__table-content {{ result.fullName }}
+              .result__table-content-wrap
+                .result__table-content {{ result.test_name }}
+              .result__table-content-wrap
+                .result__table-content {{ result.mark }}
+          div.excel(@click="exportDataToExcel")
+            MyIcon.icon(iconName="excel")
+        div.no_content(v-else)
+          myIcon(iconName="noData")
+          div.no_content_text Результатов пока нет
 
     //- pre {{filteredResultByGroup}}
     //- pre {{results}}
@@ -69,10 +80,72 @@ import { mapState, mapActions } from 'vuex'
 const xlsx = require('xlsx')
 const path = require('path')
 
+import { Bar } from 'vue-chartjs/legacy'
+import { Pie } from 'vue-chartjs/legacy'
+
+import {
+	Chart as ChartJS,
+	BarElement,
+	LinearScale,
+	Title,
+	Tooltip,
+	Legend,
+	ArcElement,
+	CategoryScale,
+} from 'chart.js'
+
+ChartJS.register(
+	Title,
+	Tooltip,
+	Legend,
+	BarElement,
+	CategoryScale,
+	LinearScale,
+	Title,
+	Tooltip,
+	Legend,
+	ArcElement,
+	CategoryScale
+)
+
+// const Chart = require('chart.js')
+
 export default {
 	components: {
 		GROUPS,
 		MyIcon,
+		Bar,
+		Pie,
+	},
+	props: {
+		chartId: {
+			type: String,
+			default: 'bar-chart',
+		},
+		datasetIdKey: {
+			type: String,
+			default: 'label',
+		},
+		width: {
+			type: Number,
+			default: 400,
+		},
+		height: {
+			type: Number,
+			default: 200,
+		},
+		cssClasses: {
+			default: '',
+			type: String,
+		},
+		styles: {
+			type: Object,
+			default: () => {},
+		},
+		plugins: {
+			type: Object,
+			default: () => {},
+		},
 	},
 	data() {
 		return {
@@ -83,6 +156,30 @@ export default {
 			currentTestName: '',
 			breadcrumbGroup: '',
 			breadcrumbTest: '',
+			// chartData: {
+			// 	labels: ['January', 'February', 'March'],
+			// 	datasets: [{ data: [40, 20, 12] }],
+			// },
+			// chartOptions: {
+			// 	responsive: true,
+			// },
+
+			chartData: {
+				labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
+				datasets: [
+					{
+						backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+						data: [40, 20, 80, 10],
+					},
+				],
+			},
+			chartOptions: {
+				responsive: true,
+				maintainAspectRatio: false,
+			},
+
+			showGraph: false,
+			currentMenuItem: 'Графики',
 			// results: "",
 			// groups: "",
 			// tests: "",
@@ -92,6 +189,16 @@ export default {
 		...mapActions('results', ['fetchResults']),
 		...mapActions('groups', ['fetchGroups']),
 		...mapActions('tests', ['fetchTests']),
+
+		changeContent(item, pos) {
+			this.currentMenuItem = item
+			for (var i = 0; i < this.sidebarItems.length; i++) {
+				this.sidebarItems[i].classList.remove('sidebar__item_content__active')
+				i === pos
+					? this.sidebarItems[i].classList.add('sidebar__item_content__active')
+					: ''
+			}
+		},
 
 		exportToExcel(data, columnNames, workSheetName, filePath) {
 			//создаем workBook
@@ -183,21 +290,36 @@ export default {
 		sortBreadcrumbGroupList() {
 			// this.groups = this.group.
 		},
+		showGraphic() {
+			// filteredResultByGroup
+			console.log(this.filteredResultByGroup)
+
+			this.chartData = {
+				labels: this.filteredResultByGroup.map((item) => item.fullName),
+				datasets: [
+					{ data: this.filteredResultByGroup.map((item) => item.mark) },
+				],
+			}
+		},
 	},
 	mounted() {
+		this.sidebarItems = this.$refs.sidebar_item
+		this.sidebarItems[0].classList.add('sidebar__item_content__active')
+
 		if (this.results.length) {
 			this.currentGroup = this.results[0].group
 
 			this.filteredResultByGroup = this.results
-
-			this.breadcrumbGroup = this.$refs.breadcrumb_group
-
-			for (var i = 1; i < this.breadcrumbGroup.length; i++) {
-				this.breadcrumbGroup[i].firstChild.classList.remove(
-					'breadcrumb--active'
-				)
+			this.chartData = {
+				labels: this.filteredResultByGroup.map((item) => item.fullName),
+				datasets: [
+					{ data: this.filteredResultByGroup.map((item) => item.mark) },
+				],
 			}
+
+			console.log('234234')
 		}
+		// this.showGraphic()
 	},
 	computed: {
 		...mapState('results', {
@@ -227,6 +349,25 @@ export default {
 		// this.tests = TESTS.data;
 		// this.results =
 		// this.currentGroup = this.results[0].group;
+	},
+	watch: {
+		// currentMenuItem: {
+		// 	immediate: true,
+		// 	handler(val) {
+		// 		if (val === 'Таблица') {
+		// 			this.breadcrumbGroup = this.$refs.breadcrumb_group
+		// 			for (var i = 1; i < this.breadcrumbGroup.length; i++) {
+		// 				this.breadcrumbGroup[i].firstChild.classList.remove(
+		// 					'breadcrumb--active'
+		// 				)
+		// 			}
+		// 		}
+		// 		if (val === 'Графики') {
+		// 			this.showGraphic()
+		// 			console.log('1k24')
+		// 		}
+		// 	},
+		// },
 	},
 }
 </script>
@@ -362,5 +503,35 @@ export default {
 		color: #183582;
 		font-weight: 600;
 	}
+}
+.sidebar__item {
+	margin-bottom: 5px;
+}
+.sidebar__item_content__active {
+	border-bottom: 3px solid #001f8b;
+}
+
+.sidebar__item_content {
+	width: 100%;
+	padding-bottom: 10px;
+	cursor: pointer;
+	&:hover {
+		border-bottom: 3px solid #001f8b;
+
+		.sidebar__item_content__active {
+			border-bottom: 3px solid transparent;
+		}
+	}
+}
+
+.sidebar__list {
+	display: flex;
+}
+
+.sidebar {
+	margin-bottom: 32px;
+}
+.sidebar__text {
+	text-align: center;
 }
 </style>
